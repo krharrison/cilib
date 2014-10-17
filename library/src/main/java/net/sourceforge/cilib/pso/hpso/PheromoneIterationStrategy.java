@@ -35,14 +35,14 @@ import net.sourceforge.cilib.util.selection.weighting.behavior.SpecialisedRatio;
  * to the pheromoneConcentration level for that behavior.
  */
 public class PheromoneIterationStrategy implements IterationStrategy<PSO>, HeterogeneousIterationStrategy {
-    private List<Double> pheromoneConcentration;
-    private PheromoneUpdateStrategy pheromoneUpdateStrategy;
+    protected List<Double> pheromoneConcentration;
+    protected PheromoneUpdateStrategy pheromoneUpdateStrategy;
 
-    private List<Behaviour> behaviorPool;
-    private Selector<Behaviour> behaviorSelectionRecipe;
-    private IterationStrategy<PSO> iterationStrategy;
-    private BehaviorChangeTriggerDetectionStrategy detectionStrategy;
-    private ControlParameter minPeromone;
+    protected List<Behaviour> behaviorPool;
+    protected Selector<Behaviour> behaviorSelectionRecipe;
+    protected IterationStrategy<PSO> iterationStrategy;
+    protected BehaviorChangeTriggerDetectionStrategy detectionStrategy;
+    protected ControlParameter minPeromone;
 
     /**
      * Create a new instance of {@linkplain PheromoneIterationStrategy}.

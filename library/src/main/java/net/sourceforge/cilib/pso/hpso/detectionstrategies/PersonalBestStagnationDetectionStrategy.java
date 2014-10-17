@@ -58,7 +58,7 @@ public class PersonalBestStagnationDetectionStrategy implements BehaviorChangeTr
     @Override
     public boolean detect(Particle entity) {
         int counter = ((Int)entity.get(Property.PBEST_STAGNATION_COUNTER)).intValue();
-
+        
         if (counter > windowSize.getParameter()) {
             entity.put(Property.PBEST_STAGNATION_COUNTER, Int.valueOf(0));
             return true;

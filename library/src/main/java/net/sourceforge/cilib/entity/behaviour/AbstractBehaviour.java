@@ -21,6 +21,7 @@ public abstract class AbstractBehaviour implements Behaviour {
 
     private int successCounter;
     private int selectedCounter;
+    private int iterationCounter;
 
     /**
      * Default constructor assigns an UnconstrainedBoundary, and sets the success
@@ -32,6 +33,7 @@ public abstract class AbstractBehaviour implements Behaviour {
         
         this.successCounter = 0;
         this.selectedCounter = 0;
+        this.iterationCounter = 0;
     }
 
     /**
@@ -45,6 +47,7 @@ public abstract class AbstractBehaviour implements Behaviour {
         
         this.selectedCounter = copy.selectedCounter;
         this.successCounter = copy.successCounter;
+        this.iterationCounter = copy.iterationCounter;
     }
 
     /**
@@ -88,6 +91,13 @@ public abstract class AbstractBehaviour implements Behaviour {
     /**
      * {@inheritDoc}
      */
+    public void incrementIterationCounter() {
+        iterationCounter++;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void incrementSuccessCounter() {
         successCounter++;
     }
@@ -99,6 +109,13 @@ public abstract class AbstractBehaviour implements Behaviour {
         selectedCounter++;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public int getIterationCounter() {
+        return iterationCounter;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -126,6 +143,13 @@ public abstract class AbstractBehaviour implements Behaviour {
     public void resetSuccessCounter() {
         successCounter = 0;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void resetIterationCounter() {
+        iterationCounter = 0;
+    }
 
     /**
      * {@inheritDoc}
@@ -139,6 +163,13 @@ public abstract class AbstractBehaviour implements Behaviour {
      */
     public void setSuccessCounter(int n) {
         successCounter = n;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setIterationCounter(int n) {
+        iterationCounter = n;
     }
 
     /**
