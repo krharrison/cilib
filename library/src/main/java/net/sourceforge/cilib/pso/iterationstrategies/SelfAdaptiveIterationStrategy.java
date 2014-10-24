@@ -129,7 +129,6 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
                 behavior.incrementSelectedCounter();
                 p.setBehaviour(behavior);
             }
-            p.getBehaviour().incrementIterationCounter();
         }
 
         for(Behaviour pb : behaviorPool) {
@@ -139,6 +138,11 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
 
         iterationStrategy.performIteration(algorithm);
 
+        for(Entity e : algorithm.getTopology()) {
+            Particle p = (Particle)e;
+            p.getBehaviour().incrementIterationCounter();
+        }
+        
         for(Behaviour pb : behaviorPool) {
             successCounters.get(pb).set(AbstractAlgorithm.get().getIterations()%(int)windowSize.getParameter(), pb.getSuccessCounter());
             iterationCounters.get(pb).set(AbstractAlgorithm.get().getIterations()%(int)windowSize.getParameter(), pb.getIterationCounter());

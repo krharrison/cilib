@@ -73,7 +73,7 @@ public class StandardConvergentVelocityProviderGenerator implements VelocityProv
 	}
 
 	/**
-	 * Generate parameters which satisfy the inequality: w > 0.5 (c1+c2) - 1
+	 * Generate parameters which satisfy convergence criteria
 	 */
 	@Override
 	public VelocityProvider generate() {
@@ -85,15 +85,20 @@ public class StandardConvergentVelocityProviderGenerator implements VelocityProv
 		double social;
 		double inertia;
 		
+		boolean inertiaAbs = false;
+		boolean inertiaRange = false;
+		boolean paramRange = false;
+		
 		do{
 			cognitive = cognitiveDistribution.getRandomNumber();
 			social = socialDistribution.getRandomNumber();
 			inertia = inertiaDistribution.getRandomNumber();
-
-			//clamp the range for inertia
-			//if(inertia < 0) inertia = 0;
-			//if(inertia > 1) inertia = 1;
-		} while(inertia <= 0.5 * (social + cognitive) - 1);
+			
+			//convergence criteria by Cleghorn and Engelbrecht (2014).
+			inertiaAbs = Math.abs(inertia) < 1; 					
+			inertiaRange = inertia > 0.5 * (social + cognitive) - 1;
+			paramRange = social + cognitive > 0 && social + cognitive < 4;
+		} while(!(inertiaAbs && inertiaRange && paramRange));
 		
 		provider.setCognitiveAcceleration(ConstantControlParameter.of(cognitive));
 		provider.setSocialAcceleration(ConstantControlParameter.of(social));

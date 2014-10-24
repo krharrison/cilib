@@ -45,7 +45,7 @@ public class StandardVelocityProviderBehaviourGenerator implements BehaviourGene
 	 *
 	 */
 	@Override
-	public BehaviourGenerator getClone() {
+	public StandardVelocityProviderBehaviourGenerator getClone() {
 		return new StandardVelocityProviderBehaviourGenerator(this);
 	}
 	

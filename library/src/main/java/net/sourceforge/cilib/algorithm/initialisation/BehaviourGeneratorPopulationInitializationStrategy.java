@@ -51,7 +51,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
      * {@inheritDoc}
      */
 	@Override
-	public PopulationInitialisationStrategy getClone() {
+	public BehaviourGeneratorPopulationInitializationStrategy getClone() {
 		return new BehaviourGeneratorPopulationInitializationStrategy(this);
 	}
 

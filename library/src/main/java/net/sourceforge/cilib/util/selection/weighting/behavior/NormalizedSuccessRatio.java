@@ -11,7 +11,8 @@ import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.entity.behaviour.Behaviour;
 
 /**
- * Obtains the ratio of the ParticleBehavior based on how often it gets selected.
+ * Obtains the ratio of the ParticleBehavior based on its successes normalized by
+ * the number of iterations in which it was used.
  */
 public class NormalizedSuccessRatio implements ParticleBehaviorRatio {
 	private ControlParameter unusedReplacement;
@@ -35,10 +36,10 @@ public class NormalizedSuccessRatio implements ParticleBehaviorRatio {
     @Override
     public double getRatio(Behaviour particleBehavior) {
     	int iterationCounter = particleBehavior.getIterationCounter();
-    	//normalize the success counter based on the number of iterations counter. If it hasn't been used, set to 0.5
+    	//normalize the success counter based on the number of iterations counter. If it hasn't been used, assignthe unusedReplacement value
     	double temp = iterationCounter > 0 ? particleBehavior.getSuccessCounter() / (double)iterationCounter : unusedReplacement.getParameter();
 
-    	//add 1 to prevent crashing when no behaviour had a success (i.e., all weights would be 0).
-    	return temp + 1;
+    	//added to prevent crashing when no behaviour had a success (i.e., all weights would be 0).
+    	return temp + Double.MIN_VALUE;
     }
 }

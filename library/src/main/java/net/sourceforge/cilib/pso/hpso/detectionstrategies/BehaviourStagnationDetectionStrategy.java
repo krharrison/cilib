@@ -58,8 +58,8 @@ public class BehaviourStagnationDetectionStrategy implements BehaviorChangeTrigg
 	@Override
 	public boolean detect(Particle particle) {
 		int iters = AbstractAlgorithm.get().getIterations();
-		//subtract 1 as the weighting scheme adds 1
-        if (iters % period.getParameter() == 0 && weighting.getRatio(particle.getBehaviour()) - 1 < threshold.getParameter()) {
+
+        if (iters % period.getParameter() == 0 && weighting.getRatio(particle.getBehaviour()) < threshold.getParameter()) {
         	return true;
         }
         
