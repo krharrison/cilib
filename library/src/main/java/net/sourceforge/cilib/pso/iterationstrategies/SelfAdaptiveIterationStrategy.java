@@ -125,7 +125,12 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
         for(Entity e : algorithm.getTopology()) {
             Particle p = (Particle)e;
             if (detectionStrategy.detect(p)) {
-                behavior = behaviorSelectionRecipe.on(behaviorPool).select();
+            	Behaviour orig = p.getBehaviour();
+            	//only allow behaviours that are as good or better than the current to be selected
+            	//do{
+            		behavior = behaviorSelectionRecipe.on(behaviorPool).select();
+            	//} while(behavior.compareTo(orig) < 0);
+            	
                 behavior.incrementSelectedCounter();
                 p.setBehaviour(behavior);
             }
