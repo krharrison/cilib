@@ -14,7 +14,7 @@ import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.util.selection.*;
 import net.sourceforge.cilib.util.selection.scoring.*;
 
-public class ScoredSelector<E extends Entity> implements Selector<E> {
+public class ScoredSelector<E> implements Selector<E> {
     
     private Selector<Score<E>> selector;
     private Selector<E> opponentSelector;
