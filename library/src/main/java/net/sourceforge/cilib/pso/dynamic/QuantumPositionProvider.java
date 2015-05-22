@@ -6,10 +6,9 @@
  */
 package net.sourceforge.cilib.pso.dynamic;
 
-import java.util.Arrays;
-import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.math.random.GaussianDistribution;
 import net.sourceforge.cilib.math.random.ProbabilityDistributionFunction;
 import net.sourceforge.cilib.math.random.UniformDistribution;
 import net.sourceforge.cilib.pso.guideprovider.GuideProvider;
@@ -18,11 +17,11 @@ import net.sourceforge.cilib.pso.particle.Particle;
 import net.sourceforge.cilib.pso.positionprovider.PositionProvider;
 import net.sourceforge.cilib.pso.positionprovider.StandardPositionProvider;
 import net.sourceforge.cilib.type.types.container.Vector;
+import net.sourceforge.cilib.util.distancemeasure.EuclideanDistanceMeasure;
 
 /**
  * Position provider for QSO (Quantum PSO). Implemented according to paper by
- * Blackwell and Branke, "Multiswarms, Exclusion, and Anti-Convergence in
- * Dynamic Environments."
+ * Blackwell, Branke, and Li: "Particle Swarms for Dynamic Optimization Problems."
  *
  */
 public class QuantumPositionProvider implements PositionProvider {
@@ -31,23 +30,29 @@ public class QuantumPositionProvider implements PositionProvider {
 
     private static final double EPSILON = 0.000000001;
 
+    private GaussianDistribution normalDistribution;
+    EuclideanDistanceMeasure distanceMeasure;
     private ControlParameter radius;
-    private ProbabilityDistributionFunction randomiser;
+    private ProbabilityDistributionFunction distribution;
     private Vector nucleus;
 
     private PositionProvider delegate;
     private GuideProvider globalGuide;
 
     public QuantumPositionProvider() {
+    	this.normalDistribution = new GaussianDistribution();
+    	this.distanceMeasure = new EuclideanDistanceMeasure();
         this.radius = ConstantControlParameter.of(5);
-        this.randomiser = new UniformDistribution();
+        this.distribution = new UniformDistribution();
         this.delegate = new StandardPositionProvider();
         this.globalGuide = new NBestGuideProvider();
     }
 
     public QuantumPositionProvider(QuantumPositionProvider copy) {
+    	this.normalDistribution = copy.normalDistribution;
+    	this.distanceMeasure = copy.distanceMeasure;
         this.radius = copy.radius;
-        this.randomiser = copy.randomiser;
+        this.distribution = copy.distribution;
         this.delegate = copy.delegate.getClone();
         this.globalGuide = copy.globalGuide.getClone();
     }
@@ -69,44 +74,33 @@ public class QuantumPositionProvider implements PositionProvider {
         if (checkChargeParticle.getCharge() < EPSILON) { // the particle is neutral
             return (Vector) this.delegate.get(particle);
         } else { // the particle is charged
-            //based on the Pythagorean theorem,
-            //the following code breaks the square of the radius distance into smaller
-            //parts that are then "distributed" among the dimensions of the problem.
-            //the position of the particle is determined in each dimension by a random number
-            //between 0 and the part of the radius assigned to that dimension
-            //This ensures that the quantum particles are placed randomly within the
-            //multidimensional sphere determined by the quantum radius.
 
             this.nucleus = (Vector) globalGuide.get(particle);
 
-            double distance = Math.pow(this.radius.getParameter(), 2); //square of the radius
+            //step 1 - create a position which is normally distributed around the nucleus
+            Vector.Builder positionBuilder = Vector.newBuilder();
             int dimensions = particle.getDimension();
-            double[] pieces = new double[dimensions]; // break up of the distance
-            pieces[dimensions - 1] = distance;
-            for (int i = 0; i < dimensions - 1; i++) {
-                pieces[i] = this.randomiser.getRandomNumber(0, distance);
-            }//for
-            Arrays.sort(pieces);
-            int sign = 1;
-            if (this.randomiser.getRandomNumber() <= 0.5) {
-                sign = -1;
-            }//if
-            //deals with first dimension
-            Vector.Builder builder = Vector.newBuilder();
-            builder.addWithin(this.nucleus.doubleValueOf(0) + sign * this.randomiser.getRandomNumber(0, Math.sqrt(pieces[0])), this.nucleus.boundsOf(0));
-            //deals with the other dimensions
-            for (int i = 1; i < dimensions; i++) {
-                sign = 1;
-                if (this.randomiser.getRandomNumber() <= 0.5) {
-                    sign = -1;
-                }//if
-                double rad = Math.sqrt(pieces[i] - pieces[i - 1]);
-                double dis = this.randomiser.getRandomNumber(0, rad);
-                double newpos = this.nucleus.doubleValueOf(i) + sign * dis;
-                builder.addWithin(newpos, this.nucleus.boundsOf(i));
-            }//for
-            return builder.build();
-        }//else
+            for (int i = 0; i < dimensions; i++) {
+            	positionBuilder.addWithin(normalDistribution.getRandomNumber(), this.nucleus.boundsOf(i));
+            }
+            
+            Vector position = positionBuilder.build();
+            
+            //step 2 - calculate the distance from the radius
+            double distance = distanceMeasure.distance(position, this.nucleus);
+            
+            //step 3 - calculate a random number using the provided probability distribution
+            double u = distribution.getRandomNumber();
+            
+           //special care to avoid negative roots
+            double sign = Math.signum(u);
+            u = Math.abs(u);
+            
+            //step 4 - calculate the quantum position, using the dth root of u
+            double root = Math.pow(u, 1.0 / dimensions);
+
+            return position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign);
+        }
     }
 
     public void setDelegate(PositionProvider delegate) {
@@ -138,5 +132,13 @@ public class QuantumPositionProvider implements PositionProvider {
     public void setRadius(ControlParameter radius) {
         //Preconditions.checkArgument(radius.getParameter() >= 0, "Radius of the electron cloud can not be negative");
         this.radius = radius;
+    }
+    
+    public void setDistribution(ProbabilityDistributionFunction distribution){
+    	this.distribution = distribution;
+    }
+    
+    public ProbabilityDistributionFunction getDistribution(){
+    	return this.distribution;
     }
 }

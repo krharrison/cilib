@@ -37,7 +37,6 @@ import net.sourceforge.cilib.type.types.container.Vector;
 public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
 
     private final ProbabilityDistributionFunction gaussian, uniform; //random providers.
-    private int frequency; //the frequency (in iterations) with which the environment changes.
     private int peaks; //the number of peaks.
     private double widthSeverity, heightSeverity, shiftSeverity, lambda; //controls the severity and movement trends of peak movements.
     private double[] peakHeigths, peakWidths; //the current heights and widths of all peaks.
@@ -49,7 +48,6 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
         this.gaussian = new GaussianDistribution();
         this.uniform = new UniformDistribution();
 
-        this.frequency = 10;
         this.peaks = 5;
         this.widthSeverity = 0.01;
         this.heightSeverity = 7.0;
@@ -61,11 +59,10 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
         this.maxWidth = 12.0;
     }
 
-    public GeneralisedMovingPeaks(int frequency, int peaks, double widthSeverity, double heightSeverity, double shiftSeverity, double lambda) {
+    public GeneralisedMovingPeaks(int peaks, double widthSeverity, double heightSeverity, double shiftSeverity, double lambda) {
         this.gaussian = new GaussianDistribution();
         this.uniform = new UniformDistribution();
 
-        this.frequency = frequency;
         this.peaks = peaks;
         this.widthSeverity = widthSeverity;
         this.heightSeverity = heightSeverity;
@@ -250,11 +247,6 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
         return max;
     }
 
-    // Getters and setters.... for use in the XML
-    public int getFrequency() {
-        return frequency;
-    }
-
     public double getHeightSeverity() {
         return heightSeverity;
     }
@@ -289,10 +281,6 @@ public class GeneralisedMovingPeaks extends DynamicFunction<Vector, Double> {
 
     public double getWidthSeverity() {
         return widthSeverity;
-    }
-
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
     }
 
     public void setHeightSeverity(double heightSeverity) {
