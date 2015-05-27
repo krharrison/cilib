@@ -31,7 +31,7 @@ public class QuantumPositionProvider implements PositionProvider {
     private static final double EPSILON = 0.000000001;
 
     private GaussianDistribution normalDistribution;
-    EuclideanDistanceMeasure distanceMeasure;
+    private EuclideanDistanceMeasure distanceMeasure;
     private ControlParameter radius;
     private ProbabilityDistributionFunction distribution;
     private Vector nucleus;
@@ -65,7 +65,7 @@ public class QuantumPositionProvider implements PositionProvider {
     /**
      * Update particle position; do it in a standard way if the particle is neutral, and
      * in a quantum way if the particle is charged. The "quantum" way entails sampling the
-     * position from a uniform distribution : a spherical cloud around gbest with a radius r.
+     * position in a spherical cloud around gbest with a radius r using some probability distribution.
      * @param particle the particle to update position of
      */
     @Override
