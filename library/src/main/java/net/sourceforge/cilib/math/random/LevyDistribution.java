@@ -13,17 +13,17 @@ import net.sourceforge.cilib.math.random.generator.Rand;
 
 public class LevyDistribution implements ProbabilityDistributionFunction {
 
-	private ControlParameter shape;
+	private ControlParameter location;
 	private ControlParameter scale;
 	
 	public LevyDistribution(){
-		shape = ConstantControlParameter.of(1.0);
+		location = ConstantControlParameter.of(1.0);
 		scale = ConstantControlParameter.of(1.0);
 	}
 	
 	@Override
 	public double getRandomNumber() {
-		return getRandomNumber(shape.getParameter(), scale.getParameter());
+		return getRandomNumber(location.getParameter(), scale.getParameter());
 	}
 
     /**
@@ -35,7 +35,6 @@ public class LevyDistribution implements ProbabilityDistributionFunction {
 	@Override
 	public double getRandomNumber(double... parameters) {
 		checkArgument(parameters.length == 2, "The Levy distribution requires two parameters.");
-		checkArgument(parameters[0] > 0, "The shape parameter must be greater than zero.");
         checkArgument(parameters[1] > 0, "The scale parameter must be greater than zero.");
 		
 		double alpha = parameters[0]; //shape
@@ -79,12 +78,12 @@ public class LevyDistribution implements ProbabilityDistributionFunction {
         return scale;
     }
 
-    public void setShape(ControlParameter shape) {
-        this.shape = shape;
+    public void setLocation(ControlParameter location) {
+        this.location = location;
     }
 
-    public ControlParameter getShape() {
-        return shape;
+    public ControlParameter getLocation() {
+        return location;
     }
 	
 }

@@ -43,12 +43,10 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
      */
 	@Override
 	public double getRandomNumber(double... parameters) {
-		checkArgument(parameters.length == 2, "The Beta distribution requires at least two parameters.");
+		checkArgument(parameters.length > 1, "The Beta distribution requires at least two parameters.");
 		checkArgument(parameters[0] > 0, "The alpha parameter must be greater than zero.");
         checkArgument(parameters[1] > 0, "The beta parameter must be greater than zero.");
 
-        
-        
         double a = parameters[0];
         double b = parameters[1];
         double scale = 1.0;
