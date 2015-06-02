@@ -36,7 +36,7 @@ public class WeibullDistribution implements ProbabilityDistributionFunction {
 	public double getRandomNumber(double... parameters) {
 		checkArgument(parameters.length == 2, "The Weibull distribution requires two parameters.");
 		
-		return parameters[1] * Math.pow(-Math.log(Rand.nextDouble()), parameters[0]);
+		return parameters[1] * Math.pow(-Math.log(Rand.nextDouble()), 1 / parameters[0]);
 	}
 	
     public void setScale(ControlParameter scale) {

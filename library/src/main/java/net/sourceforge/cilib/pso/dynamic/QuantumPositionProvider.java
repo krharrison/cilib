@@ -38,6 +38,7 @@ public class QuantumPositionProvider implements PositionProvider {
 
     private PositionProvider delegate;
     private GuideProvider globalGuide;
+    private Boolean uniform;
 
     public QuantumPositionProvider() {
     	this.normalDistribution = new GaussianDistribution();
@@ -46,6 +47,7 @@ public class QuantumPositionProvider implements PositionProvider {
         this.distribution = new UniformDistribution();
         this.delegate = new StandardPositionProvider();
         this.globalGuide = new NBestGuideProvider();
+        this.uniform = true;
     }
 
     public QuantumPositionProvider(QuantumPositionProvider copy) {
@@ -55,6 +57,7 @@ public class QuantumPositionProvider implements PositionProvider {
         this.distribution = copy.distribution;
         this.delegate = copy.delegate.getClone();
         this.globalGuide = copy.globalGuide.getClone();
+        this.uniform = copy.uniform;
     }
 
     @Override
@@ -81,12 +84,12 @@ public class QuantumPositionProvider implements PositionProvider {
             Vector.Builder positionBuilder = Vector.newBuilder();
             int dimensions = particle.getDimension();
             for (int i = 0; i < dimensions; i++) {
-            	positionBuilder.addWithin(normalDistribution.getRandomNumber(), this.nucleus.boundsOf(i));
+            	positionBuilder.add(normalDistribution.getRandomNumber());
             }
             
             Vector position = positionBuilder.build();
             
-            //step 2 - calculate the distance from the radius
+            //step 2 - calculate the distance from the nucleus
             double distance = distanceMeasure.distance(position, this.nucleus);
             
             //step 3 - calculate a random number using the provided probability distribution
@@ -96,8 +99,14 @@ public class QuantumPositionProvider implements PositionProvider {
             double sign = Math.signum(u);
             u = Math.abs(u);
             
-            //step 4 - calculate the quantum position, using the dth root of u
-            double root = Math.pow(u, 1.0 / dimensions);
+            //step 4 - calculate the quantum position
+            //using the dth root of u gives a uniform distribution
+            //using u gives a non-uniform distribution
+            double root = u;
+            if(uniform)
+            {
+            	root = Math.pow(u, 1.0 / dimensions);
+            }
 
             return position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign);
         }

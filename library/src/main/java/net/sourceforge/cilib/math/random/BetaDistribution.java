@@ -16,12 +16,10 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
 
 	private ControlParameter alpha;
 	private ControlParameter beta;
-	private ControlParameter scale; //allow the range to be expanded
 	
 	public BetaDistribution(){
 		alpha = ConstantControlParameter.of(1.0);
 		beta = ConstantControlParameter.of(1.0);
-		scale = ConstantControlParameter.of(1.0);
 	}
 	
     /**
@@ -30,7 +28,7 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
      */
 	@Override
 	public double getRandomNumber() {
-		return getRandomNumber(alpha.getParameter(), beta.getParameter(), scale.getParameter());
+		return getRandomNumber(alpha.getParameter(), beta.getParameter());
 	}
 
     /**
@@ -49,13 +47,6 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
 
         double a = parameters[0];
         double b = parameters[1];
-        double scale = 1.0;
-        
-        //do not require the scale, as it is not part of the initial definition
-        if(parameters.length > 2)
-        {
-        	scale = parameters[2];
-        }
         
         if ((a <= 1.0) && (b <= 1.0))
         {
@@ -83,7 +74,7 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
                         logX -= logM;
                         logY -= logM;
 
-                        return scale * Math.exp(logX - Math.log(Math.exp(logX) + Math.exp(logY)));
+                        return Math.exp(logX - Math.log(Math.exp(logX) + Math.exp(logY)));
                     }
                 }
             }
@@ -91,10 +82,10 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
         else
         {
         	GammaDistribution gamma = new GammaDistribution();
-        	double ga = gamma.getRandomNumber(a, 1);
-        	double gb = gamma.getRandomNumber(b, 1);
+        	double ga = gamma.getRandomNumber(1, a);
+        	double gb = gamma.getRandomNumber(1, b);
         	
-        	return scale *  (ga / (ga + gb));
+        	return(ga / (ga + gb));
         }
 	}
 	
@@ -114,13 +105,4 @@ public class BetaDistribution implements ProbabilityDistributionFunction {
     public ControlParameter getBeta() {
         return beta;
     }
-    
-    public void setScale(ControlParameter scale) {
-        this.scale = scale;
-    }
-
-    public ControlParameter getScale() {
-        return scale;
-    }
-
 }
