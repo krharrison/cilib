@@ -150,4 +150,12 @@ public class QuantumPositionProvider implements PositionProvider {
     public ProbabilityDistributionFunction getDistribution(){
     	return this.distribution;
     }
+    
+    public void setUniform(Boolean uniform){
+    	this.uniform = uniform;
+    }
+    
+    public Boolean getUniform(){
+    	return this.uniform;
+    }
 }
