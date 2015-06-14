@@ -122,7 +122,7 @@ public class PheromoneIterationStrategy implements IterationStrategy<PSO>, Heter
             if(index == -1) {
                 index = ((HeterogeneousPopulationInitialisationStrategy)
                             algorithm.getInitialisationStrategy())
-                            .getBehaviorPool().indexOf(p.getBehaviour());
+                            .getBehaviourPool().indexOf(p.getBehaviour());
             }
 
             double deltaP = pheromoneUpdateStrategy.updatePheromone(p);

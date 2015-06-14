@@ -124,7 +124,7 @@ public class DifferenceProportionalProbabilityIterationStrategy implements Itera
             checkState(algorithm.getTopology().length() >= behaviorPool.size() * rigidCountPerBehavior.getParameter(), "There are not enough particles for your chosen rigid particle count and behavior count.");
 
             //assuming the behaviors in the intialisationstrategy are the same as the behaviors in behaviorpool
-            setBehaviorPool(((HeterogeneousPopulationInitialisationStrategy) algorithm.getInitialisationStrategy()).getBehaviorPool());
+            setBehaviorPool(((HeterogeneousPopulationInitialisationStrategy) algorithm.getInitialisationStrategy()).getBehaviourPool());
             fj.data.List<Particle> top = algorithm.getTopology();
 
             for(int j = 0; j < behaviorPool.size(); j++) {

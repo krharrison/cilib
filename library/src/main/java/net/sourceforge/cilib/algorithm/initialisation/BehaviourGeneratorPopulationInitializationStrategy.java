@@ -32,7 +32,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
      * Create an instance of the {@code BehaviourGeneratorPopulationInitialisationStrategy}.
      */
 	public BehaviourGeneratorPopulationInitializationStrategy(){
-		poolSize = 25;
+		poolSize = 50;
 		behaviourGenerator = new StandardVelocityProviderBehaviourGenerator(); 
 		delegate = new HeterogeneousPopulationInitialisationStrategy();
 	}
@@ -106,6 +106,10 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
     
     public void setBehaviourGenerator(BehaviourGenerator generator){
     	this.behaviourGenerator = generator;
+    }
+    
+    public BehaviourGenerator getBehaviourGenerator(){
+    	return this.behaviourGenerator;
     }
 
     /**

@@ -47,7 +47,7 @@ public class AdaptiveHPSOBehaviorProfileMeasurement implements Measurement<Vecto
         fj.data.List<Particle> topology = pso.getTopology();
         HeterogeneousIterationStrategy strategy = (HeterogeneousIterationStrategy) pso.getIterationStrategy();
         HeterogeneousPopulationInitialisationStrategy initStrategy = (HeterogeneousPopulationInitialisationStrategy) pso.getInitialisationStrategy();
-        List<Behaviour> initialBehaviorPool = initStrategy.getBehaviorPool();
+        List<Behaviour> initialBehaviorPool = initStrategy.getBehaviourPool();
         List<Behaviour> behaviorPool = strategy.getBehaviorPool();
 
         Vector.Builder builder = Vector.newBuilder();

@@ -11,11 +11,13 @@ import net.sourceforge.cilib.entity.behaviour.generator.BehaviourGenerator;
 import net.sourceforge.cilib.problem.boundaryconstraint.BoundaryConstraint;
 import net.sourceforge.cilib.problem.boundaryconstraint.UnconstrainedBoundary;
 import net.sourceforge.cilib.pso.behaviour.StandardParticleBehaviour;
-import net.sourceforge.cilib.pso.velocityprovider.generators.StandardConvergentVelocityProviderGenerator;
+import net.sourceforge.cilib.pso.velocityprovider.generators.RandomConvergentVelocityProviderGenerator;
 import net.sourceforge.cilib.pso.velocityprovider.generators.VelocityProviderGenerator;
 
 /**
- *
+ * Construct a {@link StandardParticleBehaviour} using the provided
+ * {@link VelocityProviderGenerator} to generate the particles initial
+ * behaviour.
  */
 public class StandardVelocityProviderBehaviourGenerator implements BehaviourGenerator {
 
@@ -24,7 +26,7 @@ public class StandardVelocityProviderBehaviourGenerator implements BehaviourGene
 	private BoundaryConstraint boundaryConstraint;
 	
 	public StandardVelocityProviderBehaviourGenerator(){
-		generator = new StandardConvergentVelocityProviderGenerator();
+		generator = new RandomConvergentVelocityProviderGenerator();
 		boundaryConstraint = new UnconstrainedBoundary();
 	}
 	
@@ -41,18 +43,11 @@ public class StandardVelocityProviderBehaviourGenerator implements BehaviourGene
 		this.boundaryConstraint = boundaryConstraint;
 	}
 	
-	/**
-	 *
-	 */
 	@Override
 	public StandardVelocityProviderBehaviourGenerator getClone() {
 		return new StandardVelocityProviderBehaviourGenerator(this);
 	}
 	
-	
-	/**
-	 *
-	 */
 	@Override
 	public Behaviour generate() {
 		//generate a new behaviour using the provided velocity provider generator

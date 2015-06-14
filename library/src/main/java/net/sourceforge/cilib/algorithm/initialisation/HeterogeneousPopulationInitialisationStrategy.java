@@ -26,7 +26,7 @@ import net.sourceforge.cilib.util.selection.recipes.Selector;
  */
 public class HeterogeneousPopulationInitialisationStrategy implements PopulationInitialisationStrategy {
 
-    private List<Behaviour> behaviorPool;
+    private List<Behaviour> behaviourPool;
     private Selector<Behaviour> selectionRecipe;
     private PopulationInitialisationStrategy delegate;
 
@@ -34,7 +34,7 @@ public class HeterogeneousPopulationInitialisationStrategy implements Population
      * Create an instance of the {@code ChargedPopulationInitialisationStrategy}.
      */
     public HeterogeneousPopulationInitialisationStrategy() {
-        behaviorPool = new ArrayList<Behaviour>();
+        behaviourPool = new ArrayList<Behaviour>();
         selectionRecipe = new RandomSelector<Behaviour>();
         delegate = new ClonedPopulationInitialisationStrategy();
     }
@@ -44,7 +44,7 @@ public class HeterogeneousPopulationInitialisationStrategy implements Population
      * @param copy The instance to copy.
      */
     public HeterogeneousPopulationInitialisationStrategy(HeterogeneousPopulationInitialisationStrategy copy) {
-        this.behaviorPool = new ArrayList<Behaviour>(copy.behaviorPool);
+        this.behaviourPool = new ArrayList<Behaviour>(copy.behaviourPool);
         this.selectionRecipe = copy.selectionRecipe;
         this.delegate = copy.delegate.getClone();
     }
@@ -67,12 +67,12 @@ public class HeterogeneousPopulationInitialisationStrategy implements Population
     @Override
     public <E extends Entity> Iterable<E> initialise(Problem problem) {
         Preconditions.checkNotNull(problem, "No problem has been specified");
-        Preconditions.checkState(behaviorPool.size() > 0, "No particle behaviors have been added to the behavior pool.");
+        Preconditions.checkState(behaviourPool.size() > 0, "No particle behaviors have been added to the behavior pool.");
 
         Iterable<Entity> clones = delegate.initialise(problem);
 
         for (Entity p : clones) {
-            p.setBehaviour(selectionRecipe.on(behaviorPool).select());
+            p.setBehaviour(selectionRecipe.on(behaviourPool).select());
         }
 
         return (Iterable<E>) clones;
@@ -83,23 +83,23 @@ public class HeterogeneousPopulationInitialisationStrategy implements Population
      * @param behavior The {@link ParticleBehavior} to add to the behavior pool.
      */
     public void addBehavior(Behaviour behavior) {
-        behaviorPool.add(behavior);
+        behaviourPool.add(behavior);
     }
 
     /**
      * Set the {@link ParticleBehavior} pool.
      * @param pool A {@link List} of {@link ParticleBehavior} objects.
      */
-    public void setBehaviorPool(List<Behaviour> pool) {
-        behaviorPool = pool;
+    public void setBehaviourPool(List<Behaviour> pool) {
+        behaviourPool = pool;
     }
 
     /**
      * Get the current behavior pool.
      * @return The current {@link List} of {@link ParticleBehavior} objects.
      */
-    public List<Behaviour> getBehaviorPool() {
-        return behaviorPool;
+    public List<Behaviour> getBehaviourPool() {
+        return behaviourPool;
     }
 
     /**

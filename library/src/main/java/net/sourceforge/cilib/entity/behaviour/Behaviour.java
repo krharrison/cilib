@@ -39,11 +39,6 @@ public interface Behaviour extends Comparable<Behaviour>, Cloneable {
     public void setFitnessCalculator(FitnessCalculator fitnessCalculator);
 
     /**
-     * Increment the number of iterations this behavior was used
-     */
-    public void incrementIterationCounter();
-    
-    /**
      * Increment the number of times this behavior was successful
      */
     public void incrementSuccessCounter();
@@ -53,11 +48,6 @@ public interface Behaviour extends Comparable<Behaviour>, Cloneable {
      */
     public void incrementSelectedCounter();
 
-    /**
-     * Get the number of iterations where this behavior has been used
-     */
-    public int getIterationCounter();
-    
     /**
      * Get the number of times this behavior has been selected
      */
@@ -77,29 +67,17 @@ public interface Behaviour extends Comparable<Behaviour>, Cloneable {
      * Reset the success counter to zero.
      */
     public void resetSuccessCounter();
-    
-    /**
-     * Reset the iteration counter to zero.
-     */
-    public void resetIterationCounter();
-
 
     /**
-     * Set the number of times this behavior has been selected
+     * Get the number of times this behavior has been selected
      */
     public void setSelectedCounter(int n);
 
     /**
-     * Set the number of times this behavior was successful
+     * Get the number of times this behavior was successful
      */
     public void setSuccessCounter(int n);
 
-    /**
-     * Set the number of iterations where this behaviour was used
-     */
-    public void setIterationCounter(int n);
-    
-    
     /**
      * Compare two behaviors with regards to how successful they were in finding
      * better fitness values.
