@@ -17,7 +17,6 @@ import net.sourceforge.cilib.pso.particle.Particle;
 import net.sourceforge.cilib.pso.positionprovider.PositionProvider;
 import net.sourceforge.cilib.pso.positionprovider.StandardPositionProvider;
 import net.sourceforge.cilib.type.types.container.Vector;
-import net.sourceforge.cilib.util.distancemeasure.EuclideanDistanceMeasure;
 
 /**
  * Position provider for QSO (Quantum PSO). Implemented according to paper by
@@ -31,7 +30,6 @@ public class QuantumPositionProvider implements PositionProvider {
     private static final double EPSILON = 0.000000001;
 
     private GaussianDistribution normalDistribution;
-    private EuclideanDistanceMeasure distanceMeasure;
     private ControlParameter radius;
     private ProbabilityDistributionFunction distribution;
     private Vector nucleus;
@@ -42,7 +40,6 @@ public class QuantumPositionProvider implements PositionProvider {
 
     public QuantumPositionProvider() {
     	this.normalDistribution = new GaussianDistribution();
-    	this.distanceMeasure = new EuclideanDistanceMeasure();
         this.radius = ConstantControlParameter.of(5);
         this.distribution = new UniformDistribution();
         this.delegate = new StandardPositionProvider();
@@ -52,7 +49,6 @@ public class QuantumPositionProvider implements PositionProvider {
 
     public QuantumPositionProvider(QuantumPositionProvider copy) {
     	this.normalDistribution = copy.normalDistribution;
-    	this.distanceMeasure = copy.distanceMeasure;
         this.radius = copy.radius;
         this.distribution = copy.distribution;
         this.delegate = copy.delegate.getClone();
@@ -80,7 +76,7 @@ public class QuantumPositionProvider implements PositionProvider {
 
             this.nucleus = (Vector) globalGuide.get(particle);
 
-            //step 1 - create a position which is normally distributed around the nucleus
+            //step 1 - create a point using a normal distribution
             Vector.Builder positionBuilder = Vector.newBuilder();
             int dimensions = particle.getDimension();
             for (int i = 0; i < dimensions; i++) {
@@ -89,8 +85,8 @@ public class QuantumPositionProvider implements PositionProvider {
             
             Vector position = positionBuilder.build();
             
-            //step 2 - calculate the distance from the nucleus
-            double distance = distanceMeasure.distance(position, this.nucleus);
+            //step 2 - calculate the distance of the point from from the origin
+            double distance = position.length();
             
             //step 3 - calculate a random number using the provided probability distribution
             double u = distribution.getRandomNumber();
@@ -108,7 +104,8 @@ public class QuantumPositionProvider implements PositionProvider {
             	root = Math.pow(u, 1.0 / dimensions);
             }
 
-            return position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign);
+            //add the offset to the nucleus
+            return nucleus.plus(position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign));
         }
     }
 
