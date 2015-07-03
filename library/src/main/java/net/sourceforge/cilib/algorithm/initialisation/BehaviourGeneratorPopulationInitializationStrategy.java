@@ -11,6 +11,8 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
+import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
+import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.behaviour.Behaviour;
 import net.sourceforge.cilib.entity.behaviour.generator.BehaviourGenerator;
@@ -24,7 +26,7 @@ import net.sourceforge.cilib.pso.behaviour.generators.StandardVelocityProviderBe
  */
 public class BehaviourGeneratorPopulationInitializationStrategy implements PopulationInitialisationStrategy {
 
-	private int poolSize;
+	private ControlParameter poolSize;
 	private BehaviourGenerator behaviourGenerator;
 	private HeterogeneousPopulationInitialisationStrategy delegate;
 	
@@ -32,7 +34,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
      * Create an instance of the {@code BehaviourGeneratorPopulationInitialisationStrategy}.
      */
 	public BehaviourGeneratorPopulationInitializationStrategy(){
-		poolSize = 50;
+		poolSize = ConstantControlParameter.of(50);
 		behaviourGenerator = new StandardVelocityProviderBehaviourGenerator(); 
 		delegate = new HeterogeneousPopulationInitialisationStrategy();
 	}
@@ -96,7 +98,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
         this.delegate = delegate;
     }
     
-    public void setPoolSize(int poolSize){
+    public void setPoolSize(ControlParameter poolSize){
     	this.poolSize = poolSize;
     }
     
@@ -121,10 +123,10 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
     @Override
     public <E extends Entity> Iterable<E> initialise(Problem problem) {
         Preconditions.checkNotNull(problem, "No problem has been specified");
-        Preconditions.checkState(poolSize > 0, "Must have a pool size of at least 1.");
+        Preconditions.checkState(poolSize.getParameter() > 0, "Must have a pool size of at least 1.");
         
         //generate a behavior pool to use for the heterogeneous initialization
-        for(int i = 0 ; i < poolSize; i++){
+        for(int i = 0 ; i < poolSize.getParameter(); i++){
         	delegate.addBehavior(behaviourGenerator.generate());
         }
 
