@@ -48,7 +48,7 @@ public class AverageBestErrorBeforeChange extends DynamicMeasurement<Real> {
 
     @Override
     public synchronized Real getValue(Algorithm algorithm) {
-        if ((algorithm.getIterations() + 1) % cycleSize == 0) {
+        if ((algorithm.getIterations()) % cycleSize == 0) {
             DynamicOptimisationProblem function = (DynamicOptimisationProblem) algorithm.getOptimisationProblem();
             double error = function.getError(algorithm.getBestSolution().getPosition());
             this.avg = (this.avg * this.cycleNr + error) / (this.cycleNr + 1);
