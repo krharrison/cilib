@@ -6,7 +6,7 @@
  */
 package net.sourceforge.cilib.pso.selfadaptive.adaptationstrategies;
 
-import net.sourceforge.cilib.algorithm.initialisation.BehaviourGeneratorPopulationInitializationStrategy;
+import net.sourceforge.cilib.algorithm.initialisation.BehaviourPoolPopulationInitializationStrategy;
 import net.sourceforge.cilib.entity.behaviour.Behaviour;
 import net.sourceforge.cilib.pso.PSO;
 import net.sourceforge.cilib.pso.particle.Particle;
@@ -24,7 +24,7 @@ public class RandomReinitialization implements AdaptationStrategy {
 	@Override
 	public Behaviour adapt(Particle particle, PSO algorithm) {
 
-		BehaviourGeneratorPopulationInitializationStrategy initialization = (BehaviourGeneratorPopulationInitializationStrategy) algorithm.getInitialisationStrategy();
+		BehaviourPoolPopulationInitializationStrategy initialization = (BehaviourPoolPopulationInitializationStrategy) algorithm.getInitialisationStrategy();
         
 		//remove this behaviour from the pool and regenerate a new one, adding it to the pool
 		//what if other particles are also using this behaviour?

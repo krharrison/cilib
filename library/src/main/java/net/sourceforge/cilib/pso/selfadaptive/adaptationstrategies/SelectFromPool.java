@@ -8,7 +8,7 @@ package net.sourceforge.cilib.pso.selfadaptive.adaptationstrategies;
 
 import java.util.List;
 
-import net.sourceforge.cilib.algorithm.initialisation.BehaviourGeneratorPopulationInitializationStrategy;
+import net.sourceforge.cilib.algorithm.initialisation.BehaviourPoolPopulationInitializationStrategy;
 import net.sourceforge.cilib.entity.behaviour.Behaviour;
 import net.sourceforge.cilib.pso.PSO;
 import net.sourceforge.cilib.pso.particle.Particle;
@@ -36,7 +36,7 @@ public class SelectFromPool implements AdaptationStrategy {
 	@Override
 	public Behaviour adapt(Particle particle, PSO algorithm) {
 		
-		BehaviourGeneratorPopulationInitializationStrategy initialization = (BehaviourGeneratorPopulationInitializationStrategy) algorithm.getInitialisationStrategy();
+		BehaviourPoolPopulationInitializationStrategy initialization = (BehaviourPoolPopulationInitializationStrategy) algorithm.getInitialisationStrategy();
 		List<Behaviour> behaviourPool = initialization.getDelegate().getBehaviourPool();
 		
 		return behaviourSelectionRecipe.on(behaviourPool).select();

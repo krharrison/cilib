@@ -31,20 +31,20 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
 		
 		//set up the range for the cognitive component
 		UniformDistribution cog = new UniformDistribution();
-		cog.setLowerBound(ConstantControlParameter.of(1));
-		cog.setUpperBound(ConstantControlParameter.of(2));
+		cog.setLowerBound(ConstantControlParameter.of(0));
+		cog.setUpperBound(ConstantControlParameter.of(4));
 		this.cognitiveDistribution = cog;
 		
 		//set up the range for the social component
 		UniformDistribution soc = new UniformDistribution();
-		soc.setLowerBound(ConstantControlParameter.of(1));
-		soc.setUpperBound(ConstantControlParameter.of(2));
+		soc.setLowerBound(ConstantControlParameter.of(0));
+		soc.setUpperBound(ConstantControlParameter.of(4));
 		this.socialDistribution = soc;
 		
 		//set up the range for the inertia component
 		UniformDistribution inert = new UniformDistribution();
-		inert.setLowerBound(ConstantControlParameter.of(0.1));
-		inert.setUpperBound(ConstantControlParameter.of(0.9));
+		inert.setLowerBound(ConstantControlParameter.of(0));
+		inert.setUpperBound(ConstantControlParameter.of(1));
 		this.inertiaDistribution = inert;
 	}
 	
@@ -79,9 +79,7 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
 			social = socialDistribution.getRandomNumber();
 			
 			check = (cognitive + social) / 2 - 1;
-			//TODO: should ensure that the inertia is between 0 and 1
-		} while(check <= 0 && check >= inertia); //repeat if check <= 0 or check >= inertia
-		
+		} while(check >= inertia || check <= 0  || check >= 1); //repeat if 0 >= check >= 1
 		
 		provider.setCognitiveAcceleration(ConstantControlParameter.of(cognitive));
 		provider.setSocialAcceleration(ConstantControlParameter.of(social));
