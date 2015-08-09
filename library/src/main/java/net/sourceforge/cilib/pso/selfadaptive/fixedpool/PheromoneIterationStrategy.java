@@ -19,6 +19,7 @@ import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.entity.behaviour.Behaviour;
 import net.sourceforge.cilib.problem.boundaryconstraint.BoundaryConstraint;
 import net.sourceforge.cilib.pso.PSO;
+import net.sourceforge.cilib.pso.dynamic.ChargedParticle;
 import net.sourceforge.cilib.pso.hpso.pheromoneupdate.ConstantPheromoneUpdateStrategy;
 import net.sourceforge.cilib.pso.hpso.pheromoneupdate.PheromoneUpdateStrategy;
 import net.sourceforge.cilib.pso.iterationstrategies.SynchronousIterationStrategy;
@@ -80,7 +81,7 @@ public class PheromoneIterationStrategy implements IterationStrategy<PSO>, SelfA
 	public void performIteration(PSO algorithm) {
 		
 		//reset for each algorithm
-        if (AbstractAlgorithm.get().getIterations() == 0) {
+        if (algorithm.getIterations() == 0) {
             initializeBehaviours(algorithm);
             checkState(behaviourPool.size() > 0, "Behaviour pool is empty.");
         }
@@ -103,7 +104,6 @@ public class PheromoneIterationStrategy implements IterationStrategy<PSO>, SelfA
     		pheromoneConcentration.add(new Double(1.0 / behaviourPool.size()));
         }
     	
-
         SpecialisedRatio weighting = new SpecialisedRatio();
         weighting.setBehaviors(behaviourPool);
         weighting.setWeights(pheromoneConcentration);
@@ -114,7 +114,8 @@ public class PheromoneIterationStrategy implements IterationStrategy<PSO>, SelfA
 	private void behaviourSelection(PSO algorithm){
 		Behaviour behaviour;
         for(Particle p : algorithm.getTopology()) {
-            if (detectionStrategy.detect(p)) {
+        	ChargedParticle pCharged = (ChargedParticle) p;
+            if (pCharged.getCharge() > EPSILON && detectionStrategy.detect(p)) {
                 behaviour = behaviourSelectionRecipe.on(behaviourPool).select();
                 behaviour.incrementSelectedCounter();
                 p.setBehaviour(behaviour);

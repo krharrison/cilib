@@ -12,6 +12,8 @@ import net.sourceforge.cilib.entity.behaviour.Behaviour;
 
 public interface SelfAdaptivePSOIterationStrategy {
 	
+    static final double EPSILON = 0.000000001;
+	
     /**
      * Get the current behaviour pool.
      * @return The current {@link List} of {@link ParticleBehaviour} objects.

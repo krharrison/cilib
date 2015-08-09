@@ -26,7 +26,7 @@ import net.sourceforge.cilib.pso.behaviour.generators.StandardVelocityProviderBe
  */
 public class BehaviourPoolPopulationInitializationStrategy implements PopulationInitialisationStrategy {
 
-	private ControlParameter poolSize;
+	private int poolSize;
 	private BehaviourGenerator behaviourGenerator;
 	private HeterogeneousPopulationInitialisationStrategy delegate;
 	
@@ -34,7 +34,7 @@ public class BehaviourPoolPopulationInitializationStrategy implements Population
      * Create an instance of the {@code BehaviourGeneratorPopulationInitialisationStrategy}.
      */
 	public BehaviourPoolPopulationInitializationStrategy(){
-		poolSize = ConstantControlParameter.of(50);
+		poolSize = 50;
 		behaviourGenerator = new StandardVelocityProviderBehaviourGenerator(); 
 		delegate = new HeterogeneousPopulationInitialisationStrategy();
 	}
@@ -98,7 +98,7 @@ public class BehaviourPoolPopulationInitializationStrategy implements Population
         this.delegate = delegate;
     }
     
-    public void setPoolSize(ControlParameter poolSize){
+    public void setPoolSize(int poolSize){
     	this.poolSize = poolSize;
     }
     
@@ -123,10 +123,10 @@ public class BehaviourPoolPopulationInitializationStrategy implements Population
     @Override
     public <E extends Entity> Iterable<E> initialise(Problem problem) {
         Preconditions.checkNotNull(problem, "No problem has been specified");
-        Preconditions.checkState(poolSize.getParameter() > 0, "Must have a pool size of at least 1.");
+        Preconditions.checkState(poolSize > 0, "Must have a pool size of at least 1.");
         
         //generate a behavior pool to use for the heterogeneous initialization
-        for(int i = 0 ; i < poolSize.getParameter(); i++){
+        for(int i = 0 ; i < poolSize; i++){
         	delegate.addBehavior(behaviourGenerator.generate());
         }
 

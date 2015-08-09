@@ -28,23 +28,24 @@ public class IrregularFunctionDecorator extends ContinuousFunction {
     private ContinuousFunction function;
     private F<Numeric, Numeric> mapping;
 
-    public IrregularFunctionDecorator() {
-        mapping = new F<Numeric, Numeric>() {
-            @Override
-            public Numeric f(Numeric a) {
-                double x = a.doubleValue();
-                double xHat = x == 0.0 ? 0.0 : Math.log(Math.abs(x));
-                double c1 = x > 0 ? 10 : 5.5;
-                double c2 = x > 0 ? 7.9 : 3.1;
-                double result = Math.signum(x) * Math.exp(xHat + 0.049 * (Math.sin(xHat * c1) + Math.sin(xHat * c2)));
-                return Real.valueOf(result);
-            }
-        };
-    }
 
     @Override
     public Double f(Vector input) {
-        return function.f(input.map(mapping));
+    	Vector.Builder builder = Vector.newBuilder();
+    	for (int i = 0; i < input.size(); i++) {
+            double x = input.doubleValueOf(i);
+            if (i == 0 || i == input.size() - 1) {
+            	double xHat = x == 0.0 ? 0.0 : Math.log(Math.abs(x));
+                double c1 = x > 0 ? 10 : 5.5;
+                double c2 = x > 0 ? 7.9 : 3.1;
+                double result = Math.signum(x) * Math.exp(xHat + 0.049 * (Math.sin(xHat * c1) + Math.sin(xHat * c2)));
+                builder.add(result);
+            } else {
+                builder.add(x);
+            }
+        }
+    	
+    	return function.f(builder.build());
     }
 
     public void setFunction(ContinuousFunction function) {

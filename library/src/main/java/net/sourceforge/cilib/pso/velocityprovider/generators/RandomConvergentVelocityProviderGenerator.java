@@ -7,51 +7,35 @@
 package net.sourceforge.cilib.pso.velocityprovider.generators;
 
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
-import net.sourceforge.cilib.math.random.ProbabilityDistributionFunction;
-import net.sourceforge.cilib.math.random.UniformDistribution;
+import net.sourceforge.cilib.math.random.generator.Rand;
 import net.sourceforge.cilib.pso.guideprovider.GuideProvider;
 import net.sourceforge.cilib.pso.guideprovider.NBestGuideProvider;
 import net.sourceforge.cilib.pso.guideprovider.PBestGuideProvider;
 import net.sourceforge.cilib.pso.velocityprovider.StandardVelocityProvider;
 import net.sourceforge.cilib.pso.velocityprovider.VelocityProvider;
-import net.sourceforge.cilib.type.DomainRegistry;
-import net.sourceforge.cilib.type.types.container.Vector;
+import net.sourceforge.cilib.tuning.parameters.TuningBounds;
 
 public class RandomConvergentVelocityProviderGenerator implements VelocityProviderGenerator {
 
 	private GuideProvider globalGuideProvider;
 	private GuideProvider localGuideProvider;
-	private ProbabilityDistributionFunction cognitiveDistribution;
-	private ProbabilityDistributionFunction socialDistribution;
-	private ProbabilityDistributionFunction inertiaDistribution;
+	private TuningBounds inertiaBounds;
+	private TuningBounds socialBounds;
+	private TuningBounds cognitiveBounds;
 	
 	public RandomConvergentVelocityProviderGenerator(){
 		this.globalGuideProvider = new NBestGuideProvider();
 		this.localGuideProvider = new PBestGuideProvider();
 		
-		//set up the range for the cognitive component
-		UniformDistribution cog = new UniformDistribution();
-		cog.setLowerBound(ConstantControlParameter.of(0));
-		cog.setUpperBound(ConstantControlParameter.of(4));
-		this.cognitiveDistribution = cog;
-		
-		//set up the range for the social component
-		UniformDistribution soc = new UniformDistribution();
-		soc.setLowerBound(ConstantControlParameter.of(0));
-		soc.setUpperBound(ConstantControlParameter.of(4));
-		this.socialDistribution = soc;
-		
-		//set up the range for the inertia component
-		UniformDistribution inert = new UniformDistribution();
-		inert.setLowerBound(ConstantControlParameter.of(0));
-		inert.setUpperBound(ConstantControlParameter.of(1));
-		this.inertiaDistribution = inert;
+		inertiaBounds = new TuningBounds(0, 1);
+		socialBounds = new TuningBounds(0, 4);
+		cognitiveBounds = new TuningBounds(0, 4);
 	}
 	
 	public RandomConvergentVelocityProviderGenerator(RandomConvergentVelocityProviderGenerator clone){
-		this.cognitiveDistribution = clone.cognitiveDistribution;
-		this.socialDistribution = clone.socialDistribution;
-		this.inertiaDistribution = clone.inertiaDistribution;
+		this.inertiaBounds = clone.inertiaBounds;
+		this.socialBounds = clone.socialBounds;
+		this.cognitiveBounds = clone.cognitiveBounds;
 		this.globalGuideProvider = clone.globalGuideProvider.getClone();
 		this.localGuideProvider = clone.localGuideProvider.getClone();
 	}
@@ -61,6 +45,9 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
 		return new RandomConvergentVelocityProviderGenerator(this);
 	}
 
+	/**
+	 * Generate random, convergent parameters based on the convergence criteria of Poli
+	 */
 	@Override
 	public VelocityProvider generate() {
 		StandardVelocityProvider provider = new StandardVelocityProvider();
@@ -74,13 +61,13 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
 		double check; //used to check convergence
 		
 		do{
-			inertia = inertiaDistribution.getRandomNumber();
-			cognitive = cognitiveDistribution.getRandomNumber();
-			social = socialDistribution.getRandomNumber();
+			inertia = Rand.nextDouble() * inertiaBounds.getRange() + inertiaBounds.getLowerBound();
+			cognitive = Rand.nextDouble() * cognitiveBounds.getRange() + cognitiveBounds.getLowerBound();
+			social = Rand.nextDouble() * socialBounds.getRange() + socialBounds.getLowerBound();
 			
-			check = (cognitive + social) / 2 - 1;
-		} while(check >= inertia || check <= 0  || check >= 1); //repeat if 0 >= check >= 1
-		
+			check = (24 * (1 - inertia * inertia)) / (7 - 5 * inertia);
+		} while(check <= social + cognitive);
+
 		provider.setCognitiveAcceleration(ConstantControlParameter.of(cognitive));
 		provider.setSocialAcceleration(ConstantControlParameter.of(social));
 		provider.setInertiaWeight(ConstantControlParameter.of(inertia));
@@ -104,28 +91,40 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
         this.localGuideProvider = localGuideProvider;
     }
     
-    public void setCognitiveDistribution(ProbabilityDistributionFunction cognitiveDistribution){
-		this.cognitiveDistribution = cognitiveDistribution;
-	}
+    /**
+     * Sets the range for the inertia coefficient.
+     * @param inertiaBounds The bounds for the inertia coefficient.
+     */
+    public void setInertiaBounds(TuningBounds inertiaBounds){
+ 	   this.inertiaBounds = inertiaBounds;
+    }
     
-    public ProbabilityDistributionFunction getCognitiveDistribution(){
-    	return this.cognitiveDistribution;
+    public TuningBounds getInertiaBounds(){
+    	return this.inertiaBounds;
     }
-	
-	public void setSocialDistribution(ProbabilityDistributionFunction socialDistribution){
-		this.socialDistribution = socialDistribution;
-	}
-	
-    public ProbabilityDistributionFunction getSocialDistribution(){
-    	return this.socialDistribution;
+    
+    /**
+     * Sets the range for the social coefficient.
+     * @param socialBounds The bounds for the social coefficient.
+     */
+    public void setSocialBounds(TuningBounds socialBounds){
+ 	   this.socialBounds = socialBounds;
     }
-
-	public void setInertiaDistribution(ProbabilityDistributionFunction inertiaDistribution){
-		this.inertiaDistribution = inertiaDistribution;
-	}
-	
-    public ProbabilityDistributionFunction getInertiaDistribution(){
-    	return this.inertiaDistribution;
+    
+    public TuningBounds getSocialBounds(){
+    	return this.socialBounds;
+    }
+    
+    /**
+     * Sets the range for the cognitive coefficient.
+     * @param cognitiveBounds The bounds for the cognitive coefficient.
+     */
+    public void setCognitiveBounds(TuningBounds cognitiveBounds){
+ 	   this.cognitiveBounds = cognitiveBounds;
+    }
+    
+    public TuningBounds getCognitiveBounds(){
+    	return this.cognitiveBounds;
     }
 
 }
