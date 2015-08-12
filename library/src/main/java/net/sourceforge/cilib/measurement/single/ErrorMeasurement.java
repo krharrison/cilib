@@ -28,8 +28,7 @@ public class ErrorMeasurement implements Measurement {
 
     @Override
     public Type getValue(Algorithm algorithm) {
-        Problem problem = algorithm.getOptimisationProblem();
-        double error = problem.getFitness(algorithm.getBestSolution().getPosition()).getValue() - target;
+        double error = algorithm.getBestSolution().getFitness().getValue() - target;
         return Real.valueOf(error);
     }
 

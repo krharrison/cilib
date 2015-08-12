@@ -66,5 +66,4 @@ public class Property<T extends Type> {
      * Niching properties
      */
     public final static Property<TypeList> NICHE_DETECTION_FITNESSES = new Property();
-
 }
