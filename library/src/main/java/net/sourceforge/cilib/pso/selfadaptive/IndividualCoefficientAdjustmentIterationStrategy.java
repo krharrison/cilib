@@ -31,6 +31,7 @@ public class IndividualCoefficientAdjustmentIterationStrategy extends AbstractIt
 	protected double offset; //offset added to fitness, as this strategy requires non-negative fitnesses
 	
 	public IndividualCoefficientAdjustmentIterationStrategy(){
+		super();
 		inertiaA = 0.9;
 		inertiaB = 0.45;
 		socialA = 0.5;
@@ -40,10 +41,20 @@ public class IndividualCoefficientAdjustmentIterationStrategy extends AbstractIt
 		offset = 0;
 	}
 	
+	public IndividualCoefficientAdjustmentIterationStrategy(IndividualCoefficientAdjustmentIterationStrategy copy){
+		super(copy);
+		this.inertiaA = copy.inertiaA;
+		this.inertiaB = copy.inertiaB;
+		this.socialA = copy.socialA;
+		this.socialB = copy.socialB;
+		this.delegate = copy.delegate.getClone();
+		this.velocityProvider = copy.velocityProvider.getClone();
+		this.offset = copy.offset;
+	}
+	
 	@Override
-	public AbstractIterationStrategy<PSO> getClone() {
-		// TODO Auto-generated method stub
-		return null;
+	public IndividualCoefficientAdjustmentIterationStrategy getClone() {
+		return new IndividualCoefficientAdjustmentIterationStrategy(this);
 	}
 
 	@Override

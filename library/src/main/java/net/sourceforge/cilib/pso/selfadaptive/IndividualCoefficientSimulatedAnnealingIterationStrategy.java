@@ -31,6 +31,7 @@ public class IndividualCoefficientSimulatedAnnealingIterationStrategy extends Ab
 	protected double offset;
 	
 	public IndividualCoefficientSimulatedAnnealingIterationStrategy(){
+		super();
 		inertiaA = 0.9;
 		inertiaB = 0.45;
 		socialA = 0.5;
@@ -40,10 +41,20 @@ public class IndividualCoefficientSimulatedAnnealingIterationStrategy extends Ab
 		offset = 0;
 	}
 	
+	public IndividualCoefficientSimulatedAnnealingIterationStrategy(IndividualCoefficientSimulatedAnnealingIterationStrategy copy){
+		super(copy);
+		this.inertiaA = copy.inertiaA;
+		this.inertiaB = copy.inertiaB;
+		this.socialA = copy.socialA;
+		this.socialB = copy.socialB;
+		this.delegate = copy.delegate.getClone();
+		this.velocityProvider = copy.velocityProvider.getClone();
+		this.offset = copy.offset;
+	}
+	
 	@Override
-	public AbstractIterationStrategy<PSO> getClone() {
-		// TODO Auto-generated method stub
-		return null;
+	public IndividualCoefficientSimulatedAnnealingIterationStrategy getClone() {
+		return new IndividualCoefficientSimulatedAnnealingIterationStrategy(this);
 	}
 
 	@Override

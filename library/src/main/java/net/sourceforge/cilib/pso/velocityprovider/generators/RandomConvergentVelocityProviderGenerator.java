@@ -11,6 +11,7 @@ import net.sourceforge.cilib.math.random.generator.Rand;
 import net.sourceforge.cilib.pso.guideprovider.GuideProvider;
 import net.sourceforge.cilib.pso.guideprovider.NBestGuideProvider;
 import net.sourceforge.cilib.pso.guideprovider.PBestGuideProvider;
+import net.sourceforge.cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import net.sourceforge.cilib.pso.velocityprovider.StandardVelocityProvider;
 import net.sourceforge.cilib.pso.velocityprovider.VelocityProvider;
 import net.sourceforge.cilib.tuning.parameters.TuningBounds;
@@ -50,7 +51,7 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
 	 */
 	@Override
 	public VelocityProvider generate() {
-		StandardVelocityProvider provider = new StandardVelocityProvider();
+		SelfAdaptiveVelocityProvider provider = new SelfAdaptiveVelocityProvider();
 		provider.setLocalGuideProvider(localGuideProvider);
 		provider.setGlobalGuideProvider(globalGuideProvider);
 		

@@ -11,6 +11,7 @@ import com.google.common.base.Predicate;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
+import net.sourceforge.cilib.measurement.single.IterationBestFitness;
 import net.sourceforge.cilib.pso.PSO;
 import net.sourceforge.cilib.pso.behaviour.StandardParticleBehaviour;
 import net.sourceforge.cilib.pso.iterationstrategies.SynchronousIterationStrategy;
@@ -33,21 +34,26 @@ public class IPSOLTIterationStrategy extends AbstractIterationStrategy<PSO> {
 	protected double alpha;
 	protected double beta;
 	protected ClampingVelocityProvider velocityProvider;
+	protected IterationBestFitness iterBestFitness;
 	
 	public IPSOLTIterationStrategy(){
+		super();
 		elitistSelector = new ElitistSelector<Particle>();
 		delegate = new SynchronousIterationStrategy();
 		alpha = 0.5;
 		beta = 0.5;
 		velocityProvider = new ClampingVelocityProvider();
 		velocityProvider.setDelegate(new IPSOLTVelocityProvider());
+		iterBestFitness = new IterationBestFitness();
 	}
 	
 	public IPSOLTIterationStrategy(IPSOLTIterationStrategy copy){
+		super(copy);
 		this.elitistSelector = copy.elitistSelector;
 		this.delegate = copy.delegate.getClone();
 		this.alpha = copy.alpha;
 		this.beta = copy.beta;
+		this.iterBestFitness = copy.iterBestFitness.getClone();
 	}
 	
 	@Override
@@ -65,12 +71,12 @@ public class IPSOLTIterationStrategy extends AbstractIterationStrategy<PSO> {
 				p.setBehaviour(behaviour);
 			}
 			
-			prevIterationBestFitness = getIterationBestFitness(algorithm);
+			prevIterationBestFitness = iterBestFitness.getValue(algorithm).doubleValue();
 		}
 		
 		delegate.performIteration(algorithm);
 		
-		double bestIterationFitness = getIterationBestFitness(algorithm);
+		double bestIterationFitness = iterBestFitness.getValue(algorithm).doubleValue();
 		double convergenceFactor = calculateConvergenceFactor(algorithm, bestIterationFitness);
 		double diffusionFactor = calculateDiffusionFactor(algorithm, bestIterationFitness);
 		double newInertia = 0;
@@ -90,16 +96,6 @@ public class IPSOLTIterationStrategy extends AbstractIterationStrategy<PSO> {
 		
 		prevIterationBestFitness = bestIterationFitness;
 	}
-	
-	/**
-	 * Return the best fitness of this iteration
-	 * @param algorithm
-	 * @return
-	 */
-	public double getIterationBestFitness(PSO algorithm){
-		return elitistSelector.on(algorithm.getTopology()).select().getFitness().getValue();
-	}
-	
 	
 	public double calculateConvergenceFactor(PSO algorithm, double bestIterationFitness){
 		return Math.abs(prevIterationBestFitness - bestIterationFitness) / (prevIterationBestFitness + bestIterationFitness);

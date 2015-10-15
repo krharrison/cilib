@@ -34,6 +34,7 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
 	protected IterationStrategy<PSO> delegate;
 	
 	public VelocityInformationIterationStrategy(){
+		super();
 		initialVelocity = 100;
 		inertiaChange = 0.1;
 		minInertia = 0.3;
@@ -43,6 +44,7 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
 	}
 	
 	public VelocityInformationIterationStrategy(VelocityInformationIterationStrategy copy){
+		super(copy);
 		this.initialVelocity = copy.initialVelocity;
 		this.inertiaChange = copy.inertiaChange;
 		this.minInertia = copy.minInertia;
@@ -119,6 +121,4 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
 	public void setDelegate(IterationStrategy<PSO> delegate){
 		this.delegate = delegate;
 	}
-	
-
 }

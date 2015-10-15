@@ -8,7 +8,6 @@ package net.sourceforge.cilib.measurement.single;
 
 import net.sourceforge.cilib.algorithm.Algorithm;
 import net.sourceforge.cilib.measurement.Measurement;
-import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.type.types.Real;
 import net.sourceforge.cilib.type.types.Type;
 
@@ -28,8 +27,7 @@ public class ErrorMeasurement implements Measurement {
 
     @Override
     public Type getValue(Algorithm algorithm) {
-        Problem problem = algorithm.getOptimisationProblem();
-        double error = algorithm.getBestSolution().getFitness().getValue() - target;
+    	double error = algorithm.getBestSolution().getFitness().getValue() - target;
         return Real.valueOf(error);
     }
 

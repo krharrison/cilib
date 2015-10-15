@@ -10,6 +10,7 @@ import net.sourceforge.cilib.entity.Property;
 import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.problem.solution.Fitness;
 import net.sourceforge.cilib.problem.solution.InferiorFitness;
+import net.sourceforge.cilib.problem.solution.SuperiorFitness;
 import net.sourceforge.cilib.type.types.Int;
 import net.sourceforge.cilib.type.types.container.Vector;
 
@@ -84,10 +85,13 @@ public class StandardParticle extends AbstractParticle {
         put(Property.CANDIDATE_SOLUTION, problem.getDomain().getBuiltRepresentation().getClone());
         put(Property.BEST_POSITION, Vector.copyOf((Vector) getPosition()));
         put(Property.VELOCITY, Vector.copyOf((Vector) getPosition()));
-
+        put(Property.WORST_POSITION,  Vector.copyOf((Vector) getPosition()));
+        
         put(Property.FITNESS, InferiorFitness.instance());
         put(Property.BEST_FITNESS, InferiorFitness.instance());
         put(Property.PREVIOUS_FITNESS, InferiorFitness.instance());
+        put(Property.WORST_FITNESS, SuperiorFitness.instance());
+        
         this.neighbourhoodBest = this;
 
         this.positionInitialisationStrategy.initialise(Property.CANDIDATE_SOLUTION, this);

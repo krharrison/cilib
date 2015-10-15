@@ -16,7 +16,7 @@ import net.sourceforge.cilib.type.types.Numeric;
 import net.sourceforge.cilib.type.types.Real;
 
 /**
- * Calculates the average number of particles in the current swarm that
+ * Calculates the proportion of particles in the current swarm that
  * violates boundary constraints. This measure can be used as an
  * indicator of whether the algorithm spend too much time exploring
  * in infeasible space (with respect to the boundary constraints).
@@ -30,7 +30,7 @@ public class ParticleBoundViolations implements Measurement<Real> {
      * {@inheritDoc}
      */
     @Override
-    public Measurement getClone() {
+    public ParticleBoundViolations getClone() {
         return this;
     }
 

@@ -42,6 +42,8 @@ public class Property<T extends Type> {
      */
     public final static Property<StructuredType> BEST_POSITION = new Property();
     public final static Property<Fitness> BEST_FITNESS = new Property();
+    public final static Property<StructuredType> WORST_POSITION = new Property();
+    public final static Property<Fitness> WORST_FITNESS = new Property();
     
     /**
      * Particle properties

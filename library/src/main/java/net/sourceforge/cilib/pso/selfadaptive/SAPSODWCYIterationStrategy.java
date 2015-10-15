@@ -6,55 +6,60 @@
  */
 package net.sourceforge.cilib.pso.selfadaptive;
 
+import java.util.Comparator;
+import java.util.Iterator;
+
+import com.google.common.collect.Ordering;
+
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
-import net.sourceforge.cilib.measurement.single.IterationBestFitness;
 import net.sourceforge.cilib.pso.PSO;
 import net.sourceforge.cilib.pso.behaviour.StandardParticleBehaviour;
 import net.sourceforge.cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import net.sourceforge.cilib.pso.particle.Particle;
 import net.sourceforge.cilib.pso.velocityprovider.ClampingVelocityProvider;
 import net.sourceforge.cilib.pso.velocityprovider.StandardVelocityProvider;
-import net.sourceforge.cilib.util.selection.recipes.ElitistSelector;
-import net.sourceforge.cilib.util.selection.recipes.Selector;
+import net.sourceforge.cilib.util.selection.arrangement.Arrangement;
+import net.sourceforge.cilib.util.selection.arrangement.SortedArrangement;
 
-/**
- * PSO-SAIC
- *
- */
-public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
+public class SAPSODWCYIterationStrategy extends AbstractIterationStrategy<PSO>{
 
-	protected Selector<Particle> elitistSelector;
-	protected IterationStrategy<PSO> delegate;
 	protected ClampingVelocityProvider velocityProvider;
-	protected double previousAlpha;
-	protected IterationBestFitness iterBestFitness;
+	protected IterationStrategy<PSO> delegate;
+	protected Arrangement<Particle> arrangement;
 	
-	public IPSOCLLIterationStrategy(){
+	protected double alpha;
+	protected double beta;
+	protected double gamma;
+	
+	public SAPSODWCYIterationStrategy(){
 		super();
+		arrangement = new SortedArrangement<Particle>();
 		delegate = new SynchronousIterationStrategy();
 		velocityProvider = new ClampingVelocityProvider();
-		elitistSelector = new ElitistSelector<Particle>();
-		iterBestFitness = new IterationBestFitness();
+		alpha = 3;
+		beta = 200;
+		gamma = 8;
 	}
 	
-	public IPSOCLLIterationStrategy(IPSOCLLIterationStrategy copy){
+	public SAPSODWCYIterationStrategy(SAPSODWCYIterationStrategy copy){
 		super(copy);
+		this.arrangement = copy.arrangement;
 		this.delegate = copy.delegate.getClone();
 		this.velocityProvider = copy.velocityProvider.getClone();
-		this.elitistSelector = copy.elitistSelector;
-		this.iterBestFitness = copy.iterBestFitness.getClone();
+		this.alpha = copy.alpha;
+		this.beta = copy.beta;
+		this.gamma = copy.gamma;
 	}
 	
 	@Override
-	public IPSOCLLIterationStrategy getClone() {
-		return new IPSOCLLIterationStrategy(this);
+	public SAPSODWCYIterationStrategy getClone() {
+		return new SAPSODWCYIterationStrategy(this);
 	}
 
 	@Override
 	public void performIteration(PSO algorithm) {
-		
 		//ensure each entity has their own behaviour/velocity provider
 		if(algorithm.getIterations() == 0){
 			for(Particle p : algorithm.getTopology()){
@@ -62,53 +67,53 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
 				behaviour.setVelocityProvider(velocityProvider.getClone());
 				p.setBehaviour(behaviour);
 			}
-			
-			previousAlpha = calculateAlpha(algorithm);
 		}
-
-		delegate.performIteration(algorithm);
 		
-		double alpha = calculateAlpha(algorithm);
-		double lambda = previousAlpha == 0 ? 1 : alpha / previousAlpha;
-		double inertia = Math.exp(-lambda);
+		Iterable<Particle> ordering = orderParticles(algorithm);
+		Iterator<Particle> iterator = ordering.iterator();
+		int rank = 1;
+		int particles = algorithm.getTopology().length();
+		int dimensions = algorithm.getOptimisationProblem().getDomain().getDimension();
 		
-		for(Particle p : algorithm.getTopology()){
+		Particle p;
+		while(iterator.hasNext()){
+			p = iterator.next();
+			
+			double expTerm = Math.exp(-particles / beta);
+			double rankTerm = (dimensions * rank) / gamma;
+			double inertia = 1 / (alpha - expTerm + (rankTerm * rankTerm));
+			
 			StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
 			StandardVelocityProvider provider = (StandardVelocityProvider)((ClampingVelocityProvider) behaviour.getVelocityProvider()).getDelegate();
-			
 			provider.setInertiaWeight(ConstantControlParameter.of(inertia));
-		}
-
-		previousAlpha = alpha;
-	}
-
-	private double calculateAlpha(PSO algorithm){
-		double sum = 0;
-		int count = 0;
-		
-		double iterBest = iterBestFitness.getValue(algorithm).doubleValue();
-		
-		if(Double.isFinite(iterBest)){
-			for(Particle p : algorithm.getTopology()){
-				double fitness = p.getFitness().getValue();
-				if(Double.isFinite(fitness)){
-					sum += Math.abs(fitness - iterBest);
-					count++;
-				}
-			}
 			
-			return count == 0 ? Double.MAX_VALUE : sum / count;
+			rank++; //decrement rank for next particle
 		}
-		else{
-			return Double.MAX_VALUE;
-		}
+		
+		delegate.performIteration(algorithm);
 	}
 	
+	private Iterable<Particle> orderParticles(PSO algorithm){
+		return arrangement.arrange(algorithm.getTopology());
+	}
+
 	public void setVelocityProvider(ClampingVelocityProvider velocityProvider){
 		this.velocityProvider = velocityProvider;
 	}
 	
 	public void setDelegate(IterationStrategy<PSO> delegate){
 		this.delegate = delegate;
+	}
+	
+	public void setAlpha(double alpha){
+		this.alpha = alpha;
+	}
+	
+	public void setBeta(double beta){
+		this.beta = beta;
+	}
+	
+	public void setGamma(double gamma){
+		this.gamma = gamma;
 	}
 }

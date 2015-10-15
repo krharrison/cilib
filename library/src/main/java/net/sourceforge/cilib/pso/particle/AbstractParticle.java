@@ -51,7 +51,7 @@ public abstract class AbstractParticle extends AbstractEntity implements Particl
         this.personalBestUpdateStrategy = new StandardPersonalBestUpdateStrategy();
         this.neighbourhoodBestUpdateStrategy = new MemoryNeighbourhoodBestUpdateStrategy();
 
-	put(Property.POSITION_UPDATE_COUNTER, Int.valueOf(0));
+        put(Property.POSITION_UPDATE_COUNTER, Int.valueOf(0));
     }
 
     /**
