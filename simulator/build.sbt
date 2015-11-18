@@ -10,7 +10,7 @@ parallelExecution in Test := false
 
 test in assembly := {}
 
-mainClass := Some("net.sourceforge.cilib.simulator.Main")
+mainClass := Some("cilib.simulator.Main")
 
 libraryDependencies ++= Seq(
     "junit" % "junit" % "4.10" % "test",
