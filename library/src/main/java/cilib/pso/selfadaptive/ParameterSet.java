@@ -14,6 +14,7 @@ import cilib.pso.velocityprovider.VelocityProvider;
 import cilib.type.types.Bounds;
 import cilib.type.types.container.Vector;
 import cilib.util.Cloneable;
+import fj.test.Bool;
 
 
 public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
@@ -58,6 +59,14 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
         return new ParameterSet(this);
     }
 
+
+    public Boolean isConvergent(){
+        double inertia = inertiaWeight.getParameter();
+        double check = (24 * (1 - inertia * inertia)) / (7 - 5 * inertia);
+
+        return cognitiveAcceleration.getParameter() + socialAcceleration.getParameter() < check;
+    }
+
     @Override
     public int compareTo(ParameterSet other) {
         return this.fitness.compareTo(other.fitness);
@@ -86,6 +95,12 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
         builder.add(socialAcceleration.getParameter());
 
         return builder.build();
+    }
+
+    public void fromVector(Vector vector){
+        inertiaWeight = ConstantControlParameter.of(vector.get(0).doubleValue());
+        cognitiveAcceleration = ConstantControlParameter.of(vector.get(1).doubleValue());
+        socialAcceleration = ConstantControlParameter.of(vector.get(2).doubleValue());
     }
 
     public void setFitness(Fitness value){

@@ -19,7 +19,7 @@ public interface AdaptationStrategy {
      * @param particle  The particle to adapt.
      * @param algorithm The algorithm to which this particle belongs
      */
-    Behaviour adapt(Particle particle, PSO algorithm);
+    void adapt(Particle particle, PSO algorithm);
 
     /**
      * Clone the current {@link AdaptationStrategy}.
