@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import cilib.entity.Entity;
 import cilib.entity.behaviour.generator.BehaviourGenerator;
 import cilib.problem.Problem;
-import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
+//import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
 
 /**
  * Generate a population using a {@link HeterogeneousPopulationInitialisationStrategy}
@@ -21,7 +21,7 @@ import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator
 public class BehaviourGeneratorPopulationInitializationStrategy implements PopulationInitialisationStrategy {
 
 	private int poolSize;
-	private BehaviourGenerator behaviourGenerator;
+	//private BehaviourGenerator behaviourGenerator;
 	private HeterogeneousPopulationInitialisationStrategy delegate;
 	
     /**
@@ -29,7 +29,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
      */
 	public BehaviourGeneratorPopulationInitializationStrategy(){
 		poolSize = 25;
-		behaviourGenerator = new StandardVelocityProviderBehaviourGenerator(); 
+		//behaviourGenerator = new StandardVelocityProviderBehaviourGenerator();
 		delegate = new HeterogeneousPopulationInitialisationStrategy();
 	}
 	
@@ -39,7 +39,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
      */
 	public BehaviourGeneratorPopulationInitializationStrategy(BehaviourGeneratorPopulationInitializationStrategy copy){
 		this.poolSize = copy.poolSize;
-		this.behaviourGenerator = copy.behaviourGenerator.getClone();
+		//this.behaviourGenerator = copy.behaviourGenerator.getClone();
 		this.delegate = copy.delegate.getClone();
 	}
 	
@@ -101,14 +101,14 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
     }
     
     public void setBehaviourGenerator(BehaviourGenerator generator){
-    	this.behaviourGenerator = generator;
+    	//this.behaviourGenerator = generator;
     }
 
     /**
      * Perform the required initialisation, using the provided <tt>Problem</tt>.
      * @param problem The <tt>Problem</tt> to use in the initialisation of the topology.
      * @return An {@code Iterable<E>} of cloned instances.
-     * @throws InitialisationException if the initialisation cannot take place.
+    // * @throws InitialisationException if the initialisation cannot take place.
      */
     @Override
     public <E extends Entity> Iterable<E> initialise(Problem problem) {
@@ -117,7 +117,7 @@ public class BehaviourGeneratorPopulationInitializationStrategy implements Popul
         
         //generate a behavior pool to use for the heterogeneous initialization
         for(int i = 0 ; i < poolSize; i++){
-        	delegate.addBehavior(behaviourGenerator.generate());
+        //	delegate.addBehavior(behaviourGenerator.generate());
         }
 
         Iterable<Entity> clones = delegate.initialise(problem);

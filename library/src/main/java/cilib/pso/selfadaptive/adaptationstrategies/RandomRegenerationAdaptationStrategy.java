@@ -9,23 +9,23 @@ package cilib.pso.selfadaptive.adaptationstrategies;
 
 import cilib.entity.behaviour.generator.BehaviourGenerator;
 import cilib.pso.PSO;
-import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
+//import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
 import cilib.pso.particle.Particle;
 
 public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
-    protected BehaviourGenerator generator;
+    //protected BehaviourGenerator generator;
 
     public RandomRegenerationAdaptationStrategy(){
-        generator = new StandardVelocityProviderBehaviourGenerator();
+        //generator = new StandardVelocityProviderBehaviourGenerator();
     }
 
     public RandomRegenerationAdaptationStrategy(RandomRegenerationAdaptationStrategy copy){
-        this.generator = copy.generator.getClone();
+        //this.generator = copy.generator.getClone();
     }
 
     @Override
     public void adapt(Particle p, PSO algorithm) {
-        p.setBehaviour(generator.generate());
+      //  p.setBehaviour(generator.generate());
     }
 
     @Override
@@ -33,7 +33,7 @@ public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
         return new RandomRegenerationAdaptationStrategy(this);
     }
 
-    public void setBehaviourGenerator(BehaviourGenerator generator){
-        this.generator = generator;
-    }
+//    public void setBehaviourGenerator(BehaviourGenerator generator){
+  //      this.generator = generator;
+  //  }
 }

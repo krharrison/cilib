@@ -14,6 +14,7 @@ import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.velocityprovider.StandardVelocityProvider;
 import cilib.type.types.Numeric;
 import cilib.type.types.container.Vector;
@@ -28,7 +29,7 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
     protected double inertiaChange;		//change in inertia
     protected double minInertia;		//minimum allowable inertia
     protected double maxInertia;		//maximum allowable inertia
-    protected StandardVelocityProvider velocityProvider;
+    //protected StandardVelocityProvider velocityProvider;
     protected IterationStrategy<PSO> delegate;
 
     public VelocityInformationIterationStrategy(){
@@ -38,7 +39,7 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
         minInertia = 0.3;
         maxInertia = 0.9;
         delegate = new SynchronousIterationStrategy();
-        velocityProvider = new StandardVelocityProvider();
+        //velocityProvider = new StandardVelocityProvider();
     }
 
     public VelocityInformationIterationStrategy(VelocityInformationIterationStrategy copy){
@@ -48,7 +49,7 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
         this.minInertia = copy.minInertia;
         this.maxInertia = copy.maxInertia;
         this.delegate = copy.delegate.getClone();
-        this.velocityProvider = copy.velocityProvider.getClone();
+        //this.velocityProvider = copy.velocityProvider.getClone();
     }
 
     @Override
@@ -74,19 +75,19 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
         int numEntities = algorithm.getTopology().length();
         double averageAbsoluteVelocity = sum / (numEntities * problemDimension);
 
-        double newInertia;
-        if(averageAbsoluteVelocity >= idealVelocity){
-            newInertia = Math.max(velocityProvider.getInertiaWeight().getParameter() - inertiaChange, minInertia);
-        }
-        else{
-            newInertia = Math.min(velocityProvider.getInertiaWeight().getParameter() + inertiaChange, maxInertia);
-        }
 
-        velocityProvider.setInertiaWeight(ConstantControlParameter.of(newInertia));
+        for(Particle particle : algorithm.getTopology()){
 
-        for(Particle p : algorithm.getTopology()){
-            StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-            behaviour.setVelocityProvider(velocityProvider);
+            SelfAdaptiveParticle p = (SelfAdaptiveParticle) particle;
+            double newInertia;
+            if(averageAbsoluteVelocity >= idealVelocity){
+                newInertia = Math.max(p.getInertiaWeight().getParameter() - inertiaChange, minInertia);
+            }
+            else{
+                newInertia = Math.min(p.getInertiaWeight().getParameter() + inertiaChange, maxInertia);
+            }
+
+            p.setInertiaWeight(ConstantControlParameter.of(newInertia));
         }
 
         delegate.performIteration(algorithm);
@@ -114,9 +115,9 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
         this.maxInertia = maxInertia;
     }
 
-    public void setVelocityProvider(StandardVelocityProvider velocityProvider){
-        this.velocityProvider = velocityProvider;
-    }
+    //public void setVelocityProvider(StandardVelocityProvider velocityProvider){
+    //    this.velocityProvider = velocityProvider;
+    //}
 
     public void setDelegate(IterationStrategy<PSO> delegate){
         this.delegate = delegate;

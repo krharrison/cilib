@@ -3,7 +3,8 @@
  *   / ___/ / / / __ \   (c) CIRG @ UP
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
- */
+ *//*
+
 package cilib.pso.velocityprovider.generators;
 
 import cilib.controlparameter.ConstantControlParameter;
@@ -45,9 +46,11 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
         return new RandomConvergentVelocityProviderGenerator(this);
     }
 
-    /**
+    */
+/**
      * Generate random, convergent parameters based on the convergence criteria of Poli
-     */
+     *//*
+
     @Override
     public VelocityProvider generate() {
         SelfAdaptiveVelocityProvider provider = new SelfAdaptiveVelocityProvider();
@@ -75,26 +78,32 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
         return provider;
     }
 
-    /**
+    */
+/**
      * Sets the GuideProvider responsible for retrieving a particle's global guide.
      * @param globalGuideProvider The guide provider to set.
-     */
+     *//*
+
     public void setGlobalGuideProvider(GuideProvider globalGuideProvider) {
         this.globalGuideProvider = globalGuideProvider;
     }
 
-    /**
+    */
+/**
      * Sets the GuideProvider responsible for retrieving a particle's local guide.
      * @param localGuideProvider The guide provider to set.
-     */
+     *//*
+
     public void setLocalGuideProvider(GuideProvider localGuideProvider) {
         this.localGuideProvider = localGuideProvider;
     }
 
-    /**
+    */
+/**
      * Sets the range for the inertia coefficient.
      * @param inertiaBounds The bounds for the inertia coefficient.
-     */
+     *//*
+
     public void setInertiaBounds(TuningBounds inertiaBounds){
         this.inertiaBounds = inertiaBounds;
     }
@@ -103,10 +112,12 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
         return this.inertiaBounds;
     }
 
-    /**
+    */
+/**
      * Sets the range for the social coefficient.
      * @param socialBounds The bounds for the social coefficient.
-     */
+     *//*
+
     public void setSocialBounds(TuningBounds socialBounds){
         this.socialBounds = socialBounds;
     }
@@ -115,10 +126,12 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
         return this.socialBounds;
     }
 
-    /**
+    */
+/**
      * Sets the range for the cognitive coefficient.
      * @param cognitiveBounds The bounds for the cognitive coefficient.
-     */
+     *//*
+
     public void setCognitiveBounds(TuningBounds cognitiveBounds){
         this.cognitiveBounds = cognitiveBounds;
     }
@@ -127,4 +140,4 @@ public class RandomConvergentVelocityProviderGenerator implements VelocityProvid
         return this.cognitiveBounds;
     }
 
-}
+}*/

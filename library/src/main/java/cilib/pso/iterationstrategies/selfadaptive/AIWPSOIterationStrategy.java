@@ -14,6 +14,7 @@ import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import cilib.pso.velocityprovider.StandardVelocityProvider;
 
@@ -43,10 +44,8 @@ public class AIWPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         double inertia = successRate * (inertiaMax - inertiaMin) + inertiaMin;
 
         for(Particle p : algorithm.getTopology()){
-            StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-            StandardVelocityProvider provider = (StandardVelocityProvider) behaviour.getVelocityProvider();
 
-            provider.setInertiaWeight(ConstantControlParameter.of(inertia));
+            ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
         }
     }
 

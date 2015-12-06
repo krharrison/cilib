@@ -3,7 +3,8 @@
  *   / ___/ / / / __ \   (c) CIRG @ UP
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
- */
+ *//*
+
 package cilib.pso.velocityprovider.generators;
 
 import cilib.controlparameter.ConstantControlParameter;
@@ -106,10 +107,12 @@ public class UniformConvergentVelocityProviderGenerator implements VelocityProvi
 		double theta = point.get(0).doubleValue(); 		//this is c1 + c2, so we need to split this
 		inertia = point.get(1).doubleValue();
 
-		/*
+		*/
+/*
 		 * Need to divide up the remainder of theta, but ensure that cognitive and social both stay
 		 * within the range of [0,4].
-		 */
+		 *//*
+
 		//TODO: make this more general and account for user supplied values.
 		double min = theta > 4 ? theta - 4 : 0; 			//minimum amount which must be allocated to cognitive
 		double remainder = theta - min;						//the remainder after cognitive has taken its minimum
@@ -155,18 +158,22 @@ public class UniformConvergentVelocityProviderGenerator implements VelocityProvi
 		//initialized = true;
 	}
 
-	/**
+	*/
+/**
 	 * Sets the GuideProvider responsible for retrieving a particle's global guide.
 	 * @param globalGuideProvider The guide provider to set.
-	 */
+	 *//*
+
 	public void setGlobalGuideProvider(GuideProvider globalGuideProvider) {
 		this.globalGuideProvider = globalGuideProvider;
 	}
 
-	/**
+	*/
+/**
 	 * Sets the GuideProvider responsible for retrieving a particle's local guide.
 	 * @param localGuideProvider The guide provider to set.
-	 */
+	 *//*
+
 	public void setLocalGuideProvider(GuideProvider localGuideProvider) {
 		this.localGuideProvider = localGuideProvider;
 	}
@@ -197,4 +204,4 @@ public class UniformConvergentVelocityProviderGenerator implements VelocityProvi
 		return this.inertiaDistribution;
 	}
 
-}
+}*/

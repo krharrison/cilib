@@ -4,7 +4,8 @@
  * / ___/ / / / __ \   (c) CIRG @ UP
  * / /__/ / / / /_/ /   http://cilib.net
  * \___/_/_/_/_.___/
- */
+ *//*
+
 package cilib.pso.velocityprovider.generators;
 
 import cilib.controlparameter.ConstantControlParameter;
@@ -57,26 +58,32 @@ public class FixedParameterVelocityProviderGenerator implements VelocityProvider
         return provider;
     }
 
-    /**
+    */
+/**
      * Sets the GuideProvider responsible for retrieving a particle's global guide.
      * @param globalGuideProvider The guide provider to set.
-     */
+     *//*
+
     public void setGlobalGuideProvider(GuideProvider globalGuideProvider) {
         this.globalGuideProvider = globalGuideProvider;
     }
 
-    /**
+    */
+/**
      * Sets the GuideProvider responsible for retrieving a particle's local guide.
      * @param localGuideProvider The guide provider to set.
-     */
+     *//*
+
     public void setLocalGuideProvider(GuideProvider localGuideProvider) {
         this.localGuideProvider = localGuideProvider;
     }
 
-    /**
+    */
+/**
      * Sets the inertia coefficient.
      * @param inertia The inertia coefficient.
-     */
+     *//*
+
     public void setInertia(ControlParameter inertia){
         this.inertia = inertia;
     }
@@ -85,10 +92,12 @@ public class FixedParameterVelocityProviderGenerator implements VelocityProvider
         return this.inertia;
     }
 
-    /**
+    */
+/**
      * Sets the social coefficient.
      * @param social The social coefficient.
-     */
+     *//*
+
     public void setSocial(ControlParameter social){
         this.social = social;
     }
@@ -97,10 +106,12 @@ public class FixedParameterVelocityProviderGenerator implements VelocityProvider
         return this.social;
     }
 
-    /**
+    */
+/**
      * Sets the cognitive coefficient.
      * @param cognitive The cognitive coefficient.
-     */
+     *//*
+
     public void setCognitive(ControlParameter cognitive){
         this.cognitive = cognitive;
     }
@@ -109,3 +120,4 @@ public class FixedParameterVelocityProviderGenerator implements VelocityProvider
         return this.cognitive;
     }
 }
+*/

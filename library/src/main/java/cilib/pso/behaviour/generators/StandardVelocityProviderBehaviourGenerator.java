@@ -3,7 +3,8 @@
  *   / ___/ / / / __ \   (c) CIRG @ UP
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
- */
+ *//*
+
 package cilib.pso.behaviour.generators;
 
 import cilib.entity.behaviour.Behaviour;
@@ -14,11 +15,13 @@ import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.velocityprovider.generators.RandomConvergentVelocityProviderGenerator;
 import cilib.pso.velocityprovider.generators.VelocityProviderGenerator;
 
+*/
 /**
  * Construct a {@link StandardParticleBehaviour} using the provided
  * {@link VelocityProviderGenerator} to generate the particles initial
  * behaviour.
- */
+ *//*
+
 public class StandardVelocityProviderBehaviourGenerator implements BehaviourGenerator {
 
 	//TODO: add position provider as a parameter
@@ -57,4 +60,4 @@ public class StandardVelocityProviderBehaviourGenerator implements BehaviourGene
 		return behaviour;
 	}
 
-}
+}*/

@@ -7,6 +7,7 @@
  */
 package cilib.pso.selfadaptive.adaptationstrategies;
 
+import cilib.pso.particle.SelfAdaptiveParticle;
 import fj.F;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
@@ -37,19 +38,20 @@ public class PSOAdaptationStrategy implements AlgorithmAdaptationStrategy {
         final F<Particle, Particle> create = new F<Particle, Particle>() {
             @Override
             public Particle f(Particle p) {
-                StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-                SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
+                SelfAdaptiveParticle p2 = (SelfAdaptiveParticle) p;
+                //StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
+                //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
 
                 //create a new vector as [w, c1, c2] from the current particles parameter set
                 Vector.Builder builder = Vector.newBuilder();
-                builder.add(provider.getInertiaWeight().getParameter());
-                builder.add(provider.getCognitiveAcceleration().getParameter());
-                builder.add(provider.getSocialAcceleration().getParameter());
+                builder.add(p2.getInertiaWeight().getParameter());
+                builder.add(p2.getCognitiveAcceleration().getParameter());
+                builder.add(p2.getSocialAcceleration().getParameter());
 
                 Particle newParticle = new StandardParticle();
                 //TODO need to initialize the particle
                 newParticle.setPosition(builder.build());
-                newParticle.updateFitness(provider.getParameterSet().getFitness());
+                newParticle.updateFitness(p2.getParameterSet().getFitness());
                 return newParticle;
             }
         };
@@ -59,15 +61,15 @@ public class PSOAdaptationStrategy implements AlgorithmAdaptationStrategy {
 
         //iterate through particles of the adaptorPSO and update the parameters of the original PSO accordingly
         for(int i = 0; i < algorithm.getTopology().length(); i++){
-            Particle p = algorithm.getTopology().index(i);
+            SelfAdaptiveParticle p = (SelfAdaptiveParticle) algorithm.getTopology().index(i);
             StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
             SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
 
             Particle parameterParticle = adaptorPSO.getTopology().index(i);
             Vector parameterPosition = (Vector)parameterParticle.getPosition();
-            provider.setInertiaWeight(ConstantControlParameter.of(parameterPosition.doubleValueOf(0)));
-            provider.setCognitiveAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(1)));
-            provider.setSocialAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(2)));
+            p.setInertiaWeight(ConstantControlParameter.of(parameterPosition.doubleValueOf(0)));
+            p.setCognitiveAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(1)));
+            p.setSocialAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(2)));
 
         }
     }

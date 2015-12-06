@@ -16,6 +16,7 @@ import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.dynamic.ChargedParticle;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.ParameterSet;
 import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import cilib.type.types.container.Vector;
@@ -62,12 +63,13 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
         if (checkChargeParticle.getCharge() < EPSILON) { // the particle is neutral
             this.delegate.adapt(p, algorithm);
         } else { // the particle is charged
+        SelfAdaptiveParticle p2 = (SelfAdaptiveParticle) p;
 
             //get the nucleus as the parameters of the neighborhood best
-            Particle best = p.getNeighbourhoodBest();
-            StandardParticleBehaviour bestBehaviour = (StandardParticleBehaviour) best.getBehaviour();
-            SelfAdaptiveVelocityProvider bestProvider = (SelfAdaptiveVelocityProvider) bestBehaviour.getVelocityProvider();
-            Vector nucleus = bestProvider.getParameterSet().asVector();
+            SelfAdaptiveParticle best = (SelfAdaptiveParticle) p2.getNeighbourhoodBest();
+            //StandardParticleBehaviour bestBehaviour = (StandardParticleBehaviour) best.getBehaviour();
+            //SelfAdaptiveVelocityProvider bestProvider = (SelfAdaptiveVelocityProvider) bestBehaviour.getVelocityProvider();
+            Vector nucleus = best.getParameterSet().asVector();
 
             //get the behaviour of the particle
             StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
@@ -104,9 +106,9 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
 
                 //update parameters by adding the offset to the nucleus
 
-                provider.getParameterSet().fromVector(nucleus.plus(position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign)));
+                p2.getParameterSet().fromVector(nucleus.plus(position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign)));
 
-            } while(!provider.getParameterSet().isConvergent());
+            } while(!p2.getParameterSet().isConvergent());
 
         }
     }

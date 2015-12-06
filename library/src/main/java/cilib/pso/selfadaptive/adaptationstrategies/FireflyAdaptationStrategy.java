@@ -8,6 +8,7 @@
 package cilib.pso.selfadaptive.adaptationstrategies;
 
 
+import cilib.pso.particle.SelfAdaptiveParticle;
 import fj.F;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.entity.Property;
@@ -45,18 +46,19 @@ public class FireflyAdaptationStrategy implements AlgorithmAdaptationStrategy {
         final F<Particle, Firefly> create = new F<Particle, Firefly>() {
             @Override
             public Firefly f(Particle p) {
-                StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-                SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
+                SelfAdaptiveParticle p2 = (SelfAdaptiveParticle) p;
+                //StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
+                //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
 
                 //create a new vector as [w, c1, c2] from the current particles parameter set
                 Vector.Builder builder = Vector.newBuilder();
-                builder.add(Real.valueOf(provider.getInertiaWeight().getParameter(), provider.getParameterSet().getInertiaBounds()));
-                builder.add(Real.valueOf(provider.getCognitiveAcceleration().getParameter(), provider.getParameterSet().getCognitiveBounds()));
-                builder.add(Real.valueOf(provider.getSocialAcceleration().getParameter(), provider.getParameterSet().getSocialBounds()));
+                builder.add(Real.valueOf(p2.getInertiaWeight().getParameter(), p2.getParameterSet().getInertiaBounds()));
+                builder.add(Real.valueOf(p2.getCognitiveAcceleration().getParameter(), p2.getParameterSet().getCognitiveBounds()));
+                builder.add(Real.valueOf(p2.getSocialAcceleration().getParameter(), p2.getParameterSet().getSocialBounds()));
 
                 Firefly newFirefly = new StandardFirefly();
                 newFirefly.setPosition(builder.build());
-                newFirefly.put(Property.FITNESS, provider.getParameterSet().getFitness());
+                newFirefly.put(Property.FITNESS, p2.getParameterSet().getFitness());
                 return newFirefly;
             }
         };
@@ -66,15 +68,15 @@ public class FireflyAdaptationStrategy implements AlgorithmAdaptationStrategy {
 
         //iterate through fireflies of the adaptorFFA and update the parameters of the original PSO accordingly
         for(int i = 0; i < algorithm.getTopology().length(); i++){
-            Particle p = algorithm.getTopology().index(i);
-            StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-            SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
+            SelfAdaptiveParticle p = (SelfAdaptiveParticle) algorithm.getTopology().index(i);
+            //StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
+            //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
 
             Firefly parameterFirefly = adaptorFFA.getTopology().index(i);
             Vector parameterPosition = parameterFirefly.getPosition();
-            provider.setInertiaWeight(ConstantControlParameter.of(parameterPosition.doubleValueOf(0)));
-            provider.setCognitiveAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(1)));
-            provider.setSocialAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(2)));
+            p.setInertiaWeight(ConstantControlParameter.of(parameterPosition.doubleValueOf(0)));
+            p.setCognitiveAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(1)));
+            p.setSocialAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(2)));
         }
     }
 

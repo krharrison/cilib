@@ -16,6 +16,7 @@ import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.velocityprovider.ClampingVelocityProvider;
 import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import cilib.pso.velocityprovider.StandardVelocityProvider;
@@ -27,14 +28,14 @@ import cilib.util.selection.recipes.Selector;
  */
 public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
     protected IterationStrategy<PSO> delegate;
-    protected SelfAdaptiveVelocityProvider velocityProvider;
+    //protected SelfAdaptiveVelocityProvider velocityProvider;
 
     protected double inertiaMin;
     protected double inertiaMax;
 
     public PSOAIWFIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
-        velocityProvider = new SelfAdaptiveVelocityProvider();
+        //velocityProvider = new SelfAdaptiveVelocityProvider();
 
         inertiaMin = 0.4;
         inertiaMax = 0.9;
@@ -48,13 +49,13 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
     @Override
     public void performIteration(PSO algorithm) {
         //ensure each entity has their own behaviour/velocity provider
-        if(algorithm.getIterations() == 0){
-            for(Particle p : algorithm.getTopology()){
-                StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour().getClone();
-                behaviour.setVelocityProvider(velocityProvider.getClone());
-                p.setBehaviour(behaviour);
-            }
-        }
+       // if(algorithm.getIterations() == 0){
+       //     for(Particle p : algorithm.getTopology()){
+       //         StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour().getClone();
+       //         behaviour.setVelocityProvider(velocityProvider.getClone());
+       //         p.setBehaviour(behaviour);
+       //     }
+       // }
 
         double sum = 0;
         Fitness bestFitness = InferiorFitness.instance();
@@ -76,14 +77,14 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
         double avgFitness = sum / algorithm.getTopology().length();
 
         for(Particle p : algorithm.getTopology()){
-            updateInertia(p, bestFitness.getValue(), avgFitness);
+            updateInertia((SelfAdaptiveParticle) p, bestFitness.getValue(), avgFitness);
         }
 
         delegate.performIteration(algorithm);
 
     }
 
-    private void updateInertia(Particle p, double minFitness, double avgFitness){
+    private void updateInertia(SelfAdaptiveParticle p, double minFitness, double avgFitness){
 
         double fitness = p.getFitness().getValue();
         double inertia;
@@ -98,9 +99,9 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
             inertia = inertiaMax;
         }
 
-        StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-        SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider) behaviour.getVelocityProvider();
-        provider.setInertiaWeight(ConstantControlParameter.of(inertia));
+        //StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
+        //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider) behaviour.getVelocityProvider();
+        p.setInertiaWeight(ConstantControlParameter.of(inertia));
     }
 
     public void setInertiaMin(double inertiaMin){

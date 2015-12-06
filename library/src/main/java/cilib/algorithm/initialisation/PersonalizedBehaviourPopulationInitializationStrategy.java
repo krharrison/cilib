@@ -12,7 +12,7 @@ import com.google.common.base.Preconditions;
 import cilib.entity.Entity;
 import cilib.entity.behaviour.generator.BehaviourGenerator;
 import cilib.problem.Problem;
-import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
+//import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
 import cilib.pso.particle.Particle;
 
 /**
@@ -28,7 +28,7 @@ public class PersonalizedBehaviourPopulationInitializationStrategy implements Po
      * Create an instance of the {@code BehaviourGeneratorPopulationInitialisationStrategy}.
      */
     public PersonalizedBehaviourPopulationInitializationStrategy(){
-        behaviourGenerator = new StandardVelocityProviderBehaviourGenerator();
+     //   behaviourGenerator = new StandardVelocityProviderBehaviourGenerator();
         delegate = new ClonedPopulationInitialisationStrategy();
     }
 
