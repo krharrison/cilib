@@ -90,7 +90,7 @@ public class HPSOIterationStrategy implements IterationStrategy<PSO>, Heterogene
     private BehaviorChangeTriggerDetectionStrategy detectionStrategy;
     private Selector<Behaviour> behaviorSelectionRecipe;
     private List<Behaviour> behaviorPool;
-    private Map<Behaviour, List<Integer>> successCounters;
+    private Map<Integer, List<Integer>> successCounters;
     private ControlParameter windowSize;
 
     /**
@@ -102,9 +102,10 @@ public class HPSOIterationStrategy implements IterationStrategy<PSO>, Heterogene
         this.behaviorSelectionRecipe = new TournamentSelector<Behaviour>();
         this.behaviorPool = new ArrayList<Behaviour>();
         this.windowSize = ConstantControlParameter.of(10);
-        this.successCounters = new HashMap<Behaviour, List<Integer>>();
+        this.successCounters = new HashMap<Integer, List<Integer>>();
 
-        ((TournamentSelector<Behaviour>) this.behaviorSelectionRecipe).setTournamentSize(ConstantControlParameter.of(0.4));
+        //TODO: change this back to 1!
+        ((TournamentSelector<Behaviour>) this.behaviorSelectionRecipe).setTournamentSize(ConstantControlParameter.of(0.5));
     }
 
     /**
@@ -116,7 +117,7 @@ public class HPSOIterationStrategy implements IterationStrategy<PSO>, Heterogene
         this.detectionStrategy = copy.detectionStrategy.getClone();
         this.behaviorSelectionRecipe = copy.behaviorSelectionRecipe;
         this.behaviorPool = new ArrayList<Behaviour>(copy.behaviorPool);
-        this.successCounters = new HashMap<Behaviour, List<Integer>>(copy.successCounters);
+        this.successCounters = new HashMap<Integer, List<Integer>>(copy.successCounters);
         this.windowSize = copy.windowSize;
     }
 
@@ -158,7 +159,7 @@ public class HPSOIterationStrategy implements IterationStrategy<PSO>, Heterogene
             int sum = 0;
 
             for(int i = 0; i < (int) windowSize.getParameter(); i++) {
-                sum += successCounters.get(pb).get(i);
+                sum += successCounters.get(pb.hashCode()).get(i);
             }
 
             pb.setSuccessCounter(sum);
@@ -182,7 +183,7 @@ public class HPSOIterationStrategy implements IterationStrategy<PSO>, Heterogene
         iterationStrategy.performIteration(algorithm);
 
         for(Behaviour pb : behaviorPool) {
-            successCounters.get(pb).set(AbstractAlgorithm.get().getIterations()%(int)windowSize.getParameter(), pb.getSuccessCounter());
+            successCounters.get(pb.hashCode()).set(AbstractAlgorithm.get().getIterations()%(int)windowSize.getParameter(), pb.getSuccessCounter());
         }
     }
 
@@ -246,7 +247,7 @@ public class HPSOIterationStrategy implements IterationStrategy<PSO>, Heterogene
             zeroList.add(0);
         }
 
-        successCounters.put(behavior, zeroList);
+        successCounters.put(behavior.hashCode(), zeroList);
     }
 
     /**
