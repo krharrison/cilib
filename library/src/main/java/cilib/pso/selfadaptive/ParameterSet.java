@@ -8,6 +8,7 @@ package cilib.pso.selfadaptive;
 
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.controlparameter.ControlParameter;
+import cilib.math.random.generator.Rand;
 import cilib.problem.solution.Fitness;
 import cilib.problem.solution.MaximisationFitness;
 import cilib.pso.velocityprovider.VelocityProvider;
@@ -58,7 +59,6 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
     public ParameterSet getClone() {
         return new ParameterSet(this);
     }
-
 
     public Boolean isConvergent(){
         double inertia = inertiaWeight.getParameter();

@@ -33,7 +33,7 @@ public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
         return new RandomRegenerationAdaptationStrategy(this);
     }
 
-//    public void setBehaviourGenerator(BehaviourGenerator generator){
+//    public void setParameterGenerator(BehaviourGenerator generator){
   //      this.generator = generator;
   //  }
 }

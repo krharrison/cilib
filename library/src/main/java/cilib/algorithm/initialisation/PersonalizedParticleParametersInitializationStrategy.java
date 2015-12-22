@@ -7,6 +7,9 @@
  */
 package cilib.algorithm.initialisation;
 
+import cilib.pso.particle.SelfAdaptiveParticle;
+import cilib.pso.selfadaptive.parametersetgenerator.ConvergentParameterSetGenerator;
+import cilib.pso.selfadaptive.parametersetgenerator.ParameterSetGenerator;
 import com.google.common.base.Preconditions;
 
 import cilib.entity.Entity;
@@ -16,19 +19,19 @@ import cilib.problem.Problem;
 import cilib.pso.particle.Particle;
 
 /**
- * Generate a population using a {@link PopulationInitialisationStrategy}. Each entities behaviour
- * is uniquely generated using a {@link BehaviourGenerator} rather than provided
+ * Generate a population using a {@link PopulationInitialisationStrategy}. Each particle's parameters
+ * are uniquely generated using a {@link ParameterSetGenerator} rather than provided
  * as part of the definition.
  */
-public class PersonalizedBehaviourPopulationInitializationStrategy implements PopulationInitialisationStrategy {
+public class PersonalizedParticleParametersInitializationStrategy implements PopulationInitialisationStrategy {
 
-    private BehaviourGenerator behaviourGenerator;
+    private ParameterSetGenerator parameterGenerator;
     private PopulationInitialisationStrategy delegate;
     /**
-     * Create an instance of the {@code BehaviourGeneratorPopulationInitialisationStrategy}.
+     * Create an instance of the {@code PersonalizedParticleParametersInitializationStrategy}.
      */
-    public PersonalizedBehaviourPopulationInitializationStrategy(){
-     //   behaviourGenerator = new StandardVelocityProviderBehaviourGenerator();
+    public PersonalizedParticleParametersInitializationStrategy(){
+        parameterGenerator = new ConvergentParameterSetGenerator();
         delegate = new ClonedPopulationInitialisationStrategy();
     }
 
@@ -36,8 +39,8 @@ public class PersonalizedBehaviourPopulationInitializationStrategy implements Po
      * Copy constructor. Create a copy of the given instance.
      * @param copy The instance to copy.
      */
-    public PersonalizedBehaviourPopulationInitializationStrategy(PersonalizedBehaviourPopulationInitializationStrategy copy){
-        this.behaviourGenerator = copy.behaviourGenerator.getClone();
+    public PersonalizedParticleParametersInitializationStrategy(PersonalizedParticleParametersInitializationStrategy copy){
+        this.parameterGenerator = copy.parameterGenerator.getClone();
         this.delegate = copy.delegate.getClone();
     }
 
@@ -45,8 +48,8 @@ public class PersonalizedBehaviourPopulationInitializationStrategy implements Po
      * {@inheritDoc}
      */
     @Override
-    public PersonalizedBehaviourPopulationInitializationStrategy getClone() {
-        return new PersonalizedBehaviourPopulationInitializationStrategy(this);
+    public PersonalizedParticleParametersInitializationStrategy getClone() {
+        return new PersonalizedParticleParametersInitializationStrategy(this);
     }
 
     /**
@@ -94,12 +97,12 @@ public class PersonalizedBehaviourPopulationInitializationStrategy implements Po
         return delegate;
     }
 
-    public void setBehaviourGenerator(BehaviourGenerator generator){
-        this.behaviourGenerator = generator;
+    public void setParameterGenerator(ParameterSetGenerator generator){
+        this.parameterGenerator = generator;
     }
 
-    public BehaviourGenerator getBehaviourGenerator(){
-        return this.behaviourGenerator;
+    public ParameterSetGenerator getParameterGenerator(){
+        return this.parameterGenerator;
     }
 
     /**
@@ -113,8 +116,9 @@ public class PersonalizedBehaviourPopulationInitializationStrategy implements Po
 
         Iterable<Entity> clones = delegate.initialise(problem);
 
-        for (Entity p : clones) {
-            p.setBehaviour(behaviourGenerator.generate());
+        for (Entity e : clones) {
+            SelfAdaptiveParticle p = (SelfAdaptiveParticle) e;
+            p.setParameterSet(parameterGenerator.generate());
         }
 
         return (Iterable<E>) clones;

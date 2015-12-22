@@ -29,7 +29,6 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
     protected double inertiaChange;		//change in inertia
     protected double minInertia;		//minimum allowable inertia
     protected double maxInertia;		//maximum allowable inertia
-    //protected StandardVelocityProvider velocityProvider;
     protected IterationStrategy<PSO> delegate;
 
     public VelocityInformationIterationStrategy(){
@@ -39,7 +38,6 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
         minInertia = 0.3;
         maxInertia = 0.9;
         delegate = new SynchronousIterationStrategy();
-        //velocityProvider = new StandardVelocityProvider();
     }
 
     public VelocityInformationIterationStrategy(VelocityInformationIterationStrategy copy){
@@ -49,7 +47,6 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
         this.minInertia = copy.minInertia;
         this.maxInertia = copy.maxInertia;
         this.delegate = copy.delegate.getClone();
-        //this.velocityProvider = copy.velocityProvider.getClone();
     }
 
     @Override
@@ -114,10 +111,6 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
     public void setMaxInertia(double maxInertia){
         this.maxInertia = maxInertia;
     }
-
-    //public void setVelocityProvider(StandardVelocityProvider velocityProvider){
-    //    this.velocityProvider = velocityProvider;
-    //}
 
     public void setDelegate(IterationStrategy<PSO> delegate){
         this.delegate = delegate;

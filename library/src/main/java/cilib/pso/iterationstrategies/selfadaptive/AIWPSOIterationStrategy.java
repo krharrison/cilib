@@ -44,25 +44,25 @@ public class AIWPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         double inertia = successRate * (inertiaMax - inertiaMin) + inertiaMin;
 
         for(Particle p : algorithm.getTopology()){
-
             ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
         }
     }
 
     /**
-     * Calculate the proportion of particles which improved their personal best
+     * Calculate the proportion of particles which improved their personal best.
      * @param algorithm
      * @return
      */
     private double calculateSuccesses(PSO algorithm){
-        int sum = 0;
+        int count = 0;
 
+        //A success is recorded if it has been 0 iterations since the personal best was updated.
         for(Particle p : algorithm.getTopology()){
             if(p.get(Property.PBEST_STAGNATION_COUNTER).intValue() == 0){
-                sum++;
+                count++;
             }
         }
 
-        return (double)sum / algorithm.getTopology().length();
+        return (double)count / algorithm.getTopology().length();
     }
 }

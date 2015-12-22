@@ -29,9 +29,7 @@ import cilib.util.selection.recipes.Selector;
  */
 public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
 
-    //protected Selector<Particle> elitistSelector;
     protected IterationStrategy<PSO> delegate;
-    //protected SelfAdaptiveVelocityProvider velocityProvider;
     protected double initialInertia;
     protected double alpha;
     protected double beta;
@@ -40,8 +38,6 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
     public DAPSOIterationStrategy(){
         super();
         delegate = new SynchronousIterationStrategy();
-        //velocityProvider = new SelfAdaptiveVelocityProvider();
-        //elitistSelector = new ElitistSelector<Particle>();
         iterBestFitness = new IterationBestFitness();
         initialInertia = 1.0;
         alpha = 1.0;
@@ -51,8 +47,6 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
     public DAPSOIterationStrategy(DAPSOIterationStrategy copy){
         super(copy);
         this.delegate = copy.delegate.getClone();
-        //this.velocityProvider = copy.velocityProvider.getClone();
-       // this.elitistSelector = copy.elitistSelector;
         this.iterBestFitness = copy.iterBestFitness.getClone();
     }
 
@@ -64,23 +58,11 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
     @Override
     public void performIteration(PSO algorithm) {
 
-        //ensure each entity has their own behaviour/velocity provider
-      //  if(algorithm.getIterations() == 0){
-      //      for(Particle p : algorithm.getTopology()) {
-      //          StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour().getClone();
-      //          behaviour.setVelocityProvider(velocityProvider.getClone());
-      //          p.setBehaviour(behaviour);
-      //      }
-      //  }
-
         delegate.performIteration(algorithm);
 
         double aggDegree = aggregationDegree(algorithm);
 
         for(Particle p : algorithm.getTopology()){
-            //StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-            //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider) behaviour.getVelocityProvider();
-
             double evolSpeed = evolutionarySpeed(p);
             double inertia = initialInertia - alpha * (1 - evolSpeed) + beta * aggDegree;
 
@@ -120,10 +102,6 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
 
         return Math.abs(Math.min(iterationBest, avg) / Math.max(iterationBest, avg));
     }
-
-  //  public void setVelocityProvider(SelfAdaptiveVelocityProvider velocityProvider){
-  //      this.velocityProvider = velocityProvider;
-  //  }
 
     public void setDelegate(IterationStrategy<PSO> delegate){
         this.delegate = delegate;

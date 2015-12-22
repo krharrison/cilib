@@ -29,14 +29,12 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
 
     protected Selector<Particle> elitistSelector;
     protected IterationStrategy<PSO> delegate;
-    //protected ClampingVelocityProvider velocityProvider;
     protected double previousAlpha;
     protected IterationBestFitness iterBestFitness;
 
     public IPSOCLLIterationStrategy(){
         super();
         delegate = new SynchronousIterationStrategy();
-        //velocityProvider = new ClampingVelocityProvider();
         elitistSelector = new ElitistSelector<Particle>();
         iterBestFitness = new IterationBestFitness();
     }
@@ -44,7 +42,6 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
     public IPSOCLLIterationStrategy(IPSOCLLIterationStrategy copy){
         super(copy);
         this.delegate = copy.delegate.getClone();
-        //this.velocityProvider = copy.velocityProvider.getClone();
         this.elitistSelector = copy.elitistSelector;
         this.iterBestFitness = copy.iterBestFitness.getClone();
     }
@@ -57,15 +54,6 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
     @Override
     public void performIteration(PSO algorithm) {
 
-        //ensure each entity has their own behaviour/velocity provider
-     //   if(algorithm.getIterations() == 0){
-      //      for(Particle p : algorithm.getTopology()){
-      //          StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour().getClone();
-      //          behaviour.setVelocityProvider(velocityProvider.getClone());
-      //          p.setBehaviour(behaviour);
-      //      }
-        //}
-
         if(algorithm.getIterations() == 0){
             previousAlpha = calculateAlpha(algorithm);
         }
@@ -77,9 +65,6 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
         double inertia = Math.exp(-lambda);
 
         for(Particle p : algorithm.getTopology()){
-           // StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-           // StandardVelocityProvider provider = (StandardVelocityProvider)((ClampingVelocityProvider) behaviour.getVelocityProvider()).getDelegate();
-
             ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
         }
 
@@ -107,10 +92,6 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
             return count == 0 ? Double.MAX_VALUE : sum / count;
         }
     }
-
-   // public void setVelocityProvider(ClampingVelocityProvider velocityProvider){
-   //     this.velocityProvider = velocityProvider;
-   // }
 
     public void setDelegate(IterationStrategy<PSO> delegate){
         this.delegate = delegate;

@@ -28,15 +28,11 @@ import cilib.util.selection.recipes.Selector;
  */
 public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
     protected IterationStrategy<PSO> delegate;
-    //protected SelfAdaptiveVelocityProvider velocityProvider;
-
     protected double inertiaMin;
     protected double inertiaMax;
 
     public PSOAIWFIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
-        //velocityProvider = new SelfAdaptiveVelocityProvider();
-
         inertiaMin = 0.4;
         inertiaMax = 0.9;
     }
@@ -48,14 +44,6 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
 
     @Override
     public void performIteration(PSO algorithm) {
-        //ensure each entity has their own behaviour/velocity provider
-       // if(algorithm.getIterations() == 0){
-       //     for(Particle p : algorithm.getTopology()){
-       //         StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour().getClone();
-       //         behaviour.setVelocityProvider(velocityProvider.getClone());
-       //         p.setBehaviour(behaviour);
-       //     }
-       // }
 
         double sum = 0;
         Fitness bestFitness = InferiorFitness.instance();
@@ -99,8 +87,6 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
             inertia = inertiaMax;
         }
 
-        //StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-        //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider) behaviour.getVelocityProvider();
         p.setInertiaWeight(ConstantControlParameter.of(inertia));
     }
 

@@ -12,13 +12,11 @@ import cilib.algorithm.population.IterationStrategy;
 import cilib.entity.Property;
 import cilib.problem.boundaryconstraint.BoundaryConstraint;
 import cilib.pso.PSO;
-import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
 import cilib.pso.selfadaptive.adaptationstrategies.PSOAdaptationStrategy;
-import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 
 public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
     protected IterationStrategy<PSO> iterationStrategy;
@@ -51,8 +49,6 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
         if(iteration > 0 && iteration % period == 0){
             adaptationStrategy.adapt(algorithm);
             for(Particle p : algorithm.getTopology()){
-            //    StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-            //    SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
                 ((SelfAdaptiveParticle)p).getParameterSet().resetFitness();
             }
         }
@@ -62,8 +58,6 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
         for(Particle p : algorithm.getTopology()){
             //if the particle improved in fitness, increment the fitness of the parameters by 1
             if(p.getFitness().compareTo(p.get(Property.PREVIOUS_FITNESS)) > 0){
-                StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-                SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
                 ((SelfAdaptiveParticle)p).getParameterSet().incrementFitness(1);
             }
         }

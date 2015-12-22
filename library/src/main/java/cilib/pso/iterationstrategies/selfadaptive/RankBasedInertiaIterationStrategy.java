@@ -22,7 +22,6 @@ import cilib.util.selection.arrangement.SortedArrangement;
 
 public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy<PSO>{
 
-   // protected SelfAdaptiveVelocityProvider velocityProvider;
     protected IterationStrategy<PSO> delegate;
     protected Arrangement<Particle> arrangement;
 
@@ -33,7 +32,6 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
         super();
         arrangement = new SortedArrangement<Particle>();
         delegate = new SynchronousIterationStrategy();
-    //    velocityProvider = new SelfAdaptiveVelocityProvider();
         inertiaMin = 0.1;
         inertiaMax = 0.7;
     }
@@ -42,7 +40,6 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
         super(copy);
         this.arrangement = copy.arrangement;
         this.delegate = copy.delegate.getClone();
-    //    this.velocityProvider = copy.velocityProvider.getClone();
     }
 
     @Override
@@ -52,14 +49,6 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
 
     @Override
     public void performIteration(PSO algorithm) {
-        //ensure each entity has their own behaviour/velocity provider
-       // if(algorithm.getIterations() == 0){
-       //     for(Particle p : algorithm.getTopology()){
-       //         StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour().getClone();
-       //         behaviour.setVelocityProvider(velocityProvider.getClone());
-       //         p.setBehaviour(behaviour);
-       //     }
-       // }
 
         Iterable<Particle> ordering = orderParticles(algorithm);
         Iterator<Particle> iterator = ordering.iterator();
@@ -69,11 +58,7 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
         SelfAdaptiveParticle p;
         while(iterator.hasNext()){
             p = (SelfAdaptiveParticle) iterator.next();
-
             double inertia = inertiaMin + (inertiaMax - inertiaMin) * (particles - rank)/(double)(particles - 1);
-
-        //    StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-        //    SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider) behaviour.getVelocityProvider();
             p.setInertiaWeight(ConstantControlParameter.of(inertia));
 
             rank++; //increment rank for next particle
@@ -85,10 +70,6 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
     private Iterable<Particle> orderParticles(PSO algorithm){
         return arrangement.arrange(algorithm.getTopology());
     }
-
-  //  public void setVelocityProvider(SelfAdaptiveVelocityProvider velocityProvider){
-  //      this.velocityProvider = velocityProvider;
-  //  }
 
     public void setDelegate(IterationStrategy<PSO> delegate){
         this.delegate = delegate;

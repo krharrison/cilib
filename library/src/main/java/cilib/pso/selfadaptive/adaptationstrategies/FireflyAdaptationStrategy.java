@@ -47,8 +47,6 @@ public class FireflyAdaptationStrategy implements AlgorithmAdaptationStrategy {
             @Override
             public Firefly f(Particle p) {
                 SelfAdaptiveParticle p2 = (SelfAdaptiveParticle) p;
-                //StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-                //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
 
                 //create a new vector as [w, c1, c2] from the current particles parameter set
                 Vector.Builder builder = Vector.newBuilder();
@@ -69,8 +67,6 @@ public class FireflyAdaptationStrategy implements AlgorithmAdaptationStrategy {
         //iterate through fireflies of the adaptorFFA and update the parameters of the original PSO accordingly
         for(int i = 0; i < algorithm.getTopology().length(); i++){
             SelfAdaptiveParticle p = (SelfAdaptiveParticle) algorithm.getTopology().index(i);
-            //StandardParticleBehaviour behaviour = (StandardParticleBehaviour)p.getBehaviour();
-            //SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider)behaviour.getVelocityProvider();
 
             Firefly parameterFirefly = adaptorFFA.getTopology().index(i);
             Vector parameterPosition = parameterFirefly.getPosition();
