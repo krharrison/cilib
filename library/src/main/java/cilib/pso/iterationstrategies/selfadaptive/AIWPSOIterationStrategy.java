@@ -44,7 +44,9 @@ public class AIWPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         double inertia = successRate * (inertiaMax - inertiaMin) + inertiaMin;
 
         for(Particle p : algorithm.getTopology()){
-            ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
+            sp.setInertiaWeight(ConstantControlParameter.of(inertia));
         }
     }
 

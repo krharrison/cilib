@@ -9,6 +9,7 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.pso.PSO;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
@@ -50,8 +51,9 @@ public class SAPSOLFZIterationStrategy extends AbstractIterationStrategy<PSO> {
 
         for(Particle p : algorithm.getTopology()){
             double inertia = alpha + (1 / (1 + Math.exp(avgPBestFitness - p.getBestFitness().getValue())));
-
-            ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
+            sp.setInertiaWeight(ConstantControlParameter.of(inertia));
         }
 
         delegate.performIteration(algorithm);

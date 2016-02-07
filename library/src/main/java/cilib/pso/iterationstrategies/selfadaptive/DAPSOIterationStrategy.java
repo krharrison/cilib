@@ -65,8 +65,9 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         for(Particle p : algorithm.getTopology()){
             double evolSpeed = evolutionarySpeed(p);
             double inertia = initialInertia - alpha * (1 - evolSpeed) + beta * aggDegree;
-
-            ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
+            sp.setInertiaWeight(ConstantControlParameter.of(inertia));
         }
     }
 

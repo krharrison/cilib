@@ -30,6 +30,8 @@ public class ConvergentParticleRatio implements Measurement<Real> {
         int count = 0;
 
         for(Particle p : pso.getTopology()){
+
+            if(!(p instanceof SelfAdaptiveParticle)) return Real.valueOf(-1.0);
             SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
 
             if(sp.getParameterSet().isConvergent()) count++;

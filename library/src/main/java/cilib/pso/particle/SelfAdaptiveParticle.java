@@ -7,9 +7,14 @@
 package cilib.pso.particle;
 
 import cilib.controlparameter.ControlParameter;
+import cilib.entity.Property;
+import cilib.problem.Problem;
+import cilib.problem.solution.InferiorFitness;
 import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.selfadaptive.ParameterSet;
 import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
+import cilib.type.types.Int;
+import cilib.type.types.container.Vector;
 
 /**
  * A self-adaptive particle contains the three conventional control parameters.

@@ -10,12 +10,11 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.pso.PSO;
-import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.velocityprovider.StandardVelocityProvider;
 import cilib.type.types.Numeric;
 import cilib.type.types.container.Vector;
 
@@ -84,6 +83,7 @@ public class VelocityInformationIterationStrategy extends AbstractIterationStrat
                 newInertia = Math.min(p.getInertiaWeight().getParameter() + inertiaChange, maxInertia);
             }
 
+            p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
             p.setInertiaWeight(ConstantControlParameter.of(newInertia));
         }
 

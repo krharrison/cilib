@@ -2,6 +2,7 @@ package cilib.pso.iterationstrategies.selfadaptive;
 
 import java.util.Iterator;
 
+import cilib.entity.Property;
 import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
@@ -60,6 +61,7 @@ public class SAPSODWCYIterationStrategy extends AbstractIterationStrategy<PSO>{
             double rankTerm = (dimensions * rank) / gamma;
             double inertia = 1 / (alpha - expTerm + (rankTerm * rankTerm));
 
+            p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
             p.setInertiaWeight(ConstantControlParameter.of(inertia));
 
             rank++; //increment rank for next particle

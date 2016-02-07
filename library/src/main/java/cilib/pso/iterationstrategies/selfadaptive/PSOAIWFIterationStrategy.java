@@ -9,6 +9,7 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.measurement.single.IterationBestFitness;
 import cilib.problem.solution.Fitness;
 import cilib.problem.solution.InferiorFitness;
@@ -65,6 +66,7 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
         double avgFitness = sum / algorithm.getTopology().length();
 
         for(Particle p : algorithm.getTopology()){
+
             updateInertia((SelfAdaptiveParticle) p, bestFitness.getValue(), avgFitness);
         }
 
@@ -86,7 +88,7 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
         else{
             inertia = inertiaMax;
         }
-
+        p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
         p.setInertiaWeight(ConstantControlParameter.of(inertia));
     }
 

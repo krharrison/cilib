@@ -11,6 +11,7 @@ import java.util.Iterator;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
@@ -59,6 +60,7 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
         while(iterator.hasNext()){
             p = (SelfAdaptiveParticle) iterator.next();
             double inertia = inertiaMin + (inertiaMax - inertiaMin) * (particles - rank)/(double)(particles - 1);
+            p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
             p.setInertiaWeight(ConstantControlParameter.of(inertia));
 
             rank++; //increment rank for next particle

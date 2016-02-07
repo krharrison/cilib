@@ -13,6 +13,7 @@ import cilib.problem.solution.Fitness;
 import cilib.problem.solution.MaximisationFitness;
 import cilib.pso.velocityprovider.VelocityProvider;
 import cilib.type.types.Bounds;
+import cilib.type.types.Type;
 import cilib.type.types.container.Vector;
 import cilib.util.Cloneable;
 import fj.test.Bool;

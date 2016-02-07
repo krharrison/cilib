@@ -63,6 +63,7 @@ public class Property<T extends Type> {
     public final static Property<AdaptiveLearningIterationStrategy.ParticleProperties> ADAPTIVE_LEARNING_PROPERTIES = new Property();
     public final static Property<StructuredType> V0 = new Property();
     public final static Property<StructuredType> V1 = new Property();
+    public final static Property<StructuredType> PREVIOUS_PARAMETERS = new Property();
     
     /**
      * Niching properties

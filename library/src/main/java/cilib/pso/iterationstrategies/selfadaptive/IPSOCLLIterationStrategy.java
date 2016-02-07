@@ -10,6 +10,7 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.measurement.single.IterationBestFitness;
 import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
@@ -65,7 +66,9 @@ public class IPSOCLLIterationStrategy extends AbstractIterationStrategy<PSO> {
         double inertia = Math.exp(-lambda);
 
         for(Particle p : algorithm.getTopology()){
-            ((SelfAdaptiveParticle) p).setInertiaWeight(ConstantControlParameter.of(inertia));
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
+            sp.setInertiaWeight(ConstantControlParameter.of(inertia));
         }
 
         previousAlpha = alpha;
