@@ -27,7 +27,6 @@ import cilib.type.types.container.Vector;
  *
  * The nucleus is taken as the parameter set of a particle's neighbourhood best
  *
- * TODO: what if parameters exit the convergent region?
  */
 public class QuantumAdaptationStrategy implements AdaptationStrategy {
 
@@ -59,16 +58,12 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
     @Override
     public void adapt(Particle p, PSO algorithm) {
 
-        ChargedParticle checkChargeParticle = (ChargedParticle) p;
-        if (checkChargeParticle.getCharge() < EPSILON) { // the particle is neutral
+        SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+        if (sp.getCharge() < EPSILON) { // the particle is neutral
             this.delegate.adapt(p, algorithm);
         } else { // the particle is charged
-        SelfAdaptiveParticle p2 = (SelfAdaptiveParticle) p;
-
             //get the nucleus as the parameters of the neighborhood best
-            SelfAdaptiveParticle best = (SelfAdaptiveParticle) p2.getNeighbourhoodBest();
-            //StandardParticleBehaviour bestBehaviour = (StandardParticleBehaviour) best.getBehaviour();
-            //SelfAdaptiveVelocityProvider bestProvider = (SelfAdaptiveVelocityProvider) bestBehaviour.getVelocityProvider();
+            SelfAdaptiveParticle best = (SelfAdaptiveParticle) sp.getNeighbourhoodBest();
             Vector nucleus = best.getParameterSet().asVector();
 
             //get the behaviour of the particle
@@ -105,10 +100,9 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
                 }
 
                 //update parameters by adding the offset to the nucleus
+                sp.getParameterSet().fromVector(nucleus.plus(position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign)));
 
-                p2.getParameterSet().fromVector(nucleus.plus(position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign)));
-
-            } while(!p2.getParameterSet().isConvergent());
+            } while(!sp.getParameterSet().isConvergent());
 
         }
     }

@@ -1,15 +1,15 @@
 /**
- * __  __
+ *         __  __
  * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
  * / ___/ / / / __ \   (c) CIRG @ UP
  * / /__/ / / / /_/ /   http://cilib.net
  * \___/_/_/_/_.___/
  */
-package cilib.pso.selfadaptive.detectionstrategies;
+package cilib.pso.selfadaptive.detectionstrategies.particle;
 
 import cilib.pso.particle.Particle;
 
-public interface ParameterUpdateDetectionStrategy {
+public interface ParticleUpdateDetectionStrategy {
     /**
      * Detect whether some condition holds that should prompt a {@link Particle}
      * to change its parameters.
@@ -20,9 +20,9 @@ public interface ParameterUpdateDetectionStrategy {
     boolean detect(Particle particle);
 
     /**
-     * Clone the current {@link ParameterUpdateDetectionStrategy}.
+     * Clone the current {@link ParticleUpdateDetectionStrategy}.
      *
-     * @return A clone of this {@link ParameterUpdateDetectionStrategy}.
+     * @return A clone of this {@link ParticleUpdateDetectionStrategy}.
      */
-    ParameterUpdateDetectionStrategy getClone();
+    ParticleUpdateDetectionStrategy getClone();
 }

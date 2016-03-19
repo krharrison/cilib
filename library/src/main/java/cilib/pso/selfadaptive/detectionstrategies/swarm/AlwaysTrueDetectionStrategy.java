@@ -5,11 +5,13 @@
  * / /__/ / / / /_/ /   http://cilib.net
  * \___/_/_/_/_.___/
  */
-package cilib.pso.selfadaptive.detectionstrategies;
+package cilib.pso.selfadaptive.detectionstrategies.swarm;
 
+import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
+import cilib.pso.selfadaptive.detectionstrategies.particle.ParticleUpdateDetectionStrategy;
 
-public class AlwaysTrueDetectionStrategy implements ParameterUpdateDetectionStrategy {
+public class AlwaysTrueDetectionStrategy implements SwarmUpdateDetectionStrategy {
 
     /**
      * {@inheritDoc}
@@ -23,9 +25,7 @@ public class AlwaysTrueDetectionStrategy implements ParameterUpdateDetectionStra
      * {@inheritDoc}
      */
     @Override
-    public boolean detect(Particle entity) {
+    public boolean detect(PSO pso) {
         return true;
     }
-
-
 }

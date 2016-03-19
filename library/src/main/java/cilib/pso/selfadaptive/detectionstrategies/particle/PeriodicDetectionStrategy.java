@@ -1,22 +1,22 @@
 /**
- * __  __
+ *         __  __
  * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
  * / ___/ / / / __ \   (c) CIRG @ UP
  * / /__/ / / / /_/ /   http://cilib.net
  * \___/_/_/_/_.___/
  */
-package cilib.pso.selfadaptive.detectionstrategies;
+package cilib.pso.selfadaptive.detectionstrategies.particle;
 
 import cilib.algorithm.AbstractAlgorithm;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.controlparameter.ControlParameter;
 import cilib.pso.particle.Particle;
 
-public class PeriodicDetectionStrategy implements ParameterUpdateDetectionStrategy {
+public class PeriodicDetectionStrategy implements ParticleUpdateDetectionStrategy {
     private ControlParameter period;
 
     public PeriodicDetectionStrategy() {
-        period = ConstantControlParameter.of(30.0);
+        period = ConstantControlParameter.of(5.0);
     }
 
     /**
@@ -38,9 +38,8 @@ public class PeriodicDetectionStrategy implements ParameterUpdateDetectionStrate
 
     @Override
     public boolean detect(Particle entity) {
-        int iters = AbstractAlgorithm.get().getIterations();
 
-        if (iters % period.getParameter() == 0) {
+        if (AbstractAlgorithm.get().getIterations() % period.getParameter() == 0) {
             return true;
         }
 

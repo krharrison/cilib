@@ -7,25 +7,27 @@
  */
 package cilib.pso.selfadaptive.adaptationstrategies;
 
-import cilib.entity.behaviour.generator.BehaviourGenerator;
 import cilib.pso.PSO;
-//import cilib.pso.behaviour.generators.StandardVelocityProviderBehaviourGenerator;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
+import cilib.pso.selfadaptive.parametersetgenerator.ConvergentParameterSetGenerator;
+import cilib.pso.selfadaptive.parametersetgenerator.ParameterSetGenerator;
 
 public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
-    //protected BehaviourGenerator generator;
+    private ParameterSetGenerator parameterGenerator;
 
     public RandomRegenerationAdaptationStrategy(){
-        //generator = new StandardVelocityProviderBehaviourGenerator();
+        parameterGenerator = new ConvergentParameterSetGenerator();
     }
 
     public RandomRegenerationAdaptationStrategy(RandomRegenerationAdaptationStrategy copy){
-        //this.generator = copy.generator.getClone();
+        this.parameterGenerator = copy.parameterGenerator.getClone();
     }
 
     @Override
     public void adapt(Particle p, PSO algorithm) {
-      //  p.setBehaviour(generator.generate());
+        SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+        sp.setParameterSet(parameterGenerator.generate());
     }
 
     @Override
@@ -33,7 +35,7 @@ public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
         return new RandomRegenerationAdaptationStrategy(this);
     }
 
-//    public void setParameterGenerator(BehaviourGenerator generator){
-  //      this.generator = generator;
-  //  }
+    public void setParameterGenerator(ParameterSetGenerator parameterGenerator){
+        this.parameterGenerator = parameterGenerator;
+    }
 }

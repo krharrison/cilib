@@ -21,6 +21,7 @@ import cilib.type.types.container.Vector;
  */
 public class SelfAdaptiveParticle extends StandardParticle {
     protected ParameterSet parameters;
+    private double charge;
 
     public SelfAdaptiveParticle(){
         parameters = new ParameterSet();
@@ -94,5 +95,19 @@ public class SelfAdaptiveParticle extends StandardParticle {
      */
     public void setSocialAcceleration(ControlParameter socialComponent) {
         this.parameters.setSocialAcceleration(socialComponent);
+    }
+
+    /**
+     * @return the charge
+     */
+    public double getCharge() {
+        return charge;
+    }
+
+    /**
+     * @param charge the charge to set
+     */
+    public void setCharge(double charge) {
+        this.charge = charge;
     }
 }

@@ -53,13 +53,13 @@ public class RankBasedInertiaIterationStrategy extends AbstractIterationStrategy
 
         Iterable<Particle> ordering = orderParticles(algorithm);
         Iterator<Particle> iterator = ordering.iterator();
-        int rank = 1;
+        int rank = 0;
         int particles = algorithm.getTopology().length();
 
         SelfAdaptiveParticle p;
         while(iterator.hasNext()){
             p = (SelfAdaptiveParticle) iterator.next();
-            double inertia = inertiaMin + (inertiaMax - inertiaMin) * (particles - rank)/(double)(particles - 1);
+            double inertia = inertiaMin + (inertiaMax - inertiaMin) * rank/(double)(particles - 1);
             p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
             p.setInertiaWeight(ConstantControlParameter.of(inertia));
 

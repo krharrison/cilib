@@ -18,8 +18,6 @@ public class ParameterBounds {
         this.upperBound = ConstantControlParameter.of(1.0);
     }
 
-
-
     public ParameterBounds(double lBound, double uBound) {
         this.lowerBound = ConstantControlParameter.of(lBound);
         this.upperBound = ConstantControlParameter.of(uBound);
@@ -28,6 +26,14 @@ public class ParameterBounds {
     public ParameterBounds(ControlParameter lowerBound, ControlParameter upperBound){
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
+    }
+
+    public boolean isInsideBounds(double value) {
+        if (Double.compare(value, upperBound.getParameter()) <= 0 && Double.compare(value, lowerBound.getParameter()) >= 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public void setUpperBound(ControlParameter upperBound) {

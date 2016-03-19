@@ -8,20 +8,21 @@ package cilib.pso.selfadaptive.parametersetgenerator;
 
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.math.random.generator.Rand;
+import cilib.pso.selfadaptive.ParameterBounds;
 import cilib.pso.selfadaptive.ParameterSet;
 import cilib.type.types.Bounds;
 
 public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
 
-    protected Bounds inertiaBounds;
-    protected Bounds socialBounds;
-    protected Bounds cognitiveBounds;
+    protected ParameterBounds inertiaBounds;
+    protected ParameterBounds socialBounds;
+    protected ParameterBounds cognitiveBounds;
 
 
     public ConvergentParameterSetGenerator(){
-        inertiaBounds = new Bounds(0, 1);
-        socialBounds = new Bounds(0, 4);
-        cognitiveBounds = new Bounds(0, 4);
+        inertiaBounds = new ParameterBounds(0, 1);
+        socialBounds = new ParameterBounds(0, 4);
+        cognitiveBounds = new ParameterBounds(0, 4);
     }
 
     public ConvergentParameterSetGenerator(ConvergentParameterSetGenerator copy){
@@ -35,9 +36,9 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
         ParameterSet params = new ParameterSet();
 
         do{
-            params.setInertiaWeight(ConstantControlParameter.of(Rand.nextDouble() * inertiaBounds.getRange() + inertiaBounds.getLowerBound()));
-            params.setCognitiveAcceleration(ConstantControlParameter.of(Rand.nextDouble() * cognitiveBounds.getRange() + cognitiveBounds.getLowerBound()));
-            params.setSocialAcceleration(ConstantControlParameter.of(Rand.nextDouble() * socialBounds.getRange() + socialBounds.getLowerBound()));
+            params.setInertiaWeight(ConstantControlParameter.of(Rand.nextDouble() * inertiaBounds.getRange() + inertiaBounds.getLowerBound().getParameter()));
+            params.setCognitiveAcceleration(ConstantControlParameter.of(Rand.nextDouble() * cognitiveBounds.getRange() + cognitiveBounds.getLowerBound().getParameter()));
+            params.setSocialAcceleration(ConstantControlParameter.of(Rand.nextDouble() * socialBounds.getRange() + socialBounds.getLowerBound().getParameter()));
         } while(!params.isConvergent());
 
         return params;
@@ -51,11 +52,11 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
      * Sets the range for the inertia coefficient.
      * @param inertiaBounds The bounds for the inertia coefficient.
      */
-    public void setInertiaBounds(Bounds inertiaBounds){
+    public void setInertiaBounds(ParameterBounds inertiaBounds){
         this.inertiaBounds = inertiaBounds;
     }
 
-    public Bounds getInertiaBounds(){
+    public ParameterBounds getInertiaBounds(){
         return this.inertiaBounds;
     }
 
@@ -63,11 +64,11 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
      * Sets the range for the social coefficient.
      * @param socialBounds The bounds for the social coefficient.
      */
-    public void setSocialBounds(Bounds socialBounds){
+    public void setSocialBounds(ParameterBounds socialBounds){
         this.socialBounds = socialBounds;
     }
 
-    public Bounds getSocialBounds(){
+    public ParameterBounds getSocialBounds(){
         return this.socialBounds;
     }
 
@@ -75,11 +76,11 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
      * Sets the range for the cognitive coefficient.
      * @param cognitiveBounds The bounds for the cognitive coefficient.
      */
-    public void setCognitiveBounds(Bounds cognitiveBounds){
+    public void setCognitiveBounds(ParameterBounds cognitiveBounds){
         this.cognitiveBounds = cognitiveBounds;
     }
 
-    public Bounds getCognitiveBounds(){
+    public ParameterBounds getCognitiveBounds(){
         return this.cognitiveBounds;
     }
 }
