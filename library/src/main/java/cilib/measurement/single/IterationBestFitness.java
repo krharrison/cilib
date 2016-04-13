@@ -38,6 +38,8 @@ public class IterationBestFitness implements Measurement<Real>{
             Entity entity = populationIterator.next();
             cilib.problem.solution.Fitness entityFitness = entity.getFitness();
 
+            if(Double.isNaN(entityFitness.getValue())) continue;
+
             if(entityFitness.compareTo(bestFitness) > 0) {
                 bestFitness = entityFitness;
             }

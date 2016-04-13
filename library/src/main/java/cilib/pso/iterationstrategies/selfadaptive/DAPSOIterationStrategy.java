@@ -34,6 +34,7 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
     protected double alpha;
     protected double beta;
     protected IterationBestFitness iterBestFitness;
+    protected double[] previousPBest;
 
     public DAPSOIterationStrategy(){
         super();
@@ -58,29 +59,38 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
     @Override
     public void performIteration(PSO algorithm) {
 
-        delegate.performIteration(algorithm);
+        if(algorithm.getIterations() == 0){
+            previousPBest = new double[algorithm.getTopology().length()];
+        }
+
+        //store the personal best of each particle
+        for(int i = 0; i < algorithm.getTopology().length(); i++){
+            previousPBest[i] = algorithm.getTopology().index(i).getBestFitness().getValue();
+        }
 
         double aggDegree = aggregationDegree(algorithm);
 
-        for(Particle p : algorithm.getTopology()){
-            double evolSpeed = evolutionarySpeed(p);
+        for(int i = 0; i < algorithm.getTopology().length(); i++){
+
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) algorithm.getTopology().index(i);
+
+            double evolSpeed = evolutionarySpeed(sp, previousPBest[i]);
             double inertia = initialInertia - alpha * (1 - evolSpeed) + beta * aggDegree;
-            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
-            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
+
+            sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
             sp.setInertiaWeight(ConstantControlParameter.of(inertia));
         }
+
+        delegate.performIteration(algorithm);
     }
 
-    private double evolutionarySpeed(Particle p){
-        double pBest = p.get(Property.BEST_FITNESS).getValue();
-        //double prevFit = p.get(Property.PREVIOUS_FITNESS).getValue();
-        double prevPBest = 1.0;         //TODO: how to get the previous personal best
+    private double evolutionarySpeed(Particle sp, double prevPBest){
+        double pBest = sp.get(Property.BEST_FITNESS).getValue();
 
         //TODO: this assumes minimization, is this problematic?
         //TODO: positive offset
         return Math.abs(Math.min(pBest, prevPBest) / Math.max(pBest, prevPBest));
     }
-
 
     //TODO: what if all particles have invalid fitness?
     private double aggregationDegree(PSO algorithm){
@@ -93,9 +103,9 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         else {
             for(Particle p : algorithm.getTopology()){
                 double fitness = p.getFitness().getValue();  //TODO: positive offset
-                if(!Double.isInfinite(fitness)){
-                    avg += Math.abs(fitness - iterationBest);
-                }
+                if(Double.isInfinite(fitness) || Double.isNaN(fitness)) continue;
+                else avg += Math.abs(fitness - iterationBest);
+
             }
 
             avg /= algorithm.getTopology().length();

@@ -9,10 +9,12 @@ package cilib.pso.iterationstrategies.selfadaptive;
 
 import cilib.algorithm.AbstractAlgorithm;
 import cilib.algorithm.population.IterationStrategy;
+import cilib.entity.Property;
 import cilib.problem.boundaryconstraint.BoundaryConstraint;
 import cilib.pso.PSO;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.adaptationstrategies.AdaptationStrategy;
 import cilib.pso.selfadaptive.adaptationstrategies.RandomRegenerationAdaptationStrategy;
 import cilib.pso.selfadaptive.detectionstrategies.particle.ParticleUpdateDetectionStrategy;
@@ -42,10 +44,12 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
 
     @Override
     public void performIteration(PSO algorithm) {
-        int iteration = AbstractAlgorithm.get().getIterations();
+        //int iteration = AbstractAlgorithm.get().getIterations();
 
         //adapt and reset fitness if time to do so
         for(Particle p : algorithm.getTopology()) {
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
             if (detectionStrategy.detect(p)) {
                 adaptationStrategy.adapt(p, algorithm);
                 //for (Particle p : algorithm.getTopology()) {

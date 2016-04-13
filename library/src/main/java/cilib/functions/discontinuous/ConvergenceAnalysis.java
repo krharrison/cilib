@@ -20,7 +20,7 @@ public class ConvergenceAnalysis extends ContinuousFunction {
 
     public ConvergenceAnalysis(){
         values = new HashMap<Integer, Double>();
-        uniformDistribution = new UniformDistribution(ConstantControlParameter.of(-1000), ConstantControlParameter.of(1000));
+        uniformDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(2000));
     }
 
     @Override

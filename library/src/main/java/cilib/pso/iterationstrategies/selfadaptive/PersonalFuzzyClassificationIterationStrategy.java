@@ -9,24 +9,20 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.entity.Property;
 import cilib.math.random.ProbabilityDistributionFunction;
 import cilib.math.random.UniformDistribution;
-import cilib.problem.solution.Fitness;
-import cilib.problem.solution.InferiorFitness;
 import cilib.pso.PSO;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.type.types.Type;
 import cilib.type.types.container.StructuredType;
 import cilib.util.distancemeasure.DistanceMeasure;
 import cilib.util.distancemeasure.EuclideanDistanceMeasure;
 
 /**
- * APSO-ZZLC
+ * Personal-parameter modification of APSO-ZZLC
  */
-public class FuzzyClassificationIterationStrategy extends AbstractIterationStrategy<PSO>{
+public class PersonalFuzzyClassificationIterationStrategy extends AbstractIterationStrategy<PSO>{
 
     protected enum State{
         EXPLORATION,
@@ -37,135 +33,140 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
 
     protected IterationStrategy<PSO> delegate;
     protected DistanceMeasure distanceMeasure;
-    protected double delta;
-    protected State state;
+    //protected double delta;
     protected ProbabilityDistributionFunction deltaDistribution;
+    protected State[] state;
 
-    public FuzzyClassificationIterationStrategy(){
+
+    public PersonalFuzzyClassificationIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
         distanceMeasure = new EuclideanDistanceMeasure();
-        delta = 0.1;
-        state = State.EXPLORATION;
         deltaDistribution = new UniformDistribution(ConstantControlParameter.of(0.05), ConstantControlParameter.of(0.1));
+        //delta = 0.1;
+        //state = State.EXPLORATION;
     }
 
-    public FuzzyClassificationIterationStrategy(FuzzyClassificationIterationStrategy copy){
+    public PersonalFuzzyClassificationIterationStrategy(PersonalFuzzyClassificationIterationStrategy copy){
         this.delegate = copy.delegate.getClone();
         this.distanceMeasure = copy.distanceMeasure;
-        this.delta = copy.delta;
-        this.state = copy.state;
         this.deltaDistribution = copy.deltaDistribution;
+        this.state = copy.state;
     }
 
     @Override
-    public FuzzyClassificationIterationStrategy getClone() {
-        return new FuzzyClassificationIterationStrategy(this);
+    public PersonalFuzzyClassificationIterationStrategy getClone() {
+        return new PersonalFuzzyClassificationIterationStrategy(this);
     }
 
     @Override
     public void performIteration(PSO algorithm) {
-        double dMin = Double.MAX_VALUE;
-        double dMax = -Double.MIN_VALUE;
-        for (Particle p : algorithm.getTopology()) {
-            double d = meanDistance(p.getPosition(), algorithm);
-            dMin = Math.min(d, dMin);
-            dMax = Math.max(d, dMax);
+
+        if(algorithm.getIterations() == 0){
+            state = new State[algorithm.getTopology().length()];
+            for(int i = 0; i < state.length; i++){
+                state[i] = State.EXPLORATION;
+            }
         }
 
-        //TODO: dg is usually always the dmin, so algorithm is always 'converging'
-        double dg = meanDistance((StructuredType) algorithm.getBestSolution().getPosition(), algorithm);
-        dMin = Math.min(dMin, dg);
-        dMax = Math.max(dMax, dg);
+        double dValues[] = new double[algorithm.getTopology().length()];
+        double dMin = Double.MAX_VALUE;
+        double dMax = -Double.MIN_VALUE;
 
-        double f = calculateF(dg, dMin, dMax);
+        for(int i = 0; i < algorithm.getTopology().length(); i++){
+            Particle p = algorithm.getTopology().index(i);
+            dValues[i] = distanceMeasure.distance(p.getPosition(), (StructuredType)algorithm.getBestSolution().getPosition());  //meanDistance(p.getPosition(), algorithm);
+            dMin = Math.min(dValues[i], dMin);
+            dMax = Math.max(dValues[i], dMax);
+        }
 
-        double memExplore = membershipExploration(f);
-        double memExploit = membershipExploitation(f);
-        double memConv = membershipConvergence(f);
-        double memJump = membershipJumpingOut(f);
+        for(int i = 0; i < algorithm.getTopology().length(); i++){
+            SelfAdaptiveParticle p = (SelfAdaptiveParticle)algorithm.getTopology().index(i);
 
-        changeState(memExplore, memExploit, memConv, memJump);
+            double f = calculateF(dValues[i], dMin, dMax);
 
-        for (Particle p : algorithm.getTopology()) {
-            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
-            sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
-            adapt(sp, f);
+            double memExplore = membershipExploration(f);
+            double memExploit = membershipExploitation(f);
+            double memConv = membershipConvergence(f);
+            double memJump = membershipJumpingOut(f);
+
+            changeState(i, memExplore, memExploit, memConv, memJump);
+            adapt(p, f, state[i]);
         }
 
         delegate.performIteration(algorithm);
 
     }
 
-    protected void changeState(double memExplore, double memExploit, double memConv, double memJump){
+    protected void changeState(int index, double memExplore, double memExploit, double memConv, double memJump){
         //TODO: this could probably be simplified and cleaned up
-        switch(state){
+        switch(state[index]){
             case EXPLORATION:
                 if(memExplore > 0){   //resist change
-                    state = State.EXPLORATION;
+                    state[index] = State.EXPLORATION;
                 }
                 else if(memExploit > 0){         //favor change to exploitation
-                    state = state.EXPLOITATION;
+                    state[index] = State.EXPLOITATION;
                 }
                 else if(memConv > memJump){
-                    state = State.CONVERGENCE;
+                    state[index] = State.CONVERGENCE;
                 }
                 else{
-                    state = State.JUMPINGOUT;
+                    state[index] = State.JUMPINGOUT;
                 }
                 break;
             case EXPLOITATION:
                 if(memExploit > 0){   //resist change
-                    state = State.EXPLOITATION;
+                    state[index] = State.EXPLOITATION;
                 }
                 else if(memConv > 0){         //favor change to convergence
-                    state = state.CONVERGENCE;
+                    state[index] = State.CONVERGENCE;
                 }
                 else if(memExplore > memJump){
-                    state = State.EXPLORATION;
+                    state[index] = State.EXPLORATION;
                 }
                 else{
-                    state = State.JUMPINGOUT;
+                    state[index] = State.JUMPINGOUT;
                 }
                 break;
             case CONVERGENCE:
                 if(memConv > 0){   //resist change
-                    state = State.CONVERGENCE;
+                    state[index] = State.CONVERGENCE;
                 }
                 else if(memJump > 0){         //favor change to jumping out
-                    state = state.JUMPINGOUT;
+                    state[index] = State.JUMPINGOUT;
                 }
                 else if(memExplore > memExploit){
-                    state = State.EXPLORATION;
+                    state[index] = State.EXPLORATION;
                 }
                 else{
-                    state = State.EXPLOITATION;
+                    state[index] = State.EXPLOITATION;
                 }
                 break;
             case JUMPINGOUT:
                 if(memJump > 0){       //resist change
-                    state = State.JUMPINGOUT;
+                    state[index] = State.JUMPINGOUT;
                 }
                 else if(memExplore > 0){         //favor change to exploration
-                    state = state.EXPLORATION;
+                    state[index] = State.EXPLORATION;
                 }
                 else if(memExploit > memConv){
-                    state = State.EXPLOITATION;
+                    state[index] = State.EXPLOITATION;
                 }
                 else{
-                    state = State.CONVERGENCE;
+                    state[index] = State.CONVERGENCE;
                 }
                 break;
             default:
-                state = State.EXPLORATION;
+                state[index] = State.EXPLORATION;
                 break;
         }
     }
 
-    protected void adapt(SelfAdaptiveParticle sp, double f){
-        double delta = deltaDistribution.getRandomNumber();
-
+    protected void adapt(SelfAdaptiveParticle sp, double f, State state){
         double soc = sp.getSocialAcceleration().getParameter();
         double cog = sp.getCognitiveAcceleration().getParameter();
+
+        double delta = deltaDistribution.getRandomNumber();
 
         switch (state){
             case EXPLORATION:
@@ -174,11 +175,11 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
                 break;
             case EXPLOITATION:
                 cog += 0.5 * delta;
-                soc -= 0.5 * delta ;
+                soc -= 0.5 * delta;
                 break;
             case CONVERGENCE:
-                cog += 0.5 * delta;
-                soc += 0.5 * delta ;
+                cog += 0.5 * delta; //TODO: this is defined as both increasing, but doesn't match the diagram
+                soc += 0.5 * delta;
                 break;
             case JUMPINGOUT:
                 cog -= delta;
@@ -191,27 +192,28 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
         }
 
         //clamp c1 and c2
-        soc = Math.min(soc, 2.5);
-        soc = Math.max(soc, 1.5);
-        cog = Math.min(cog, 2.5);
-        cog = Math.max(cog, 1.5);
+        soc = Math.max(soc, 0.0);
+       // soc = Math.min(soc, 2.0);
+        cog = Math.max(cog, 0.0);
+       // cog = Math.min(cog, 2.0);
 
-        double sum = soc + cog;
-        if(sum > 4){
-            soc = (soc * 4) / sum;
-            cog = (cog * 4) / sum;
+        double sum = soc + cog; //TODO define more sensible upper limit
+        double maxSum = 2.99236; // 2 * 1.49618
+        if(sum > maxSum){
+            soc = (soc * maxSum) / sum;
+            cog = (cog * maxSum) / sum;
         }
 
-        double inertia = calculateInertia(f);
+        //double inertia = calculateInertia(f);
 
         sp.setSocialAcceleration(ConstantControlParameter.of(soc));
         sp.setCognitiveAcceleration(ConstantControlParameter.of(cog));
-        sp.setInertiaWeight(ConstantControlParameter.of(inertia));
+        //sp.setInertiaWeight(ConstantControlParameter.of(inertia));
     }
 
-    protected double calculateInertia(double f){
-        return 1 / (1 + 1.5 * Math.exp(-2.6 * f));
-    }
+   // protected double calculateInertia(double f){
+   //     return 1 / (1 + 1.5 * Math.exp(-2.6 * f));
+   // }
 
     protected double calculateF(double dg, double dmin, double dmax){
         return (dg - dmin) / (dmax - dmin);
@@ -263,7 +265,7 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
         this.distanceMeasure = measure;
     }
 
-    public void setDelta(double delta){
-        this.delta = delta;
+    public void setDeltaDistribution(ProbabilityDistributionFunction dist){
+        this.deltaDistribution = dist;
     }
 }
