@@ -73,6 +73,7 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
         return this.fitness.compareTo(other.fitness);
     }
 
+
     public void incrementFitness(double value){
         this.fitness = this.fitness.newInstance(this.fitness.getValue() + value);
     }

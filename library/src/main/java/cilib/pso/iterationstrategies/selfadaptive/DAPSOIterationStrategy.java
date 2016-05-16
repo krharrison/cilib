@@ -61,11 +61,10 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
 
         if(algorithm.getIterations() == 0){
             previousPBest = new double[algorithm.getTopology().length()];
-        }
-
-        //store the personal best of each particle
-        for(int i = 0; i < algorithm.getTopology().length(); i++){
-            previousPBest[i] = algorithm.getTopology().index(i).getBestFitness().getValue();
+            //store the personal best of each particle
+            for(int i = 0; i < algorithm.getTopology().length(); i++){
+                previousPBest[i] = algorithm.getTopology().index(i).getBestFitness().getValue();
+            }
         }
 
         double aggDegree = aggregationDegree(algorithm);
@@ -79,6 +78,11 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
 
             sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
             sp.setInertiaWeight(ConstantControlParameter.of(inertia));
+        }
+
+        //store the personal best of each particle
+        for(int i = 0; i < algorithm.getTopology().length(); i++){
+            previousPBest[i] = algorithm.getTopology().index(i).getBestFitness().getValue();
         }
 
         delegate.performIteration(algorithm);
@@ -105,7 +109,6 @@ public class DAPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
                 double fitness = p.getFitness().getValue();  //TODO: positive offset
                 if(Double.isInfinite(fitness) || Double.isNaN(fitness)) continue;
                 else avg += Math.abs(fitness - iterationBest);
-
             }
 
             avg /= algorithm.getTopology().length();

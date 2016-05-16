@@ -7,6 +7,7 @@
 package cilib.functions.continuous.unconstrained;
 
 import cilib.functions.ContinuousFunction;
+import cilib.math.random.GaussianDistribution;
 import cilib.type.types.container.Vector;
 
 /**
@@ -35,6 +36,12 @@ public class DeJongF4 extends ContinuousFunction {
 
     private static final long serialVersionUID = 4835441178770462999L;
 
+    private GaussianDistribution noise;
+
+    public DeJongF4(){
+        noise = new GaussianDistribution();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -43,7 +50,7 @@ public class DeJongF4 extends ContinuousFunction {
         double sum = 0;
         for (int i = 0; i < input.size(); ++i) {
             double xi = input.doubleValueOf(i);
-            sum += (i + 1) * (xi * xi * xi * xi);
+            sum += (i + 1) * (xi * xi * xi * xi) + noise.getRandomNumber();
         }
         return sum;
     }

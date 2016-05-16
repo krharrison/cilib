@@ -34,8 +34,8 @@ public class PSOAIWFIterationStrategy extends AbstractIterationStrategy<PSO> {
 
     public PSOAIWFIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
-        inertiaMin = 0.4;
-        inertiaMax = 0.9;
+        inertiaMin = 0.2;
+        inertiaMax = 1.2;
     }
 
     @Override

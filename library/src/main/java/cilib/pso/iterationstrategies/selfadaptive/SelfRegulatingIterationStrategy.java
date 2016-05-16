@@ -10,6 +10,7 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.math.random.ProbabilityDistributionFunction;
 import cilib.math.random.UniformDistribution;
 import cilib.problem.solution.Fitness;
@@ -58,6 +59,8 @@ public class SelfRegulatingIterationStrategy extends AbstractIterationStrategy<P
         List<Particle> particles = algorithm.getTopology();
         for (int i = 0; i < algorithm.getTopology().length(); i++){
             SelfAdaptiveParticle sp = (SelfAdaptiveParticle) particles.index(i);
+
+            sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
 
             if(i == bestIndex){
                 double inertia = sp.getInertiaWeight().getParameter() + eta * deltaInertia;

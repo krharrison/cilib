@@ -177,7 +177,7 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
                 soc -= 0.5 * delta ;
                 break;
             case CONVERGENCE:
-                cog += 0.5 * delta;
+                cog += 0.5 * delta; //TODO: why increase both?
                 soc += 0.5 * delta ;
                 break;
             case JUMPINGOUT:

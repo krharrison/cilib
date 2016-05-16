@@ -7,6 +7,8 @@
 package cilib.pso.selfadaptive.parametersetgenerator;
 
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.math.random.ProbabilityDistributionFunction;
+import cilib.math.random.UniformDistribution;
 import cilib.math.random.generator.Rand;
 import cilib.pso.selfadaptive.ParameterBounds;
 import cilib.pso.selfadaptive.ParameterSet;
@@ -17,18 +19,26 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
     protected ParameterBounds inertiaBounds;
     protected ParameterBounds socialBounds;
     protected ParameterBounds cognitiveBounds;
-
+    protected ProbabilityDistributionFunction inertiaDistribution;
+    protected ProbabilityDistributionFunction socialDistribution;
+    protected ProbabilityDistributionFunction cognitiveDistribution;
 
     public ConvergentParameterSetGenerator(){
         inertiaBounds = new ParameterBounds(0, 1);
         socialBounds = new ParameterBounds(0, 4);
         cognitiveBounds = new ParameterBounds(0, 4);
+        inertiaDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(1));
+        socialDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4));
+        cognitiveDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4));
     }
 
     public ConvergentParameterSetGenerator(ConvergentParameterSetGenerator copy){
-        this.inertiaBounds = copy.getInertiaBounds();
-        this.socialBounds = copy.getSocialBounds();
-        this.cognitiveBounds = copy.getCognitiveBounds();
+        this.inertiaBounds = copy.inertiaBounds;
+        this.socialBounds = copy.socialBounds;
+        this.cognitiveBounds = copy.cognitiveBounds;
+        this.inertiaDistribution = copy.inertiaDistribution;
+        this.cognitiveDistribution = copy.cognitiveDistribution;
+        this.socialDistribution = copy.socialDistribution;
     }
 
     public ParameterSet generate(){
@@ -36,9 +46,9 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
         ParameterSet params = new ParameterSet();
 
         do{
-            params.setInertiaWeight(ConstantControlParameter.of(Rand.nextDouble() * inertiaBounds.getRange() + inertiaBounds.getLowerBound().getParameter()));
-            params.setCognitiveAcceleration(ConstantControlParameter.of(Rand.nextDouble() * cognitiveBounds.getRange() + cognitiveBounds.getLowerBound().getParameter()));
-            params.setSocialAcceleration(ConstantControlParameter.of(Rand.nextDouble() * socialBounds.getRange() + socialBounds.getLowerBound().getParameter()));
+            params.setInertiaWeight(ConstantControlParameter.of(inertiaDistribution.getRandomNumber()));
+            params.setCognitiveAcceleration(ConstantControlParameter.of(cognitiveDistribution.getRandomNumber()));
+            params.setSocialAcceleration(ConstantControlParameter.of(socialDistribution.getRandomNumber()));
         } while(!params.isConvergent());
 
         return params;
@@ -82,5 +92,17 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
 
     public ParameterBounds getCognitiveBounds(){
         return this.cognitiveBounds;
+    }
+
+    public void setInertiaDistribution(ProbabilityDistributionFunction distribution){
+        this.inertiaDistribution = distribution;
+    }
+
+    public void setCognitiveDistribution(ProbabilityDistributionFunction distribution){
+        this.cognitiveDistribution = distribution;
+    }
+
+    public void setSocialDistribution(ProbabilityDistributionFunction distribution){
+        this.socialDistribution = distribution;
     }
 }

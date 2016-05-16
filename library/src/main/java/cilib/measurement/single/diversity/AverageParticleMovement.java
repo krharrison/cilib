@@ -23,7 +23,7 @@ public class AverageParticleMovement implements Measurement<Real> {
     }
 
     @Override
-    public Measurement<Real> getClone() {
+    public AverageParticleMovement getClone() {
         return this;
     }
 

@@ -9,6 +9,7 @@ package cilib.pso.iterationstrategies.selfadaptive;
 import cilib.algorithm.population.AbstractIterationStrategy;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
+import cilib.entity.Property;
 import cilib.pso.PSO;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
@@ -75,6 +76,7 @@ public class SAICIterationStrategy extends AbstractIterationStrategy<PSO> {
             double inertia = inertiaA * f + inertiaB;
             double social = socialA * g + socialB;
 
+            sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
             sp.setInertiaWeight(ConstantControlParameter.of(inertia));
             sp.setSocialAcceleration(ConstantControlParameter.of(social));
         }
