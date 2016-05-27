@@ -1,52 +1,50 @@
-package cilib.pso.iterationstrategies.selfadaptive;
+/**
+ *         __  __
+ * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ * / ___/ / / / __ \   (c) CIRG @ UP
+ * / /__/ / / / /_/ /   http://cilib.net
+ * \___/_/_/_/_.___/
+ */
+package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
-import java.util.Iterator;
-
-import cilib.entity.Property;
-import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.algorithm.population.AbstractIterationStrategy;
-import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
-import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
+import cilib.pso.particle.SelfAdaptiveParticle;
+import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
 import cilib.util.selection.arrangement.Arrangement;
 import cilib.util.selection.arrangement.SortedArrangement;
 
-public class SAPSODWCYIterationStrategy extends AbstractIterationStrategy<PSO>{
-    protected IterationStrategy<PSO> delegate;
-    protected Arrangement<Particle> arrangement;
+import java.util.Iterator;
 
+/**
+ * C. Dong, G. Wang, Z. Chen, and Z. Yu, “A Method of Self-adaptive Inertia Weight for PSO,” in Proceedings of the 2008
+ * International Conference on Computer Science and Software Engineering, 2008, vol. 1, pp. 1195–1198.
+ */
+public class DWCYInertiaStrategy implements AlgorithmAdaptationStrategy {
+
+    protected Arrangement<Particle> arrangement;
     protected double alpha;
     protected double beta;
     protected double gamma;
 
-    public SAPSODWCYIterationStrategy(){
-        super();
+    public DWCYInertiaStrategy(){
         arrangement = new SortedArrangement<Particle>();
-        delegate = new SynchronousIterationStrategy();
         alpha = 3;
         beta = 200;
         gamma = 8;
     }
 
-    public SAPSODWCYIterationStrategy(SAPSODWCYIterationStrategy copy){
-        super(copy);
+    public DWCYInertiaStrategy(DWCYInertiaStrategy copy){
         this.arrangement = copy.arrangement;
-        this.delegate = copy.delegate.getClone();
         this.alpha = copy.alpha;
         this.beta = copy.beta;
         this.gamma = copy.gamma;
     }
 
-    @Override
-    public SAPSODWCYIterationStrategy getClone() {
-        return new SAPSODWCYIterationStrategy(this);
-    }
 
     @Override
-    public void performIteration(PSO algorithm) {
-
+    public void adapt(PSO algorithm) {
         Iterable<Particle> ordering = orderParticles(algorithm);
         Iterator<Particle> iterator = ordering.iterator();
         int rank = 1;
@@ -61,32 +59,51 @@ public class SAPSODWCYIterationStrategy extends AbstractIterationStrategy<PSO>{
             double rankTerm = (dimensions * rank) / gamma;
             double inertia = 1 / (alpha - expTerm + (rankTerm * rankTerm));
 
-            p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
             p.setInertiaWeight(ConstantControlParameter.of(inertia));
 
             rank++; //increment rank for next particle
         }
-
-        delegate.performIteration(algorithm);
     }
 
     private Iterable<Particle> orderParticles(PSO algorithm){
         return arrangement.arrange(algorithm.getTopology());
     }
 
-    public void setDelegate(IterationStrategy<PSO> delegate){
-        this.delegate = delegate;
+    @Override
+    public DWCYInertiaStrategy getClone() {
+        return new DWCYInertiaStrategy(this);
     }
 
-    public void setAlpha(double alpha){
+    public Arrangement<Particle> getArrangement() {
+        return arrangement;
+    }
+
+    public void setArrangement(Arrangement<Particle> arrangement) {
+        this.arrangement = arrangement;
+    }
+
+    public double getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(double alpha) {
         this.alpha = alpha;
     }
 
-    public void setBeta(double beta){
+    public double getBeta() {
+        return beta;
+    }
+
+    public void setBeta(double beta) {
         this.beta = beta;
     }
 
-    public void setGamma(double gamma){
+    public double getGamma() {
+        return gamma;
+    }
+
+    public void setGamma(double gamma) {
         this.gamma = gamma;
     }
+
 }

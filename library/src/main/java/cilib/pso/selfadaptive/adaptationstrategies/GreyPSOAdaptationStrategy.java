@@ -1,35 +1,33 @@
-/**           __  __
- *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
- *   / ___/ / / / __ \   (c) CIRG @ UP
- *  / /__/ / / / /_/ /   http://cilib.net
- *  \___/_/_/_/_.___/
+/**
+ *         __  __
+ * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ * / ___/ / / / __ \   (c) CIRG @ UP
+ * / /__/ / / / /_/ /   http://cilib.net
+ * \___/_/_/_/_.___/
  */
-package cilib.pso.iterationstrategies.selfadaptive;
+package cilib.pso.selfadaptive.adaptationstrategies;
 
-import cilib.algorithm.population.AbstractIterationStrategy;
-import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.controlparameter.LinearlyVaryingControlParameter;
-import cilib.entity.Property;
 import cilib.pso.PSO;
-import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.type.types.Numeric;
 import cilib.type.types.container.Vector;
-import fj.F;
 
-public class GreyPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
+/**
+ * M.-S. Leu and M.-F. Yeh, “Grey Particle Swarm Optimization,” Applied Soft Computing, vol. 12, no. 9, pp. 2985–2996, 2012.
+ */
+public class GreyPSOAdaptationStrategy implements AlgorithmAdaptationStrategy{
 
-    protected IterationStrategy<PSO> delegate;
     protected double eta;
     protected double inertiaMin;
     protected double inertiaMax;
     protected LinearlyVaryingControlParameter cMax;
     protected LinearlyVaryingControlParameter cMin;
 
-    public GreyPSOIterationStrategy(){
-        delegate = new SynchronousIterationStrategy();
+    public GreyPSOAdaptationStrategy(){
+        super();
         eta = 1.0;
         inertiaMin = 0.4;
         inertiaMax = 0.9;
@@ -37,13 +35,17 @@ public class GreyPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         cMin = new LinearlyVaryingControlParameter(1.5,2.5);
     }
 
-    @Override
-    public GreyPSOIterationStrategy getClone() {
-        return null;
+    public GreyPSOAdaptationStrategy(GreyPSOAdaptationStrategy copy){
+        this.eta = copy.eta;
+        this.inertiaMax = copy.inertiaMax;
+        this.inertiaMin = copy.inertiaMin;
+        this.cMax = copy.cMax.getClone();
+        this.cMin = copy.cMin.getClone();
     }
 
+
     @Override
-    public void performIteration(PSO algorithm) {
+    public void adapt(PSO algorithm) {
 
         double[] gValues = new double[algorithm.getTopology().length()];
         double gMin = Double.MAX_VALUE;
@@ -60,11 +62,8 @@ public class GreyPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
             gMin = Math.min(gMin, gValues[i]);
         }
 
-        //adapt the particles
         for(int i = 0; i < algorithm.getTopology().length(); i++) {
             SelfAdaptiveParticle p = (SelfAdaptiveParticle) algorithm.getTopology().index(i);
-
-            p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
 
             double inertia = calculateInertia(gValues[i], inertiaMin, inertiaMax, gMin, gMax);
             double social = calculateSocial(gValues[i], cMin.getParameter(), cMax.getParameter(), gMin, gMax);
@@ -74,7 +73,6 @@ public class GreyPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
             p.setSocialAcceleration(ConstantControlParameter.of(social));
         }
 
-        delegate.performIteration(algorithm);
     }
 
     private double relationalGrade(Vector gBest, Vector pos){
@@ -117,6 +115,50 @@ public class GreyPSOIterationStrategy extends AbstractIterationStrategy<PSO> {
         double right = (cMin * gMax - cMax * gMin) / (gMax - gMin);
 
         return left + right;
+    }
+
+    @Override
+    public GreyPSOAdaptationStrategy getClone() {
+        return new GreyPSOAdaptationStrategy(this);
+    }
+    public double getEta() {
+        return eta;
+    }
+
+    public void setEta(double eta) {
+        this.eta = eta;
+    }
+
+    public double getInertiaMin() {
+        return inertiaMin;
+    }
+
+    public void setInertiaMin(double inertiaMin) {
+        this.inertiaMin = inertiaMin;
+    }
+
+    public double getInertiaMax() {
+        return inertiaMax;
+    }
+
+    public void setInertiaMax(double inertiaMax) {
+        this.inertiaMax = inertiaMax;
+    }
+
+    public LinearlyVaryingControlParameter getcMax() {
+        return cMax;
+    }
+
+    public void setcMax(LinearlyVaryingControlParameter cMax) {
+        this.cMax = cMax;
+    }
+
+    public LinearlyVaryingControlParameter getcMin() {
+        return cMin;
+    }
+
+    public void setcMin(LinearlyVaryingControlParameter cMin) {
+        this.cMin = cMin;
     }
 
 }

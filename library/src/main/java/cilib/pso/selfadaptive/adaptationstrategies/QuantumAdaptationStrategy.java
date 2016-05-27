@@ -84,7 +84,7 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
                 //step 2 - calculate the distance of the point from from the origin
                 double distance = position.length();
 
-                //step 3 - calculate a random number using the provided probability distribution
+                //step 3 - calculate a random number using the provided weight distribution
                 double u = distribution.getRandomNumber();
 
                 //special care to avoid negative roots

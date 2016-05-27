@@ -4,29 +4,23 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package cilib.pso.iterationstrategies.selfadaptive;
+package cilib.pso.selfadaptive.adaptationstrategies;
 
-import cilib.algorithm.population.AbstractIterationStrategy;
-import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.entity.Property;
 import cilib.math.random.ProbabilityDistributionFunction;
 import cilib.math.random.UniformDistribution;
-import cilib.problem.solution.Fitness;
-import cilib.problem.solution.InferiorFitness;
 import cilib.pso.PSO;
-import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.type.types.Type;
 import cilib.type.types.container.StructuredType;
 import cilib.util.distancemeasure.DistanceMeasure;
 import cilib.util.distancemeasure.EuclideanDistanceMeasure;
 
 /**
- * APSO-ZZLC
+ * Z.-H. Zhan, J. Zhang, Y. Li, and H. S.-H. Chung, “Adaptive Particle Swarm Optimization,”
+ * IEEE Transactions on Systems, Man, and Cybernetics, Part B: Cybernetics, vol. 39, no. 6, pp. 1362–1381, Dec. 2009.
  */
-public class FuzzyClassificationIterationStrategy extends AbstractIterationStrategy<PSO>{
+public class FuzzyClassificationAdaptationStrategy implements AlgorithmAdaptationStrategy {
 
     protected enum State{
         EXPLORATION,
@@ -35,22 +29,20 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
         JUMPINGOUT
     }
 
-    protected IterationStrategy<PSO> delegate;
     protected DistanceMeasure distanceMeasure;
     protected double delta;
     protected State state;
     protected ProbabilityDistributionFunction deltaDistribution;
 
-    public FuzzyClassificationIterationStrategy(){
-        delegate = new SynchronousIterationStrategy();
+    public FuzzyClassificationAdaptationStrategy(){
+        super();
         distanceMeasure = new EuclideanDistanceMeasure();
         delta = 0.1;
         state = State.EXPLORATION;
         deltaDistribution = new UniformDistribution(ConstantControlParameter.of(0.05), ConstantControlParameter.of(0.1));
     }
 
-    public FuzzyClassificationIterationStrategy(FuzzyClassificationIterationStrategy copy){
-        this.delegate = copy.delegate.getClone();
+    public FuzzyClassificationAdaptationStrategy(FuzzyClassificationAdaptationStrategy copy){
         this.distanceMeasure = copy.distanceMeasure;
         this.delta = copy.delta;
         this.state = copy.state;
@@ -58,12 +50,7 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
     }
 
     @Override
-    public FuzzyClassificationIterationStrategy getClone() {
-        return new FuzzyClassificationIterationStrategy(this);
-    }
-
-    @Override
-    public void performIteration(PSO algorithm) {
+    public void adapt(PSO algorithm) {
         double dMin = Double.MAX_VALUE;
         double dMax = -Double.MIN_VALUE;
         for (Particle p : algorithm.getTopology()) {
@@ -88,12 +75,57 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
 
         for (Particle p : algorithm.getTopology()) {
             SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
-            sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
-            adapt(sp, f);
+            adaptParticle(sp, f);
         }
 
-        delegate.performIteration(algorithm);
+    }
 
+    protected void adaptParticle(SelfAdaptiveParticle sp, double f){
+        double delta = deltaDistribution.getRandomNumber();
+
+        double soc = sp.getSocialAcceleration().getParameter();
+        double cog = sp.getCognitiveAcceleration().getParameter();
+
+        switch (state){
+            case EXPLORATION:
+                cog += delta;
+                soc -= delta;
+                break;
+            case EXPLOITATION:
+                cog += 0.5 * delta;
+                soc -= 0.5 * delta ;
+                break;
+            case CONVERGENCE:
+                cog += 0.5 * delta; //TODO: why increase both?
+                soc += 0.5 * delta ;
+                break;
+            case JUMPINGOUT:
+                cog -= delta;
+                soc += delta;
+                break;
+            default:
+                cog = 2;
+                soc = 2;
+                break;
+        }
+
+        //clamp c1 and c2
+        soc = Math.min(soc, 2.5);
+        soc = Math.max(soc, 1.5);
+        cog = Math.min(cog, 2.5);
+        cog = Math.max(cog, 1.5);
+
+        double sum = soc + cog;
+        if(sum > 4){
+            soc = (soc * 4) / sum;
+            cog = (cog * 4) / sum;
+        }
+
+        double inertia = calculateInertia(f);
+
+        sp.setSocialAcceleration(ConstantControlParameter.of(soc));
+        sp.setCognitiveAcceleration(ConstantControlParameter.of(cog));
+        sp.setInertiaWeight(ConstantControlParameter.of(inertia));
     }
 
     protected void changeState(double memExplore, double memExploit, double memConv, double memJump){
@@ -161,54 +193,6 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
         }
     }
 
-    protected void adapt(SelfAdaptiveParticle sp, double f){
-        double delta = deltaDistribution.getRandomNumber();
-
-        double soc = sp.getSocialAcceleration().getParameter();
-        double cog = sp.getCognitiveAcceleration().getParameter();
-
-        switch (state){
-            case EXPLORATION:
-                cog += delta;
-                soc -= delta;
-                break;
-            case EXPLOITATION:
-                cog += 0.5 * delta;
-                soc -= 0.5 * delta ;
-                break;
-            case CONVERGENCE:
-                cog += 0.5 * delta; //TODO: why increase both?
-                soc += 0.5 * delta ;
-                break;
-            case JUMPINGOUT:
-                cog -= delta;
-                soc += delta;
-                break;
-            default:
-                cog = 2;
-                soc = 2;
-                break;
-        }
-
-        //clamp c1 and c2
-        soc = Math.min(soc, 2.5);
-        soc = Math.max(soc, 1.5);
-        cog = Math.min(cog, 2.5);
-        cog = Math.max(cog, 1.5);
-
-        double sum = soc + cog;
-        if(sum > 4){
-            soc = (soc * 4) / sum;
-            cog = (cog * 4) / sum;
-        }
-
-        double inertia = calculateInertia(f);
-
-        sp.setSocialAcceleration(ConstantControlParameter.of(soc));
-        sp.setCognitiveAcceleration(ConstantControlParameter.of(cog));
-        sp.setInertiaWeight(ConstantControlParameter.of(inertia));
-    }
-
     protected double calculateInertia(double f){
         return 1 / (1 + 1.5 * Math.exp(-2.6 * f));
     }
@@ -254,16 +238,33 @@ public class FuzzyClassificationIterationStrategy extends AbstractIterationStrat
         else if (f <= 0.9) return 5 * f - 3.5; // 0.7 < f <= 0.9
         else return 1;                         // 0.9 < f <= 1.0
     }
-
-    public void setDelegate(IterationStrategy<PSO> delegate){
-        this.delegate = delegate;
+    @Override
+    public FuzzyClassificationAdaptationStrategy getClone() {
+        return new FuzzyClassificationAdaptationStrategy(this);
     }
 
-    public void setDistanceMeasure(DistanceMeasure measure){
-        this.distanceMeasure = measure;
+    public DistanceMeasure getDistanceMeasure() {
+        return distanceMeasure;
     }
 
-    public void setDelta(double delta){
+    public void setDistanceMeasure(DistanceMeasure distanceMeasure) {
+        this.distanceMeasure = distanceMeasure;
+    }
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
         this.delta = delta;
     }
+
+    public ProbabilityDistributionFunction getDeltaDistribution() {
+        return deltaDistribution;
+    }
+
+    public void setDeltaDistribution(ProbabilityDistributionFunction deltaDistribution) {
+        this.deltaDistribution = deltaDistribution;
+    }
+
 }

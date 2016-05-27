@@ -1,44 +1,38 @@
 /**
- * __  __
+ *         __  __
  * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
  * / ___/ / / / __ \   (c) CIRG @ UP
  * / /__/ / / / /_/ /   http://cilib.net
  * \___/_/_/_/_.___/
  */
-package cilib.pso.iterationstrategies.selfadaptive;
+package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
-import cilib.algorithm.population.AbstractIterationStrategy;
-import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.controlparameter.ControlParameter;
 import cilib.controlparameter.ExponentiallyVaryingControlParameter;
-import cilib.entity.Property;
 import cilib.measurement.single.diversity.AverageParticleMovement;
 import cilib.pso.PSO;
-import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.type.types.Numeric;
-import cilib.type.types.container.Vector;
+import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
 
 /**
  * Adapt the inertia weight based on the step sizes of the particles
  *
- * Based on Adaptive Parameter Tuning of PSO Based on Velocity Information
- * by G. Hu.
+ * Inspired heavily by:
+ * G. Xu, “An Adaptive Parameter Tuning of Particle Swarm Optimization Algorithm,”
+ * Applied Mathematics and Computation, vol. 219, no. 9, pp. 4560–4569, 2013.
  */
-public class MovementInformationIterationStrategy extends AbstractIterationStrategy<PSO> {
 
-    protected double initialVelocity; 	//initial ideal velocity
+public class MovementInformationInertiaStrategy implements AlgorithmAdaptationStrategy {
+
     protected double inertiaChange;		//change in inertia
     protected double minInertia;		//minimum allowable inertia
     protected double maxInertia;		//maximum allowable inertia
-    protected IterationStrategy<PSO> delegate;
-
     protected ControlParameter idealMovement;
     private AverageParticleMovement movementMeasure;
 
-    public MovementInformationIterationStrategy(){
+    public MovementInformationInertiaStrategy(){
         super();
         inertiaChange = 0.1;
         minInertia = 0.4;
@@ -48,26 +42,18 @@ public class MovementInformationIterationStrategy extends AbstractIterationStrat
         ExponentiallyVaryingControlParameter movement = new ExponentiallyVaryingControlParameter(1095.445,0);
         movement.setCurve(-4);
         idealMovement = movement;
-        delegate = new SynchronousIterationStrategy();
     }
 
-    public MovementInformationIterationStrategy(MovementInformationIterationStrategy copy){
-        super(copy);
+    public MovementInformationInertiaStrategy(MovementInformationInertiaStrategy copy){
         this.inertiaChange = copy.inertiaChange;
         this.minInertia = copy.minInertia;
         this.maxInertia = copy.maxInertia;
         this.movementMeasure = copy.movementMeasure.getClone();
         this.idealMovement = copy.idealMovement.getClone();
-        this.delegate = copy.delegate.getClone();
     }
 
     @Override
-    public MovementInformationIterationStrategy getClone() {
-        return new MovementInformationIterationStrategy(this);
-    }
-
-    @Override
-    public void performIteration(PSO algorithm) {
+    public void adapt(PSO algorithm) {
         double idealMovementSize = idealMovement.getParameter();
         double avgMovement = movementMeasure.getValue(algorithm).doubleValue();
 
@@ -82,30 +68,45 @@ public class MovementInformationIterationStrategy extends AbstractIterationStrat
                 newInertia = Math.min(p.getInertiaWeight().getParameter() + inertiaChange, maxInertia);
             }
 
-            p.put(Property.PREVIOUS_PARAMETERS, p.getParameterSet().asVector());
             p.setInertiaWeight(ConstantControlParameter.of(newInertia));
         }
 
-        delegate.performIteration(algorithm);
     }
 
-    public void setIdealMovement(ControlParameter idealMovement){
-        this.idealMovement = idealMovement;
+    @Override
+    public MovementInformationInertiaStrategy getClone() {
+        return new MovementInformationInertiaStrategy(this);
     }
 
-    public void setInertiaChange(double inertiaChange){
+    public double getInertiaChange() {
+        return inertiaChange;
+    }
+
+    public void setInertiaChange(double inertiaChange) {
         this.inertiaChange = inertiaChange;
     }
 
-    public void setMinInertia(double minInertia){
+    public double getMinInertia() {
+        return minInertia;
+    }
+
+    public void setMinInertia(double minInertia) {
         this.minInertia = minInertia;
     }
 
-    public void setMaxInertia(double maxInertia){
+    public double getMaxInertia() {
+        return maxInertia;
+    }
+
+    public void setMaxInertia(double maxInertia) {
         this.maxInertia = maxInertia;
     }
 
-    public void setDelegate(IterationStrategy<PSO> delegate){
-        this.delegate = delegate;
+    public ControlParameter getIdealMovement() {
+        return idealMovement;
+    }
+
+    public void setIdealMovement(ControlParameter idealMovement) {
+        this.idealMovement = idealMovement;
     }
 }

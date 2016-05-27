@@ -8,7 +8,6 @@
 package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.entity.Property;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
@@ -16,7 +15,6 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
 import cilib.type.types.Numeric;
 import cilib.type.types.container.Vector;
 import fj.F;
-import fj.F2;
 
 /**
  * Inertia weight based on velocity informatiom
@@ -37,6 +35,12 @@ public class VelocityInformationInertiaStrategy implements AlgorithmAdaptationSt
         inertiaChange = 0.1;
         minInertia = 0.3;
         maxInertia = 0.9;
+    }
+
+    public VelocityInformationInertiaStrategy(VelocityInformationInertiaStrategy copy){
+        this.inertiaChange = copy.inertiaChange;
+        this.minInertia = copy.minInertia;
+        this.maxInertia = copy.maxInertia;
     }
 
     @Override
@@ -93,7 +97,7 @@ public class VelocityInformationInertiaStrategy implements AlgorithmAdaptationSt
 
     @Override
     public VelocityInformationInertiaStrategy getClone() {
-        return this;
+        return new VelocityInformationInertiaStrategy(this);
     }
 
 

@@ -16,12 +16,12 @@ import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
 
-public class AdaptiveInertiaIterationStrategy extends AbstractIterationStrategy<PSO> {
+public class AdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
 
     protected AlgorithmAdaptationStrategy adaptationStrategy;
     protected IterationStrategy<PSO> delegate;
 
-    public AdaptiveInertiaIterationStrategy(){
+    public AdaptiveIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
         adaptationStrategy = new AlgorithmAdaptationStrategy() {
             @Override
@@ -72,6 +72,4 @@ public class AdaptiveInertiaIterationStrategy extends AbstractIterationStrategy<
     public void setDelegate(IterationStrategy<PSO> delegate) {
         this.delegate = delegate;
     }
-
-
 }
