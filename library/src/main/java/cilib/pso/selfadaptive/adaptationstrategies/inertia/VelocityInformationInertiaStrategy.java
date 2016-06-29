@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import cilib.type.types.Numeric;
 import cilib.type.types.container.Vector;
 import fj.F;
@@ -23,7 +23,7 @@ import fj.F;
  * Applied Mathematics and Computation, vol. 219, no. 9, pp. 4560–4569, 2013.
  */
 
-public class VelocityInformationInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class VelocityInformationInertiaStrategy implements SwarmAdaptationStrategy {
     protected double inertiaChange;		//change in inertia
     protected double minInertia;		//minimum allowable inertia
     protected double maxInertia;		//maximum allowable inertia

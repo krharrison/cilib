@@ -13,7 +13,7 @@ import cilib.math.random.UniformDistribution;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Random Inertia Weight Strategy
@@ -22,7 +22,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * in Proceedings of the 2001 IEEE Congress on Evolutionary Computation, 2001, vol. 1, pp. 94–100.
  */
 
-public class RandomInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class RandomInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected ProbabilityDistributionFunction distribution;
     protected double baseInertia;

@@ -1,9 +1,8 @@
-/**
- * __  __
- * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
- * / ___/ / / / __ \   (c) CIRG @ UP
- * / /__/ / / / /_/ /   http://cilib.net
- * \___/_/_/_/_.___/
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package cilib.pso.selfadaptive.adaptationstrategies;
 
@@ -18,13 +17,11 @@ import cilib.ff.firefly.StandardFirefly;
 import cilib.ff.iterationstrategies.NonEvaluatingFireflyIterationStrategy;
 import cilib.problem.boundaryconstraint.ClampingBoundaryConstraint;
 import cilib.pso.PSO;
-import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.particle.Particle;
-import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import cilib.type.types.Real;
 import cilib.type.types.container.Vector;
 
-public class FireflyAdaptationStrategy implements AlgorithmAdaptationStrategy {
+public class FireflyAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected FFA adaptorFFA;
 
@@ -48,14 +45,8 @@ public class FireflyAdaptationStrategy implements AlgorithmAdaptationStrategy {
             public Firefly f(Particle p) {
                 SelfAdaptiveParticle p2 = (SelfAdaptiveParticle) p;
 
-                //create a new vector as [w, c1, c2] from the current particles parameter set
-                Vector.Builder builder = Vector.newBuilder();
-                builder.add(Real.valueOf(p2.getInertiaWeight().getParameter(), p2.getParameterSet().getInertiaBounds()));
-                builder.add(Real.valueOf(p2.getCognitiveAcceleration().getParameter(), p2.getParameterSet().getCognitiveBounds()));
-                builder.add(Real.valueOf(p2.getSocialAcceleration().getParameter(), p2.getParameterSet().getSocialBounds()));
-
                 Firefly newFirefly = new StandardFirefly();
-                newFirefly.setPosition(builder.build());
+                newFirefly.setPosition(p2.getParameterSet().asVector());
                 newFirefly.put(Property.FITNESS, p2.getParameterSet().getFitness());
                 return newFirefly;
             }

@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import cilib.type.types.container.Vector;
 import cilib.util.distancemeasure.DistanceMeasure;
 import cilib.util.distancemeasure.EuclideanDistanceMeasure;
@@ -23,7 +23,7 @@ import cilib.util.distancemeasure.EuclideanDistanceMeasure;
  * in Proceedings of the 2011 World Congress on Information and Communication Technologies, 2011, pp. 424–429.
  */
 
-public class FineGrainedInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class FineGrainedInertiaStrategy implements SwarmAdaptationStrategy {
 
     private DistanceMeasure measure = new EuclideanDistanceMeasure();
 

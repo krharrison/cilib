@@ -1,9 +1,8 @@
-/**
- *         __  __
- * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
- * / ___/ / / / __ \   (c) CIRG @ UP
- * / /__/ / / / /_/ /   http://cilib.net
- * \___/_/_/_/_.___/
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package cilib.pso.selfadaptive.adaptationstrategies;
 
@@ -13,7 +12,7 @@ import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.parametersetgenerator.ConvergentParameterSetGenerator;
 import cilib.pso.selfadaptive.parametersetgenerator.ParameterSetGenerator;
 
-public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
+public class RandomRegenerationAdaptationStrategy implements SwarmAdaptationStrategy {
     private ParameterSetGenerator parameterGenerator;
 
     public RandomRegenerationAdaptationStrategy(){
@@ -25,13 +24,15 @@ public class RandomRegenerationAdaptationStrategy implements AdaptationStrategy{
     }
 
     @Override
-    public void adapt(Particle p, PSO algorithm) {
-        SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
-        sp.setParameterSet(parameterGenerator.generate());
+    public void adapt(PSO algorithm) {
+        for(Particle p : algorithm.getTopology()) {
+            SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
+            sp.setParameterSet(parameterGenerator.generate());
+        }
     }
 
     @Override
-    public AdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return new RandomRegenerationAdaptationStrategy(this);
     }
 

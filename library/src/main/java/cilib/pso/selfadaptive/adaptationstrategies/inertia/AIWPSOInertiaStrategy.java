@@ -9,12 +9,10 @@ package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.entity.Property;
-import cilib.math.random.generator.Rand;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
-import fj.F2;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Adaptive Inertia Weight Factor PSO
@@ -22,7 +20,7 @@ import fj.F2;
  * A. Nickabadi, M. M. Ebadzadeh, and R. Safabakhsh, “A Novel Particle Swarm Optimization Algorithm with
  * Adaptive Inertia Weight,” Applied Soft Computing, vol. 11, no. 4, pp. 3658–3670, 2011.
  */
-public class AIWPSOInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class AIWPSOInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double minValue;
     protected double maxValue;

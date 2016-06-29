@@ -12,7 +12,7 @@ import cilib.math.random.generator.Rand;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Chaotic Descending Inertia Weight
@@ -20,7 +20,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * Y. Feng, G. Teng, A. Wang, and Y. Yao, “Chaotic Inertia Weight in Particle Swarm Optimization,”
  * in Second International Conference on Innovative Computing, Information and Control, 2007, pp. 475–479.
  */
-public class ChaoticDescendingInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class ChaoticDescendingInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double z;
     protected double minValue;
@@ -44,7 +44,7 @@ public class ChaoticDescendingInertiaStrategy implements AlgorithmAdaptationStra
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

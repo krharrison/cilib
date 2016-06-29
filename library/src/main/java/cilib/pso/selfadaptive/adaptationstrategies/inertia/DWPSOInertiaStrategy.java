@@ -11,14 +11,14 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * S.-K. S. Fan and Y.-Y. Chiu, “A Decreasing Inertia Weight Particle Swarm Optimizer,”
  * Engineering Optimization, vol. 39, no. 2, pp. 203–228, 2007.
  */
 
-public class DWPSOInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class DWPSOInertiaStrategy implements SwarmAdaptationStrategy {
     @Override
     public void adapt(PSO algorithm) {
         int iter = algorithm.getIterations();
@@ -31,7 +31,7 @@ public class DWPSOInertiaStrategy implements AlgorithmAdaptationStrategy {
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 }

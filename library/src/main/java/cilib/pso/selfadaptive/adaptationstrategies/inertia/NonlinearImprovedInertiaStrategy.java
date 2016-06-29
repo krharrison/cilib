@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Nonlinear improved inertia.
@@ -20,7 +20,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * Chaos, Solitons and Fractals, vol. 37, no. 3, pp. 698–705, 2008.
  */
 
-public class NonlinearImprovedInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class NonlinearImprovedInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double initialInertia;
     protected double u;
@@ -41,7 +41,7 @@ public class NonlinearImprovedInertiaStrategy implements AlgorithmAdaptationStra
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

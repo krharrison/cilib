@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Nonlinear time-varying inertia weight.
@@ -20,7 +20,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * with High-Order Nonlinear Time-varying Inertia Weight,” Applied Soft Computing, vol. 29, pp. 386–394, 2015.
  */
 
-public class NonlinearInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class NonlinearInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double minInertia;
     protected double maxInertia;
@@ -43,7 +43,7 @@ public class NonlinearInertiaStrategy implements AlgorithmAdaptationStrategy{
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

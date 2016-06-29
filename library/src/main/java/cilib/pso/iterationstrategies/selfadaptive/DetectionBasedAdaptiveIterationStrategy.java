@@ -14,17 +14,21 @@ import cilib.pso.PSO;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.DoNothingAdaptationStrategy;
-import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.particle.DoNothingParticleAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.particle.ParticleAdaptationStrategy;
+import cilib.pso.selfadaptive.detectionstrategies.particle.AlwaysTrueDetectionStrategy;
+import cilib.pso.selfadaptive.detectionstrategies.particle.ParticleUpdateDetectionStrategy;
 
-public class AdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
+public class DetectionBasedAdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
 
-    protected SwarmAdaptationStrategy adaptationStrategy;
+    protected ParticleAdaptationStrategy adaptationStrategy;
+    protected ParticleUpdateDetectionStrategy detectionStrategy;
     protected IterationStrategy<PSO> delegate;
 
-    public AdaptiveIterationStrategy(){
+    public DetectionBasedAdaptiveIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
-        adaptationStrategy = new DoNothingAdaptationStrategy();
+        adaptationStrategy = new DoNothingParticleAdaptationStrategy();
+        detectionStrategy = new AlwaysTrueDetectionStrategy();
     }
 
     @Override
@@ -40,21 +44,33 @@ public class AdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
                 SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
                 sp.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
             }
-        }
 
-        adaptationStrategy.adapt(algorithm);
+            if (detectionStrategy.detect(p)){
+                adaptationStrategy.adapt(p, algorithm);
+            }
+        }
 
         delegate.performIteration(algorithm);
     }
 
 
-    public SwarmAdaptationStrategy getAdaptationStrategy() {
+    public ParticleAdaptationStrategy getAdaptationStrategy() {
         return adaptationStrategy;
     }
 
-    public void setAdaptationStrategy(SwarmAdaptationStrategy adaptationStrategy) {
+    public void setAdaptationStrategy(ParticleAdaptationStrategy adaptationStrategy) {
         this.adaptationStrategy = adaptationStrategy;
     }
+
+
+    public ParticleUpdateDetectionStrategy getDetectionStrategy() {
+        return detectionStrategy;
+    }
+
+    public void setDetectionStrategy(ParticleUpdateDetectionStrategy detectionStrategy) {
+        this.detectionStrategy = detectionStrategy;
+    }
+
 
     public IterationStrategy<PSO> getDelegate() {
         return delegate;

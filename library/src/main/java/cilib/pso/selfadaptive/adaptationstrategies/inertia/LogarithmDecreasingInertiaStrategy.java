@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Logarithm Inertia Weight
@@ -19,7 +19,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * Y. Gao, X. An, and J. Liu, “A Particle Swarm Optimization Algorithm with Logarithm Decreasing Inertia Weight and Chaos Mutation,”
  * in Proceedings of the 2008 International Conference on Computational Intelligence and Security, 2008, pp. 61–65.
  */
-public class LogarithmDecreasingInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class LogarithmDecreasingInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double minValue;
     protected double maxValue;
@@ -42,7 +42,7 @@ public class LogarithmDecreasingInertiaStrategy implements AlgorithmAdaptationSt
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

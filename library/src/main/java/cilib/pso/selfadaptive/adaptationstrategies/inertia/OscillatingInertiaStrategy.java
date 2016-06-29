@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * PSO with Oscillating Inertia Weight
@@ -20,7 +20,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * in Proceedings of the 11th Annual conference on Genetic and evolutionary computation, 2009, pp. 1749–1750.
  */
 
-public class OscillatingInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class OscillatingInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double minValue;
     protected double maxValue;
@@ -55,7 +55,7 @@ public class OscillatingInertiaStrategy implements AlgorithmAdaptationStrategy {
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

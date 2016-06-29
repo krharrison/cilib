@@ -8,12 +8,10 @@
 package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.entity.Property;
-import cilib.math.random.generator.Rand;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import cilib.util.selection.arrangement.Arrangement;
 import cilib.util.selection.arrangement.SortedArrangement;
 
@@ -25,7 +23,7 @@ import java.util.Iterator;
  * B. K. Panigrahi, V. Ravikumar Pandi, and S. Das, “Adaptive Particle Swarm Optimization Approach for
  * Static and Dynamic Economic Load Dispatch,” Energy Conversion and Management, vol. 49, no. 6, pp. 1407–1415, 2008.
  */
-public class RankBasedInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class RankBasedInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double minValue;
     protected double maxValue;

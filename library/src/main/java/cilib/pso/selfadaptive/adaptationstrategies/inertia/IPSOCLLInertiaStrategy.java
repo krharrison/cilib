@@ -8,13 +8,11 @@
 package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.entity.Property;
 import cilib.measurement.single.IterationBestFitness;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
-import cilib.util.selection.recipes.ElitistSelector;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Improved PSO by Chen et al.
@@ -23,7 +21,7 @@ import cilib.util.selection.recipes.ElitistSelector;
  * Application in Available Transfer Capability Calculation,” in Natural Computation, 2009.
  * ICNC ’09. Fifth International Conference on, 2009, vol. 3, pp. 200–205.
  */
-public class IPSOCLLInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class IPSOCLLInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double previousAlpha;
     protected IterationBestFitness iterBestFitness;

@@ -11,13 +11,13 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  *X. Li, H. Fu, and C. Zhang, “A Self-Adaptive Particle Swarm Optimization Algorithm,” in Proceedings of the
  * 2008 International Conference on Computer Science and Software Engineering, 2008, vol. 5, pp. 186–189.
  */
-public class LFZInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class LFZInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double alpha;
 

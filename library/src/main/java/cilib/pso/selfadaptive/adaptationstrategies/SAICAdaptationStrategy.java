@@ -16,7 +16,7 @@ import cilib.pso.particle.SelfAdaptiveParticle;
  * Z. Wu and J. Zhou, “A Self-Adaptive Particle Swarm Optimization Algorithm with Individual Coefficients Adjustment,”
  * in Proceedings of the 2007 International Conference on Computational Intelligence and Security, 2007, pp. 133–136.
  */
-public class SAICAdaptationStrategy implements AlgorithmAdaptationStrategy{
+public class SAICAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected double inertiaA;
     protected double inertiaB;

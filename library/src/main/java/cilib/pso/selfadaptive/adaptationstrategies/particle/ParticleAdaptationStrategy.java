@@ -5,14 +5,13 @@
  * / /__/ / / / /_/ /   http://cilib.net
  * \___/_/_/_/_.___/
  */
-package cilib.pso.selfadaptive.adaptationstrategies;
+package cilib.pso.selfadaptive.adaptationstrategies.particle;
 
-import cilib.entity.behaviour.Behaviour;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 
 
-public interface AdaptationStrategy {
+public interface ParticleAdaptationStrategy {
     /**
      * Adapt the control parameters of the provided {@link Particle}.
      *
@@ -22,9 +21,9 @@ public interface AdaptationStrategy {
     void adapt(Particle particle, PSO algorithm);
 
     /**
-     * Clone the current {@link AdaptationStrategy}.
+     * Clone the current {@link ParticleAdaptationStrategy}.
      *
-     * @return A clone of this {@link AdaptationStrategy}.
+     * @return A clone of this {@link ParticleAdaptationStrategy}.
      */
-    AdaptationStrategy getClone();
+    ParticleAdaptationStrategy getClone();
 }

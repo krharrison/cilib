@@ -14,7 +14,8 @@ import cilib.measurement.single.diversity.AverageParticleMovement;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
+import cilib.type.types.container.Vector;
 
 /**
  * Adapt the inertia weight based on the step sizes of the particles
@@ -24,12 +25,14 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * Applied Mathematics and Computation, vol. 219, no. 9, pp. 4560–4569, 2013.
  */
 
-public class MovementInformationInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class MovementInformationInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double inertiaChange;		//change in inertia
     protected double minInertia;		//minimum allowable inertia
     protected double maxInertia;		//maximum allowable inertia
-    protected ControlParameter idealMovement;
+    protected double initialMovement;   //ideal initial movement
+    //protected ControlParameter idealMovement;
+
     private AverageParticleMovement movementMeasure;
 
     public MovementInformationInertiaStrategy(){
@@ -39,9 +42,9 @@ public class MovementInformationInertiaStrategy implements AlgorithmAdaptationSt
         maxInertia = 0.9;
         movementMeasure = new AverageParticleMovement();
         //1095.445 is the delta-max for domain of [-100,100]^30
-        ExponentiallyVaryingControlParameter movement = new ExponentiallyVaryingControlParameter(1095.445,0);
-        movement.setCurve(-4);
-        idealMovement = movement;
+        //ExponentiallyVaryingControlParameter movement = new ExponentiallyVaryingControlParameter(1095.445,0);
+        //movement.setCurve(-4);
+        //idealMovement = movement;
     }
 
     public MovementInformationInertiaStrategy(MovementInformationInertiaStrategy copy){
@@ -49,12 +52,20 @@ public class MovementInformationInertiaStrategy implements AlgorithmAdaptationSt
         this.minInertia = copy.minInertia;
         this.maxInertia = copy.maxInertia;
         this.movementMeasure = copy.movementMeasure.getClone();
-        this.idealMovement = copy.idealMovement.getClone();
+        //this.idealMovement = copy.idealMovement.getClone();
     }
 
     @Override
     public void adapt(PSO algorithm) {
-        double idealMovementSize = idealMovement.getParameter();
+
+        //initial movement is delta_max
+        if(algorithm.getIterations() == 0){
+            Vector domain = (Vector) algorithm.getOptimisationProblem().getDomain().getBuiltRepresentation();
+            initialMovement = 0.75 * Math.sqrt(domain.size() * Math.pow(domain.get(0).getBounds().getRange(), 2));
+        }
+
+        //double idealMovementSize = idealMovement.getParameter();
+        double idealMovementSize = calculateIdealMovement(algorithm);
         double avgMovement = movementMeasure.getValue(algorithm).doubleValue();
 
         for(Particle particle : algorithm.getTopology()){
@@ -76,6 +87,11 @@ public class MovementInformationInertiaStrategy implements AlgorithmAdaptationSt
     @Override
     public MovementInformationInertiaStrategy getClone() {
         return new MovementInformationInertiaStrategy(this);
+    }
+
+    private double calculateIdealMovement(PSO algorithm){
+        double factor = algorithm.getPercentageComplete() / 0.95;
+        return initialMovement * ((1 + Math.cos(factor * Math.PI)) / 2);
     }
 
     public double getInertiaChange() {
@@ -102,11 +118,11 @@ public class MovementInformationInertiaStrategy implements AlgorithmAdaptationSt
         this.maxInertia = maxInertia;
     }
 
-    public ControlParameter getIdealMovement() {
-        return idealMovement;
-    }
+    //public ControlParameter getIdealMovement() {
+    //    return idealMovement;
+    //}
 
-    public void setIdealMovement(ControlParameter idealMovement) {
-        this.idealMovement = idealMovement;
-    }
+   // public void setIdealMovement(ControlParameter idealMovement) {
+   //     this.idealMovement = idealMovement;
+   // }
 }

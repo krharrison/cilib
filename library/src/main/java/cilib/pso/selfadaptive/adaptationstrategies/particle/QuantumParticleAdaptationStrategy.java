@@ -1,11 +1,10 @@
-/**
- * __  __
- * _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
- * / ___/ / / / __ \   (c) CIRG @ UP
- * / /__/ / / / /_/ /   http://cilib.net
- * \___/_/_/_/_.___/
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
-package cilib.pso.selfadaptive.adaptationstrategies;
+package cilib.pso.selfadaptive.adaptationstrategies.particle;
 
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.controlparameter.ControlParameter;
@@ -14,10 +13,8 @@ import cilib.math.random.ProbabilityDistributionFunction;
 import cilib.math.random.UniformDistribution;
 import cilib.pso.PSO;
 import cilib.pso.behaviour.StandardParticleBehaviour;
-import cilib.pso.dynamic.ChargedParticle;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.ParameterSet;
 import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import cilib.type.types.container.Vector;
 
@@ -28,7 +25,7 @@ import cilib.type.types.container.Vector;
  * The nucleus is taken as the parameter set of a particle's neighbourhood best
  *
  */
-public class QuantumAdaptationStrategy implements AdaptationStrategy {
+public class QuantumParticleAdaptationStrategy implements ParticleAdaptationStrategy {
 
     private static final double EPSILON = 0.000000001;
 
@@ -37,17 +34,17 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
     private ControlParameter radius;
     private Boolean uniform; //true if using uniform distributions
 
-    protected AdaptationStrategy delegate;
+    protected ParticleAdaptationStrategy delegate;
 
-    public QuantumAdaptationStrategy(){
+    public QuantumParticleAdaptationStrategy(){
         this.normalDistribution = new GaussianDistribution();
         this.radius = ConstantControlParameter.of(0.1);
         this.distribution = new UniformDistribution();
-        this.delegate = new RandomRegenerationAdaptationStrategy();
+        this.delegate = new RandomRegenerationParticleAdaptationStrategy();
         this.uniform = true;
     }
 
-    public QuantumAdaptationStrategy(QuantumAdaptationStrategy copy){
+    public QuantumParticleAdaptationStrategy(QuantumParticleAdaptationStrategy copy){
         this.normalDistribution = copy.normalDistribution;
         this.radius = copy.radius;
         this.distribution = copy.distribution;
@@ -108,8 +105,8 @@ public class QuantumAdaptationStrategy implements AdaptationStrategy {
     }
 
     @Override
-    public QuantumAdaptationStrategy getClone() {
-        return new QuantumAdaptationStrategy(this);
+    public QuantumParticleAdaptationStrategy getClone() {
+        return new QuantumParticleAdaptationStrategy(this);
     }
 
     /**

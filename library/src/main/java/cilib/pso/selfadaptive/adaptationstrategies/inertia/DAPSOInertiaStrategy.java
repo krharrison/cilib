@@ -13,13 +13,13 @@ import cilib.measurement.single.IterationBestFitness;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * X. Yang, J. Yuan, J. Yuan, and H. Mao, “A Modified Particle Swarm Optimizer with Dynamic Adaptation,”
  * Applied Mathematics and Computation, vol. 189, no. 2, pp. 1205–1213, 2007.
  */
-public class DAPSOInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class DAPSOInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double initialInertia;
     protected double alpha;

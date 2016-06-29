@@ -18,7 +18,7 @@ import cilib.type.types.container.Vector;
 /**
  * M.-S. Leu and M.-F. Yeh, “Grey Particle Swarm Optimization,” Applied Soft Computing, vol. 12, no. 9, pp. 2985–2996, 2012.
  */
-public class GreyPSOAdaptationStrategy implements AlgorithmAdaptationStrategy{
+public class GreyPSOAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected double eta;
     protected double inertiaMin;

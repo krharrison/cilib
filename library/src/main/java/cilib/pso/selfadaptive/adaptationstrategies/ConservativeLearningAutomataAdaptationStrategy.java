@@ -15,7 +15,6 @@ import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.learningautomata.Action;
 import cilib.pso.selfadaptive.learningautomata.LearningAutomata;
-import cilib.type.types.Bounds;
 
 /**
  * The 'adventurous' unified adaptive PSO approach from:
@@ -23,7 +22,7 @@ import cilib.type.types.Bounds;
  * A. B. Hashemi and M. R. Meybodi, “A Note on the Learning Automata Based Algorithms for Adaptive Parameter
  * Selection in PSO,” Applied Soft Computing, vol. 11, no. 1, pp. 689–705, 2011.
  */
-public class ConservativeLearningAutomataAdaptationStrategy implements AlgorithmAdaptationStrategy {
+public class ConservativeLearningAutomataAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected LearningAutomata<Double> inertiaLA;
     protected LearningAutomata<Double> socialLA;

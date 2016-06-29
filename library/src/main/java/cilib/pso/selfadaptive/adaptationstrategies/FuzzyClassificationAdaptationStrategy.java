@@ -20,7 +20,7 @@ import cilib.util.distancemeasure.EuclideanDistanceMeasure;
  * Z.-H. Zhan, J. Zhang, Y. Li, and H. S.-H. Chung, “Adaptive Particle Swarm Optimization,”
  * IEEE Transactions on Systems, Man, and Cybernetics, Part B: Cybernetics, vol. 39, no. 6, pp. 1362–1381, Dec. 2009.
  */
-public class FuzzyClassificationAdaptationStrategy implements AlgorithmAdaptationStrategy {
+public class FuzzyClassificationAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected enum State{
         EXPLORATION,

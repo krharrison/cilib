@@ -7,7 +7,6 @@
  */
 package cilib.pso.iterationstrategies.selfadaptive;
 
-import cilib.algorithm.AbstractAlgorithm;
 import cilib.algorithm.population.IterationStrategy;
 import cilib.entity.Property;
 import cilib.problem.boundaryconstraint.BoundaryConstraint;
@@ -15,19 +14,19 @@ import cilib.pso.PSO;
 import cilib.pso.iterationstrategies.SynchronousIterationStrategy;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AdaptationStrategy;
-import cilib.pso.selfadaptive.adaptationstrategies.RandomRegenerationAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.particle.ParticleAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.particle.RandomRegenerationParticleAdaptationStrategy;
 import cilib.pso.selfadaptive.detectionstrategies.particle.ParticleUpdateDetectionStrategy;
 
 public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
     protected IterationStrategy<PSO> iterationStrategy;
-    protected AdaptationStrategy adaptationStrategy;
+    protected ParticleAdaptationStrategy adaptationStrategy;
     protected ParticleUpdateDetectionStrategy detectionStrategy;
     //protected int period;
 
     public SAPSOIterationStrategy(){
         iterationStrategy = new SynchronousIterationStrategy();
-        adaptationStrategy = new RandomRegenerationAdaptationStrategy();
+        adaptationStrategy = new RandomRegenerationParticleAdaptationStrategy();
         //period = 50;
     }
 
@@ -68,7 +67,7 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
         //}
     }
 
-    public void setAdaptationStrategy(AdaptationStrategy strategy){
+    public void setAdaptationStrategy(ParticleAdaptationStrategy strategy){
         this.adaptationStrategy = strategy;
     }
 

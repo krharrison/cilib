@@ -13,13 +13,13 @@ import cilib.problem.solution.InferiorFitness;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * B. Liu, L. Wang, Y.-H. Jin, F. Tang, and D.-X. Huang, “Improved Particle Swarm Optimization Combined with Chaos,”
  * Chaos, Solitons & Fractals, vol. 25, no. 5, pp. 1261–1271, 2005.
  */
-public class AIWFInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class AIWFInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double inertiaMin;
     protected double inertiaMax;

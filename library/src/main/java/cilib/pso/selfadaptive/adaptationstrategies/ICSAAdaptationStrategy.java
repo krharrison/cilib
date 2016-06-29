@@ -7,20 +7,16 @@
  */
 package cilib.pso.selfadaptive.adaptationstrategies;
 
-import cilib.algorithm.population.IterationStrategy;
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.controlparameter.LinearlyVaryingControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.type.types.Numeric;
-import cilib.type.types.container.Vector;
 
 /**
  * S. Jun and L. Jian, “An Improved Self-Adaptive Particle Swarm Optimization Algorithm with Simulated Annealing,”
  * in Intelligent Information Technology Application, 2009. IITA 2009. Third International Symposium on, 2009, vol. 3, pp. 396–399.
  */
-public class ICSAAdaptationStrategy implements AlgorithmAdaptationStrategy{
+public class ICSAAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected double inertiaA;
     protected double inertiaB;

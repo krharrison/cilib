@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Inertia weight using a Sugeno function.
@@ -21,7 +21,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * in Aerospace and Astronautics, 2006, pp. 977–980.
  */
 
-public class SugenoFunctionInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class SugenoFunctionInertiaStrategy implements SwarmAdaptationStrategy {
     protected double s;
 
     public SugenoFunctionInertiaStrategy(){
@@ -41,7 +41,7 @@ public class SugenoFunctionInertiaStrategy implements AlgorithmAdaptationStrateg
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

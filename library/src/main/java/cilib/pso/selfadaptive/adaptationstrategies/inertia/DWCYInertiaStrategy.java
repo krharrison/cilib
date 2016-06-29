@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import cilib.util.selection.arrangement.Arrangement;
 import cilib.util.selection.arrangement.SortedArrangement;
 
@@ -21,7 +21,7 @@ import java.util.Iterator;
  * C. Dong, G. Wang, Z. Chen, and Z. Yu, “A Method of Self-adaptive Inertia Weight for PSO,” in Proceedings of the 2008
  * International Conference on Computer Science and Software Engineering, 2008, vol. 1, pp. 1195–1198.
  */
-public class DWCYInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class DWCYInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected Arrangement<Particle> arrangement;
     protected double alpha;

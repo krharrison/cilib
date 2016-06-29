@@ -8,14 +8,10 @@
 package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.entity.Property;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
-import cilib.type.types.container.Vector;
-import cilib.util.distancemeasure.DistanceMeasure;
-import cilib.util.distancemeasure.EuclideanDistanceMeasure;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Improved PSO by Li and Tan
@@ -24,7 +20,7 @@ import cilib.util.distancemeasure.EuclideanDistanceMeasure;
  * in Fourth International Conference on Natural Computation, 2008, vol. 1, pp. 30–34.
  */
 
-public class IPSOLTInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class IPSOLTInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double[] previousPBest;
     protected double alpha;

@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import cilib.type.types.container.Vector;
 import cilib.util.distancemeasure.DistanceMeasure;
 import cilib.util.distancemeasure.EuclideanDistanceMeasure;
@@ -23,7 +23,7 @@ import cilib.util.distancemeasure.EuclideanDistanceMeasure;
  * Memetic Computing, vol. 5, no. 3, pp. 229–251, 2013.
  */
 
-public class DoubleExponentialInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class DoubleExponentialInertiaStrategy implements SwarmAdaptationStrategy {
 
     private DistanceMeasure measure = new EuclideanDistanceMeasure();
 

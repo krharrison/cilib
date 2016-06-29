@@ -8,11 +8,10 @@
 package cilib.pso.selfadaptive.adaptationstrategies.inertia;
 
 import cilib.controlparameter.ConstantControlParameter;
-import cilib.math.random.generator.Rand;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 
 /**
  * Natural Exponent Inertia Weight
@@ -20,7 +19,7 @@ import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
  * G. Chen, Z. Min, J. Jia, and H. Xinbo, “Natural Exponential Inertia Weight Strategy in Particle Swarm Optimization,”
  * Proceedings of the 6th World Congress on Intelligent Control and Automation, vol. 1, pp. 3672–3675, 2006.
  */
-public class NaturalExponentInertiaStrategy implements AlgorithmAdaptationStrategy{
+public class NaturalExponentInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double minValue;
     protected double maxValue;
@@ -41,7 +40,7 @@ public class NaturalExponentInertiaStrategy implements AlgorithmAdaptationStrate
     }
 
     @Override
-    public AlgorithmAdaptationStrategy getClone() {
+    public SwarmAdaptationStrategy getClone() {
         return this;
     }
 

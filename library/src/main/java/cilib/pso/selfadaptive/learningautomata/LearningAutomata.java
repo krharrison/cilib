@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public class LearningAutomata<T extends Comparable<T>> {
+
     protected double reward;
     protected double penalty;
     protected List<Action<T>> actions;
@@ -34,7 +35,6 @@ public class LearningAutomata<T extends Comparable<T>> {
             objects.add(new WeightedObject(action, action.weight));
         }
 
-        //TODO: will this properly return the appropriate Action object?
         return (Action<T>)selector.on(objects).select().getObject();
     }
 
@@ -66,4 +66,21 @@ public class LearningAutomata<T extends Comparable<T>> {
     public void addAction(Action<T> action){
         this.actions.add(action);
     }
+
+    public double getReward() {
+        return reward;
+    }
+
+    public void setReward(double reward) {
+        this.reward = reward;
+    }
+
+    public double getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(double penalty) {
+        this.penalty = penalty;
+    }
+
 }

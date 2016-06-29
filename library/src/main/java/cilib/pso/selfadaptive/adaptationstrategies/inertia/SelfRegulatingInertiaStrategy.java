@@ -13,7 +13,7 @@ import cilib.problem.solution.InferiorFitness;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import fj.data.List;
 
 /**
@@ -23,7 +23,7 @@ import fj.data.List;
  * Information Sciences, vol. 294, pp. 182–202, 2015.
  */
 
-public class SelfRegulatingInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class SelfRegulatingInertiaStrategy implements SwarmAdaptationStrategy {
 
     protected double eta;
     protected double maxIters;

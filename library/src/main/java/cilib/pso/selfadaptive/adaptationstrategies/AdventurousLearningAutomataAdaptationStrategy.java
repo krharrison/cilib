@@ -23,7 +23,7 @@ import cilib.type.types.Bounds;
  * A. B. Hashemi and M. R. Meybodi, “A Note on the Learning Automata Based Algorithms for Adaptive Parameter
  * Selection in PSO,” Applied Soft Computing, vol. 11, no. 1, pp. 689–705, 2011.
  */
-public class AdventurousLearningAutomataAdaptationStrategy implements AlgorithmAdaptationStrategy {
+public class AdventurousLearningAutomataAdaptationStrategy implements SwarmAdaptationStrategy {
 
     protected LearningAutomata<Double> inertiaLA;
     protected LearningAutomata<Double> socialLA;
@@ -35,9 +35,9 @@ public class AdventurousLearningAutomataAdaptationStrategy implements AlgorithmA
     protected int numAcceleration; //number of actions in the social/cognitive automata
     protected double successThreshold;
 
-    Action<Double> inertia;
-    Action<Double> social;
-    Action<Double> cognitive;
+    Action<Double> inertiaAction;
+    Action<Double> socialAction;
+    Action<Double> cognitiveAction;
 
     public AdventurousLearningAutomataAdaptationStrategy(){
         inertiaBounds = new Bounds(0, 1);
@@ -71,26 +71,26 @@ public class AdventurousLearningAutomataAdaptationStrategy implements AlgorithmA
             initializeCognitiveLA();
         }
         else if(successful(algorithm)){
-            inertiaLA.updateSuccessful(inertia);
-            socialLA.updateSuccessful(social);
-            cognitiveLA.updateSuccessful(cognitive);
+            inertiaLA.updateSuccessful(inertiaAction);
+            socialLA.updateSuccessful(socialAction);
+            cognitiveLA.updateSuccessful(cognitiveAction);
         }
         else
         {
-            inertiaLA.updateUnsuccessful(inertia);
-            socialLA.updateUnsuccessful(social);
-            cognitiveLA.updateUnsuccessful(cognitive);
+            inertiaLA.updateUnsuccessful(inertiaAction);
+            socialLA.updateUnsuccessful(socialAction);
+            cognitiveLA.updateUnsuccessful(cognitiveAction);
         }
 
-        inertia = inertiaLA.select();
-        cognitive = cognitiveLA.select();
-        social = socialLA.select();
+        inertiaAction = inertiaLA.select();
+        cognitiveAction = cognitiveLA.select();
+        socialAction = socialLA.select();
 
         for (Particle p : algorithm.getTopology()) {
             SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
-            sp.setInertiaWeight(ConstantControlParameter.of(inertia.getAction()));
-            sp.setSocialAcceleration(ConstantControlParameter.of(social.getAction()));
-            sp.setCognitiveAcceleration(ConstantControlParameter.of(cognitive.getAction()));
+            sp.setInertiaWeight(ConstantControlParameter.of(inertiaAction.getAction()));
+            sp.setSocialAcceleration(ConstantControlParameter.of(socialAction.getAction()));
+            sp.setCognitiveAcceleration(ConstantControlParameter.of(cognitiveAction.getAction()));
         }
     }
 
@@ -137,5 +137,78 @@ public class AdventurousLearningAutomataAdaptationStrategy implements AlgorithmA
     public AdventurousLearningAutomataAdaptationStrategy getClone() {
         return new AdventurousLearningAutomataAdaptationStrategy(this);
     }
+
+    public Bounds getInertiaBounds() {
+        return inertiaBounds;
+    }
+
+    public void setInertiaBounds(Bounds inertiaBounds) {
+        this.inertiaBounds = inertiaBounds;
+    }
+
+    public Bounds getSocialBounds() {
+        return socialBounds;
+    }
+
+    public void setSocialBounds(Bounds socialBounds) {
+        this.socialBounds = socialBounds;
+    }
+
+    public Bounds getCognitiveBounds() {
+        return cognitiveBounds;
+    }
+
+    public void setCognitiveBounds(Bounds cognitiveBounds) {
+        this.cognitiveBounds = cognitiveBounds;
+    }
+
+    public int getNumInteria() {
+        return numInteria;
+    }
+
+    public void setNumInteria(int numInteria) {
+        this.numInteria = numInteria;
+    }
+
+    public int getNumAcceleration() {
+        return numAcceleration;
+    }
+
+    public void setNumAcceleration(int numAcceleration) {
+        this.numAcceleration = numAcceleration;
+    }
+
+    public double getSuccessThreshold() {
+        return successThreshold;
+    }
+
+    public void setSuccessThreshold(double successThreshold) {
+        this.successThreshold = successThreshold;
+    }
+
+    public LearningAutomata<Double> getInertiaLA() {
+        return inertiaLA;
+    }
+
+    public void setInertiaLA(LearningAutomata<Double> inertiaLA) {
+        this.inertiaLA = inertiaLA;
+    }
+
+    public LearningAutomata<Double> getSocialLA() {
+        return socialLA;
+    }
+
+    public void setSocialLA(LearningAutomata<Double> socialLA) {
+        this.socialLA = socialLA;
+    }
+
+    public LearningAutomata<Double> getCognitiveLA() {
+        return cognitiveLA;
+    }
+
+    public void setCognitiveLA(LearningAutomata<Double> cognitiveLA) {
+        this.cognitiveLA = cognitiveLA;
+    }
+
 
 }

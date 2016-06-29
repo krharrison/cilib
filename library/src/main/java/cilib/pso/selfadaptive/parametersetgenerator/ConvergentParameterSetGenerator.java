@@ -49,7 +49,7 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
             params.setInertiaWeight(ConstantControlParameter.of(inertiaDistribution.getRandomNumber()));
             params.setCognitiveAcceleration(ConstantControlParameter.of(cognitiveDistribution.getRandomNumber()));
             params.setSocialAcceleration(ConstantControlParameter.of(socialDistribution.getRandomNumber()));
-        } while(!params.isConvergent());
+        } while(!params.isConvergent()); //TODO: add check for bounds
 
         return params;
     }

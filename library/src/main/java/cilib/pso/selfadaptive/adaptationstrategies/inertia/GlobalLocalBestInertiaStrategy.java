@@ -11,7 +11,7 @@ import cilib.controlparameter.ConstantControlParameter;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.selfadaptive.adaptationstrategies.AlgorithmAdaptationStrategy;
+import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
 import cilib.util.distancemeasure.DistanceMeasure;
 import cilib.util.distancemeasure.EuclideanDistanceMeasure;
 import fj.F2;
@@ -24,7 +24,7 @@ import fj.F2;
  * a Class of Hybrid Systems,” Applied Soft Computing, vol. 8, no. 1, pp. 324–336, Jan. 2008.
  */
 
-public class GlobalLocalBestInertiaStrategy implements AlgorithmAdaptationStrategy {
+public class GlobalLocalBestInertiaStrategy implements SwarmAdaptationStrategy {
 
     private DistanceMeasure measure = new EuclideanDistanceMeasure();
 
