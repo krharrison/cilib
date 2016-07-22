@@ -56,7 +56,7 @@ public class DWCYInertiaStrategy implements SwarmAdaptationStrategy {
             p = (SelfAdaptiveParticle) iterator.next();
 
             double expTerm = Math.exp(-particles / beta);
-            double rankTerm = (dimensions * rank) / gamma;
+            double rankTerm = rank / (dimensions * gamma);
             double inertia = 1 / (alpha - expTerm + (rankTerm * rankTerm));
 
             p.setInertiaWeight(ConstantControlParameter.of(inertia));
