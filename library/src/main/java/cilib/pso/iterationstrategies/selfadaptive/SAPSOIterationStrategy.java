@@ -22,18 +22,15 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
     protected IterationStrategy<PSO> iterationStrategy;
     protected ParticleAdaptationStrategy adaptationStrategy;
     protected ParticleUpdateDetectionStrategy detectionStrategy;
-    //protected int period;
 
     public SAPSOIterationStrategy(){
         iterationStrategy = new SynchronousIterationStrategy();
         adaptationStrategy = new RandomRegenerationParticleAdaptationStrategy();
-        //period = 50;
     }
 
     public SAPSOIterationStrategy(SAPSOIterationStrategy copy){
         this.iterationStrategy = copy.iterationStrategy.getClone();
         this.adaptationStrategy = copy.adaptationStrategy.getClone();
-        //this.period = copy.period;
     }
 
     @Override
@@ -43,28 +40,15 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
 
     @Override
     public void performIteration(PSO algorithm) {
-        //int iteration = AbstractAlgorithm.get().getIterations();
-
-        //adapt and reset fitness if time to do so
         for(Particle p : algorithm.getTopology()) {
             SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
             p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
             if (detectionStrategy.detect(p)) {
                 adaptationStrategy.adapt(p, algorithm);
-                //for (Particle p : algorithm.getTopology()) {
-                //    ((SelfAdaptiveParticle) p).getParameterSet().resetFitness();
-                //}
             }
         }
 
         iterationStrategy.performIteration(algorithm);
-
-        //for(Particle p : algorithm.getTopology()){
-            //if the particle improved in fitness, increment the fitness of the parameters by 1
-        //    if(p.getFitness().compareTo(p.get(Property.PREVIOUS_FITNESS)) > 0){
-        //        ((SelfAdaptiveParticle)p).getParameterSet().incrementFitness(1);
-        //    }
-        //}
     }
 
     public void setAdaptationStrategy(ParticleAdaptationStrategy strategy){
@@ -83,11 +67,5 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
     @Override
     public void setBoundaryConstraint(BoundaryConstraint boundaryConstraint) {
         iterationStrategy.setBoundaryConstraint(boundaryConstraint);
-
     }
-
-    //public void setPeriod(int period){
-    //    this.period = period;
-    //}
-
 }

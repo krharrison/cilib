@@ -9,10 +9,8 @@ package cilib.pso.selfadaptive.parametersetgenerator;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.math.random.ProbabilityDistributionFunction;
 import cilib.math.random.UniformDistribution;
-import cilib.math.random.generator.Rand;
 import cilib.pso.selfadaptive.ParameterBounds;
 import cilib.pso.selfadaptive.ParameterSet;
-import cilib.type.types.Bounds;
 
 public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
 

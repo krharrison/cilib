@@ -32,6 +32,9 @@ import java.util.List;
  *
  * K. Socha and M. Dorigo, “Ant Colony Optimization for Continuous Domains,”
  * European Journal of Operational Research, vol. 185, no. 3, pp. 1155–1173, 2008.
+ *
+ * TODO: need to find a good way to associate fitness to parameters based on success.
+ * Improving the best particle should be better than improving the worst
  */
 
 public class GaussianKernelAdaptationStrategy implements SwarmAdaptationStrategy {

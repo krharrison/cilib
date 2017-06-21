@@ -16,6 +16,7 @@ import cilib.type.types.Bounds;
 import cilib.type.types.Type;
 import cilib.type.types.container.Vector;
 import cilib.util.Cloneable;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
 import fj.test.Bool;
 
 
@@ -103,6 +104,16 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
         inertiaWeight = ConstantControlParameter.of(vector.get(0).doubleValue());
         cognitiveAcceleration = ConstantControlParameter.of(vector.get(1).doubleValue());
         socialAcceleration = ConstantControlParameter.of(vector.get(2).doubleValue());
+    }
+
+    public static ParameterSet fromValues(double inertia, double cognitive, double social)
+    {
+        ParameterSet params = new ParameterSet();
+        params.setInertiaWeight(ConstantControlParameter.of(inertia));
+        params.setCognitiveAcceleration(ConstantControlParameter.of(cognitive));
+        params.setSocialAcceleration(ConstantControlParameter.of(social));
+
+        return params;
     }
 
     public void setFitness(Fitness value){
