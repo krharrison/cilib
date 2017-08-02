@@ -30,8 +30,8 @@ public class ConvergentParameterSetGenerator2 implements ParameterSetGenerator{
         //socialBounds = new ParameterBounds(0, 4);
         //cognitiveBounds = new ParameterBounds(0, 4);
         inertiaDistribution = new UniformDistribution(ConstantControlParameter.of(-1), ConstantControlParameter.of(1));
-        socialDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4));
-        cognitiveDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4));
+        socialDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4.4));
+        cognitiveDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4.4));
         factor = ConstantControlParameter.of(0.75);
     }
 
@@ -54,7 +54,7 @@ public class ConvergentParameterSetGenerator2 implements ParameterSetGenerator{
             w = inertiaDistribution.getRandomNumber();
             c1 = cognitiveDistribution.getRandomNumber();
             c2 = socialDistribution.getRandomNumber();
-        } while(!check(w, c1, c2)); //TODO: add check for bounds
+        } while(!check(w, c1, c2));
 
         params.setInertiaWeight(ConstantControlParameter.of(w));
         params.setCognitiveAcceleration(ConstantControlParameter.of(c1));

@@ -25,9 +25,9 @@ public class ConvergentParameterSetGenerator implements ParameterSetGenerator{
         inertiaBounds = new ParameterBounds(0, 1);
         socialBounds = new ParameterBounds(0, 4);
         cognitiveBounds = new ParameterBounds(0, 4);
-        inertiaDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(1));
-        socialDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4));
-        cognitiveDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4));
+        inertiaDistribution = new UniformDistribution(ConstantControlParameter.of(-1), ConstantControlParameter.of(1));
+        socialDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4.4));
+        cognitiveDistribution = new UniformDistribution(ConstantControlParameter.of(0), ConstantControlParameter.of(4.4));
     }
 
     public ConvergentParameterSetGenerator(ConvergentParameterSetGenerator copy){
