@@ -23,3 +23,7 @@ autoScalaLibrary := false
 
 resourceDirectory in Test <<= baseDirectory { _ / "simulator" }
 
+mergeStrategy in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case x => MergeStrategy.first
+}

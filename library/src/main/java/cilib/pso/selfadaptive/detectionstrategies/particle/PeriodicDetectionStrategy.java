@@ -38,12 +38,7 @@ public class PeriodicDetectionStrategy implements ParticleUpdateDetectionStrateg
 
     @Override
     public boolean detect(Particle entity) {
-
-        if (AbstractAlgorithm.get().getIterations() % period.getParameter() == 0) {
-            return true;
-        }
-
-        return false;
+        return AbstractAlgorithm.get().getIterations() % period.getParameter() == 0;
     }
 
     public ControlParameter getPeriod() {

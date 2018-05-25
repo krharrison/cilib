@@ -12,10 +12,9 @@ import cilib.math.random.GaussianDistribution;
 import cilib.math.random.ProbabilityDistributionFunction;
 import cilib.math.random.UniformDistribution;
 import cilib.pso.PSO;
-import cilib.pso.behaviour.StandardParticleBehaviour;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
-import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
+import cilib.pso.selfadaptive.ParameterSet;
 import cilib.type.types.container.Vector;
 
 /**
@@ -63,11 +62,7 @@ public class QuantumParticleAdaptationStrategy implements ParticleAdaptationStra
             SelfAdaptiveParticle best = (SelfAdaptiveParticle) sp.getNeighbourhoodBest();
             Vector nucleus = best.getParameterSet().asVector();
 
-            //get the behaviour of the particle
-            StandardParticleBehaviour behaviour = (StandardParticleBehaviour) p.getBehaviour();
-            SelfAdaptiveVelocityProvider provider = (SelfAdaptiveVelocityProvider) behaviour.getVelocityProvider();
-
-            //only update if new position is convergent, otherwise regenerate
+            //only update if new position adheres to the PSO-iRC criteria, otherwise regenerate
             do {
                 //step 1 - create a point using a normal distribution
                 Vector.Builder positionBuilder = Vector.newBuilder();
@@ -99,9 +94,26 @@ public class QuantumParticleAdaptationStrategy implements ParticleAdaptationStra
                 //update parameters by adding the offset to the nucleus
                 sp.getParameterSet().fromVector(nucleus.plus(position.multiply(root / distance).multiply(radius.getParameter()).multiply(sign)));
 
-            } while(!sp.getParameterSet().isConvergent());
+            } while(!check(sp.getParameterSet()));
 
         }
+    }
+
+    /**
+     * Check whether the given parameter set adheres to the PSO-iRC criteria.
+     * @param params
+     * @return
+     */
+    private boolean check(ParameterSet params){
+        double w = params.getInertiaWeight().getParameter();
+        double c1 = params.getCognitiveAcceleration().getParameter();
+        double c2 = params.getSocialAcceleration().getParameter();
+
+        double upper = (24 * (1 - w * w)) / (7 - 5 * w);
+        double lower = (22 - 30 * w * w) / (7 - 5 * w);
+        double c = c1 + c2;
+
+        return c > lower && c < upper;
     }
 
     @Override
@@ -138,5 +150,9 @@ public class QuantumParticleAdaptationStrategy implements ParticleAdaptationStra
 
     public Boolean getUniform(){
         return this.uniform;
+    }
+
+    public void setDelegate(ParticleAdaptationStrategy strategy){
+        this.delegate = strategy;
     }
 }

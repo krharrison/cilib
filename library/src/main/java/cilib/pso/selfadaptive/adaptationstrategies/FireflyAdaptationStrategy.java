@@ -8,6 +8,7 @@ package cilib.pso.selfadaptive.adaptationstrategies;
 
 
 import cilib.pso.particle.SelfAdaptiveParticle;
+import cilib.pso.selfadaptive.ParameterSet;
 import fj.F;
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.entity.Property;
@@ -29,7 +30,7 @@ public class FireflyAdaptationStrategy implements SwarmAdaptationStrategy {
         adaptorFFA = new FFA();
         NonEvaluatingFireflyIterationStrategy iterationStrategy = new NonEvaluatingFireflyIterationStrategy();
         iterationStrategy.setBoundaryConstraint(new ClampingBoundaryConstraint());
-        adaptorFFA.setIterationStrategy(new NonEvaluatingFireflyIterationStrategy());
+        adaptorFFA.setIterationStrategy(iterationStrategy);
     }
 
     public FireflyAdaptationStrategy(FireflyAdaptationStrategy copy){
@@ -61,9 +62,10 @@ public class FireflyAdaptationStrategy implements SwarmAdaptationStrategy {
 
             Firefly parameterFirefly = adaptorFFA.getTopology().index(i);
             Vector parameterPosition = parameterFirefly.getPosition();
-            p.setInertiaWeight(ConstantControlParameter.of(parameterPosition.doubleValueOf(0)));
-            p.setCognitiveAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(1)));
-            p.setSocialAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(2)));
+            p.setParameterSet(ParameterSet.createFromVector(parameterPosition));
+            //p.setInertiaWeight(ConstantControlParameter.of(parameterPosition.doubleValueOf(0)));
+            //p.setCognitiveAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(1)));
+            //p.setSocialAcceleration(ConstantControlParameter.of(parameterPosition.doubleValueOf(2)));
         }
     }
 

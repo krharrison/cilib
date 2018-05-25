@@ -40,6 +40,10 @@ public class ParameterBounds {
         this.upperBound = upperBound;
     }
 
+    public void setUpperBound(double upperBound){
+        this.upperBound = ConstantControlParameter.of(upperBound);
+    }
+
     public ControlParameter getUpperBound() {
         return upperBound;
     }
@@ -48,11 +52,20 @@ public class ParameterBounds {
         this.lowerBound = lowerBound;
     }
 
+    public void setLowerBound(double lowerBound){
+        this.lowerBound = ConstantControlParameter.of(lowerBound);
+    }
+
     public ControlParameter getLowerBound() {
         return lowerBound;
     }
 
     public double getRange() {
         return upperBound.getParameter() - lowerBound.getParameter();
+    }
+
+    @Override
+    public String toString() {
+        return "(" + lowerBound.getParameter() + "," + upperBound.getParameter() + ")";
     }
 }

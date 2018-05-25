@@ -79,8 +79,7 @@ public final class StandardVelocityProvider implements VelocityProvider {
     private static P1<Number> cp(final ControlParameter r) {
         return new P1<Number>() {
             @Override
-            public Number _1() {
-                return r.getParameter();
+            public Number _1() { return r.getParameter();
             }
         };
     }

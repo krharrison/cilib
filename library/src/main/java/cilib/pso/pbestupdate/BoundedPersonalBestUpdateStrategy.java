@@ -47,7 +47,7 @@ public class BoundedPersonalBestUpdateStrategy implements PersonalBestUpdateStra
     @Override
     public void updatePersonalBest(Particle particle) {
         if (!Types.isInsideBounds(particle.getPosition())) {
-            particle.put(Property.FITNESS, InferiorFitness.instance());
+            //particle.put(Property.FITNESS, InferiorFitness.instance());
             return;
         }
 

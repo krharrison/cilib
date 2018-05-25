@@ -64,6 +64,7 @@ public abstract class AbstractParticle extends AbstractEntity implements Particl
 
         this.personalBestUpdateStrategy = copy.personalBestUpdateStrategy.getClone();
         this.neighbourhoodBestUpdateStrategy = copy.neighbourhoodBestUpdateStrategy.getClone();
+        this.behaviour = copy.behaviour.getClone();
     }
 
     /**

@@ -8,16 +8,13 @@ package cilib.pso.selfadaptive;
 
 import cilib.controlparameter.ConstantControlParameter;
 import cilib.controlparameter.ControlParameter;
-import cilib.math.random.generator.Rand;
 import cilib.problem.solution.Fitness;
 import cilib.problem.solution.MaximisationFitness;
 import cilib.pso.velocityprovider.VelocityProvider;
 import cilib.type.types.Bounds;
-import cilib.type.types.Type;
+import cilib.type.types.Real;
 import cilib.type.types.container.Vector;
 import cilib.util.Cloneable;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Parameter;
-import fj.test.Bool;
 
 
 public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
@@ -63,10 +60,17 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
     }
 
     public Boolean isConvergent(){
+
         double inertia = inertiaWeight.getParameter();
+        if(inertia < -1 || inertia > 1) return false;
         double check = (24 * (1 - inertia * inertia)) / (7 - 5 * inertia);
 
-        return cognitiveAcceleration.getParameter() + socialAcceleration.getParameter() < check;
+        double c1 = cognitiveAcceleration.getParameter();
+        if(c1 < 0) return false;
+        double c2 = socialAcceleration.getParameter();
+        if(c2 < 0) return false;
+
+        return c1 + c2 < check;
     }
 
     @Override
@@ -93,11 +97,21 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
 
     public Vector asVector(){
         Vector.Builder builder =  Vector.newBuilder();
-        builder.add(inertiaWeight.getParameter());
-        builder.add(cognitiveAcceleration.getParameter());
-        builder.add(socialAcceleration.getParameter());
+        builder.add(Real.valueOf(inertiaWeight.getParameter(), inertiaBounds));
+        builder.add(Real.valueOf(cognitiveAcceleration.getParameter(), cognitiveBounds));
+        builder.add(Real.valueOf(socialAcceleration.getParameter(), socialBounds));
 
         return builder.build();
+    }
+
+    public double[] asArray(){
+        double[] result = new double[3];
+
+        result[0] = inertiaWeight.getParameter();
+        result[1] = cognitiveAcceleration.getParameter();
+        result[2] = socialAcceleration.getParameter();
+
+        return result;
     }
 
     public void fromVector(Vector vector){
@@ -106,12 +120,28 @@ public class ParameterSet implements Cloneable, Comparable<ParameterSet> {
         socialAcceleration = ConstantControlParameter.of(vector.get(2).doubleValue());
     }
 
-    public static ParameterSet fromValues(double inertia, double cognitive, double social)
-    {
+    public static ParameterSet createFromVector(Vector vector){
+        ParameterSet params = new ParameterSet();
+        params.fromVector(vector);
+        return params;
+    }
+
+    public static ParameterSet fromValues(double inertia, double cognitive, double social) {
         ParameterSet params = new ParameterSet();
         params.setInertiaWeight(ConstantControlParameter.of(inertia));
         params.setCognitiveAcceleration(ConstantControlParameter.of(cognitive));
         params.setSocialAcceleration(ConstantControlParameter.of(social));
+
+        return params;
+    }
+
+    public static ParameterSet fromArray(double[] parameters){
+        if(parameters.length != 3) throw new IllegalArgumentException("Must supply 3 parameters to ParameterSet");
+
+        ParameterSet params = new ParameterSet();
+        params.setInertiaWeight(ConstantControlParameter.of(parameters[0]));
+        params.setCognitiveAcceleration(ConstantControlParameter.of(parameters[1]));
+        params.setSocialAcceleration(ConstantControlParameter.of(parameters[2]));
 
         return params;
     }

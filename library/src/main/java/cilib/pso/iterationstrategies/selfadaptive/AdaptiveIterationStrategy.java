@@ -16,15 +16,23 @@ import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.adaptationstrategies.DoNothingAdaptationStrategy;
 import cilib.pso.selfadaptive.adaptationstrategies.SwarmAdaptationStrategy;
+import cilib.pso.selfadaptive.detectionstrategies.swarm.AlwaysTrueDetectionStrategy;
+import cilib.pso.selfadaptive.detectionstrategies.swarm.SwarmUpdateDetectionStrategy;
+import cilib.pso.selfadaptive.parameterfitnessadjustmentstrategies.ParameterFitnessAdjustmentStrategy;
+import cilib.pso.selfadaptive.parameterfitnessadjustmentstrategies.SuccessfulAdjustmentStrategy;
 
 public class AdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
 
     protected SwarmAdaptationStrategy adaptationStrategy;
+    protected SwarmUpdateDetectionStrategy detectionStrategy;
     protected IterationStrategy<PSO> delegate;
+    protected ParameterFitnessAdjustmentStrategy parameterFitnessAdjustmentStrategy;
 
     public AdaptiveIterationStrategy(){
         delegate = new SynchronousIterationStrategy();
         adaptationStrategy = new DoNothingAdaptationStrategy();
+        detectionStrategy = new AlwaysTrueDetectionStrategy();
+        parameterFitnessAdjustmentStrategy = new SuccessfulAdjustmentStrategy();
     }
 
     @Override
@@ -42,9 +50,13 @@ public class AdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
             }
         }
 
-        adaptationStrategy.adapt(algorithm);
+        if(detectionStrategy.detect(algorithm)) {
+            adaptationStrategy.adapt(algorithm);
+        }
 
         delegate.performIteration(algorithm);
+
+        parameterFitnessAdjustmentStrategy.adjustFitness(algorithm);
     }
 
 
@@ -56,11 +68,19 @@ public class AdaptiveIterationStrategy extends AbstractIterationStrategy<PSO> {
         this.adaptationStrategy = adaptationStrategy;
     }
 
+    public void setDetectionStrategy(SwarmUpdateDetectionStrategy detectionStrategy) {
+        this.detectionStrategy = detectionStrategy;
+    }
+
     public IterationStrategy<PSO> getDelegate() {
         return delegate;
     }
 
     public void setDelegate(IterationStrategy<PSO> delegate) {
         this.delegate = delegate;
+    }
+
+    public void setParameterFitnessAdjustmentStrategy(ParameterFitnessAdjustmentStrategy strategy){
+        this.parameterFitnessAdjustmentStrategy = strategy;
     }
 }

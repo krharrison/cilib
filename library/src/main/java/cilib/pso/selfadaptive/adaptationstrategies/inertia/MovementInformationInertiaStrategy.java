@@ -61,7 +61,7 @@ public class MovementInformationInertiaStrategy implements SwarmAdaptationStrate
         //initial movement is delta_max
         if(algorithm.getIterations() == 0){
             Vector domain = (Vector) algorithm.getOptimisationProblem().getDomain().getBuiltRepresentation();
-            initialMovement = 0.75 * Math.sqrt(domain.size() * Math.pow(domain.get(0).getBounds().getRange(), 2));
+            initialMovement = 0.25 * Math.sqrt(domain.size() * Math.pow(domain.get(0).getBounds().getRange(), 2));
         }
 
         //double idealMovementSize = idealMovement.getParameter();
@@ -90,7 +90,7 @@ public class MovementInformationInertiaStrategy implements SwarmAdaptationStrate
     }
 
     private double calculateIdealMovement(PSO algorithm){
-        double factor = algorithm.getPercentageComplete() / 0.95;
+        double factor = algorithm.getPercentageComplete() / 0.75;
         return initialMovement * ((1 + Math.cos(factor * Math.PI)) / 2);
     }
 

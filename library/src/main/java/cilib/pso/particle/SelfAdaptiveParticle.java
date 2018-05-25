@@ -16,6 +16,8 @@ import cilib.pso.velocityprovider.SelfAdaptiveVelocityProvider;
 import cilib.type.types.Int;
 import cilib.type.types.container.Vector;
 
+import java.util.Properties;
+
 /**
  * A self-adaptive particle contains the three conventional control parameters.
  */
@@ -24,6 +26,7 @@ public class SelfAdaptiveParticle extends StandardParticle {
     private double charge;
 
     public SelfAdaptiveParticle(){
+        //super();
         parameters = new ParameterSet();
         ((StandardParticleBehaviour) this.behaviour).setVelocityProvider(new SelfAdaptiveVelocityProvider());
     }
@@ -31,6 +34,11 @@ public class SelfAdaptiveParticle extends StandardParticle {
     public SelfAdaptiveParticle(SelfAdaptiveParticle copy){
         super(copy);
         this.parameters = copy.parameters.getClone();
+        this.charge = copy.charge;
+    }
+
+    public boolean wasSuccessful(){
+        return getFitness().compareTo(get(Property.PREVIOUS_FITNESS)) > 0;
     }
 
     @Override

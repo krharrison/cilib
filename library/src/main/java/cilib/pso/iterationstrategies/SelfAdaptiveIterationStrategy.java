@@ -44,10 +44,10 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
     public SelfAdaptiveIterationStrategy() {
         this.iterationStrategy = new SynchronousIterationStrategy();
         this.detectionStrategy = new PersonalBestStagnationDetectionStrategy();
-        this.behaviorSelectionRecipe = new TournamentSelector<Behaviour>();
+        this.behaviorSelectionRecipe = new TournamentSelector<>();
         this.windowSize = ConstantControlParameter.of(10);
-        this.successCounters = new HashMap<Behaviour, List<Integer>>();
-        this.iterationCounters = new HashMap<Behaviour, List<Integer>>();
+        this.successCounters = new HashMap<>();
+        this.iterationCounters = new HashMap<>();
         ((TournamentSelector<Behaviour>) this.behaviorSelectionRecipe).setTournamentSize(ConstantControlParameter.of(0.2));
     }
 
@@ -59,9 +59,9 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
         this.iterationStrategy = copy.iterationStrategy.getClone();
         this.detectionStrategy = copy.detectionStrategy.getClone();
         this.behaviorSelectionRecipe = copy.behaviorSelectionRecipe;
-        this.behaviorPool = new ArrayList<Behaviour>(copy.behaviorPool);
-        this.successCounters = new HashMap<Behaviour, List<Integer>>(copy.successCounters);
-        this.iterationCounters = new HashMap<Behaviour, List<Integer>>(copy.iterationCounters); 
+        this.behaviorPool = new ArrayList<>(copy.behaviorPool);
+        this.successCounters = new HashMap<>(copy.successCounters);
+        this.iterationCounters = new HashMap<>(copy.iterationCounters);
         this.windowSize = copy.windowSize;
     }
 
@@ -208,7 +208,7 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
     }
 
     private void addToSuccessCounters(Behaviour behavior) {
-        ArrayList<Integer> zeroList = new ArrayList<Integer>((int)windowSize.getParameter());
+        ArrayList<Integer> zeroList = new ArrayList<>((int)windowSize.getParameter());
         for(int i = 0; i < (int) windowSize.getParameter(); i++) {
             zeroList.add(0);
         }
@@ -217,7 +217,7 @@ public class SelfAdaptiveIterationStrategy implements IterationStrategy<PSO>, He
     }
     
     private void addToIterationCounters(Behaviour behavior) {
-        ArrayList<Integer> zeroList = new ArrayList<Integer>((int)windowSize.getParameter());
+        ArrayList<Integer> zeroList = new ArrayList<>((int)windowSize.getParameter());
         for(int i = 0; i < (int) windowSize.getParameter(); i++) {
             zeroList.add(0);
         }

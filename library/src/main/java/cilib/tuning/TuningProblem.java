@@ -6,7 +6,6 @@
  */
 package cilib.tuning;
 
-import fj.F;
 import static fj.data.List.range;
 import static fj.function.Doubles.sum;
 import cilib.algorithm.AbstractAlgorithm;
@@ -19,6 +18,12 @@ import cilib.problem.solution.Fitness;
 import cilib.tuning.problem.ProblemGenerator;
 import cilib.type.types.Real;
 import cilib.type.types.Type;
+import fj.F;
+
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TuningProblem extends AbstractProblem {
     
@@ -63,7 +68,51 @@ public class TuningProblem extends AbstractProblem {
             }                    
         })) / samples;
 
+        /*List<IFRaceSimulation> simulations = new ArrayList<>();
+        for(int i = 0; i < samples; i++){
+            simulations.add(new IFRaceSimulation(targetAlgorithm.getClone(), currentProblem));
+        }
+
+        final IFRaceSimulation[] completedSimulations = execute(simulations);
+
+        double f = 0;
+
+        for(int i = 0; i < completedSimulations.length; i++){
+            f += measurement.getValue(completedSimulations[i].getAlgorithm()).doubleValue();
+        }
+
+        f /= samples;*/
+
         return objective.evaluate(f);
+    }
+
+
+    private IFRaceSimulation[] execute(List<IFRaceSimulation> simulations){
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        CompletionService<IFRaceSimulation> completionService = new ExecutorCompletionService<>(executor);
+
+        //add each simulation to the queue
+        for (IFRaceSimulation simulation : simulations) {
+            completionService.submit(simulation, simulation);
+        }
+
+        final IFRaceSimulation[] completedSimulations = new IFRaceSimulation[samples];
+        try {
+            //take each simulation from the queue as it completes
+            for (int i = 0; i < samples; i++) {
+                Future<IFRaceSimulation> simulation = completionService.take();
+                completedSimulations[i] = simulation.get();
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TuningProblem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            executor.shutdownNow(); // Shutdown now - time to explode
+            throw new RuntimeException(ex);
+        }
+
+        executor.shutdown();
+
+        return completedSimulations;
     }
 
     public void nextProblem() {
@@ -88,7 +137,7 @@ public class TuningProblem extends AbstractProblem {
     
     public void setTargetAlgorithm(AbstractAlgorithm targetAlgorithm) {
         this.targetAlgorithm = targetAlgorithm;
-        this.targetAlgorithm.addAlgorithmListener(measuringListener);
+        //this.targetAlgorithm.addAlgorithmListener(measuringListener);
     }
 
     public AbstractAlgorithm getTargetAlgorithm() {

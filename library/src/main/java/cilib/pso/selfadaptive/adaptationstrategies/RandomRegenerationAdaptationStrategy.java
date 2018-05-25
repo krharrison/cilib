@@ -6,9 +6,11 @@
  */
 package cilib.pso.selfadaptive.adaptationstrategies;
 
+import cilib.entity.Property;
 import cilib.pso.PSO;
 import cilib.pso.particle.Particle;
 import cilib.pso.particle.SelfAdaptiveParticle;
+import cilib.pso.selfadaptive.ParameterSet;
 import cilib.pso.selfadaptive.parametersetgenerator.ConvergentParameterSetGenerator;
 import cilib.pso.selfadaptive.parametersetgenerator.ParameterSetGenerator;
 
@@ -25,9 +27,13 @@ public class RandomRegenerationAdaptationStrategy implements SwarmAdaptationStra
 
     @Override
     public void adapt(PSO algorithm) {
+        ParameterSet params = parameterGenerator.generate();
+
         for(Particle p : algorithm.getTopology()) {
             SelfAdaptiveParticle sp = (SelfAdaptiveParticle) p;
-            sp.setParameterSet(parameterGenerator.generate());
+            p.put(Property.PREVIOUS_PARAMETERS, sp.getParameterSet().asVector());
+
+            sp.setParameterSet(params);
         }
     }
 

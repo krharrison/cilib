@@ -53,7 +53,7 @@ public class MeasuringListener implements AlgorithmListener {
      * {@inheritDoc}
      */
     public void algorithmFinished(AlgorithmEvent e) {
-        if (e.getSource().getIterations() % resolution != 0)
+        //if (e.getSource().getIterations() % resolution != 0)
             lastMeasurement = measurement.getValue(e.getSource());
     }
 

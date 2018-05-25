@@ -17,6 +17,7 @@ import cilib.pso.particle.SelfAdaptiveParticle;
 import cilib.pso.selfadaptive.adaptationstrategies.particle.ParticleAdaptationStrategy;
 import cilib.pso.selfadaptive.adaptationstrategies.particle.RandomRegenerationParticleAdaptationStrategy;
 import cilib.pso.selfadaptive.detectionstrategies.particle.ParticleUpdateDetectionStrategy;
+import cilib.pso.selfadaptive.detectionstrategies.particle.PeriodicDetectionStrategy;
 
 public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
     protected IterationStrategy<PSO> iterationStrategy;
@@ -26,11 +27,13 @@ public class SAPSOIterationStrategy implements IterationStrategy<PSO>{
     public SAPSOIterationStrategy(){
         iterationStrategy = new SynchronousIterationStrategy();
         adaptationStrategy = new RandomRegenerationParticleAdaptationStrategy();
+        detectionStrategy = new PeriodicDetectionStrategy();
     }
 
     public SAPSOIterationStrategy(SAPSOIterationStrategy copy){
         this.iterationStrategy = copy.iterationStrategy.getClone();
         this.adaptationStrategy = copy.adaptationStrategy.getClone();
+        this.detectionStrategy = copy.detectionStrategy.getClone();
     }
 
     @Override

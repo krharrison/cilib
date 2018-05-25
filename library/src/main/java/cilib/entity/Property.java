@@ -64,6 +64,7 @@ public class Property<T extends Type> {
     public final static Property<StructuredType> V0 = new Property();
     public final static Property<StructuredType> V1 = new Property();
     public final static Property<StructuredType> PREVIOUS_PARAMETERS = new Property();
+    public final static Property<Real> DISTANCE_TO_BEST = new Property();
     
     /**
      * Niching properties

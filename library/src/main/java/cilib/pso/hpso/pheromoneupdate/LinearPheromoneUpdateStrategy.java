@@ -52,7 +52,7 @@ public class LinearPheromoneUpdateStrategy implements PheromoneUpdateStrategy{
      */
     @Override
     public double updatePheromone(Particle e) {
-        Fitness prevFitness = ((Fitness)e.get(Property.PREVIOUS_FITNESS));
+        Fitness prevFitness = e.get(Property.PREVIOUS_FITNESS);
         double diff = e.getFitness().getValue() - (prevFitness.getValue().isNaN() ? 0 : prevFitness.getValue());
         return Math.abs(diff) * this.gradient.getParameter() * (e.getFitness().compareTo(prevFitness));
     }

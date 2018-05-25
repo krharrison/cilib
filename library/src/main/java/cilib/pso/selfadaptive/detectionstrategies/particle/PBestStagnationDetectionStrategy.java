@@ -14,10 +14,10 @@ import cilib.pso.particle.Particle;
 import cilib.type.types.Int;
 
 public class PBestStagnationDetectionStrategy implements ParticleUpdateDetectionStrategy {
-    private ControlParameter windowSize;
+    private ControlParameter period;
 
     public PBestStagnationDetectionStrategy() {
-        windowSize = ConstantControlParameter.of(5.0);
+        period = ConstantControlParameter.of(5.0);
     }
 
     /**
@@ -26,7 +26,7 @@ public class PBestStagnationDetectionStrategy implements ParticleUpdateDetection
      * @param copy the {@link PBestStagnationDetectionStrategy} to copy.
      */
     public PBestStagnationDetectionStrategy(PBestStagnationDetectionStrategy copy) {
-        this.windowSize = copy.windowSize.getClone();
+        this.period = copy.period.getClone();
     }
 
     /**
@@ -42,7 +42,7 @@ public class PBestStagnationDetectionStrategy implements ParticleUpdateDetection
 
         int counter = entity.get(Property.PBEST_STAGNATION_COUNTER).intValue();
 
-        if (counter >= windowSize.getParameter()) {
+        if (counter >= period.getParameter()) {
             entity.put(Property.PBEST_STAGNATION_COUNTER, Int.valueOf(0));
             return true;
         }
@@ -50,12 +50,12 @@ public class PBestStagnationDetectionStrategy implements ParticleUpdateDetection
         return false;
     }
 
-    public ControlParameter getWindowSize() {
-        return windowSize;
+    public ControlParameter getPeriod() {
+        return period;
     }
 
-    public void setWindowSize(ControlParameter windowSize) {
-        this.windowSize = windowSize;
+    public void setPeriod(ControlParameter windowSize) {
+        this.period = windowSize;
     }
 
 }
